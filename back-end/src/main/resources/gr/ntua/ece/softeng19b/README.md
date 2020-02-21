@@ -1,4 +1,4 @@
-# Config Credentials for SQL server
-* Create a file here with the name app.properties
-* Copy contents from app-default.properties
-* Change username and password for SQL server
+# Ρυθμίσεις SQL εξυπηρετητή
+* Δημιουργία αρχείου με το όνομα app.properties
+* Αντιγραφή περιεχομένων από το app-default.properties
+* Αλλαγή των πεδίων username / password / database schema name

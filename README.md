@@ -56,8 +56,14 @@
 cd back-end
 ./gradlew apprun
 ```
-
 Το REST API base URL είναι το `https://localhost:8765/energy/api`, όπως απαιτείται από την εργασία. 
+
+* Για την ρύθμιση του εξυπηρετητή SQL και των διαπιστευτηρίων του:
+
+```bash
+cd  back-end/src/main/resources/gr/ntua/ece/softeng19b/
+```
+Περαιτέρω οδηγίες δίνονται στο εν λόγω φάκελο.
 
 * Για την εκτέλεση του cli app:
 
