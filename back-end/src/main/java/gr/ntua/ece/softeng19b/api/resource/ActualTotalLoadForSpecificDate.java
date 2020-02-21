@@ -27,10 +27,15 @@ public class ActualTotalLoadForSpecificDate extends EnergyResource {
 
         //Read the optional date attribute
         String dateParam = getAttributeDecoded("date");
+        String values[] = dateParam.split("-");
+        int year = Integer.parseInt(values[0]);
+        int month = Integer.parseInt(values[1]);
+        int day = Integer.parseInt(values[2]);
 
         //Use the EnergyResource.parseXXX methods to parse the dates and implement the required business logic
         //For the sake of this example, we hard-code a date
-        LocalDate date = LocalDate.of(2019, 10, 1);
+        LocalDate date = LocalDate.of(year, month, day);
+        System.out.println(year+"-"+month+"-"+day);
 
         //Read the format query parameter
         Format format = parseFormat(getQueryValue("format"));
