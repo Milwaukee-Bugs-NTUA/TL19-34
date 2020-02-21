@@ -5,6 +5,7 @@
 *.bak
 *.backup
 .*.sw[a-z]
+back-end/src/main/resources/gr/ntua/ece/softeng19b/app.properties
 
 # Mac OS specific
 
@@ -20,5 +21,4 @@ Thumbs.db*
 # - Large data files
 # - Files containing passwords, credentials, etc.
 # - Code dependencies
-back-end/src/main/resources/gr/ntua/ece/softeng19b/app.properties
 README_nickie.md
