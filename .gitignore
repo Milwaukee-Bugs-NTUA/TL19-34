@@ -20,5 +20,5 @@ Thumbs.db*
 # - Large data files
 # - Files containing passwords, credentials, etc.
 # - Code dependencies
-
+back-end/src/main/resources/gr/ntua/ece/softeng19b/app.properties
 README_nickie.md
