@@ -28,7 +28,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
         try {
             if (dateArgs.date != null ) {
                 List<ATLRecordForSpecificDay> records = new RestAPI().
-                        getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
+                        getDayAheadTotalLoadForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;

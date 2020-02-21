@@ -1,6 +1,7 @@
 package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -60,6 +61,13 @@ public class RestAPI {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, LocalDate date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -226,8 +234,18 @@ public class RestAPI {
                                                             LocalDate date,
                                                             Format format) {
         return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
+            () -> newGetRequest(urlForDayActualDataLoad(areaName, resolutionCode, date, format)),
             format::consumeActualTotalLoadRecordsForSpecificDay
+        );
+    }
+
+    public List<DATLFRecordForSpecificDay> getDayAheadTotalLoadForecast(String areaName,
+                                                            String resolutionCode,
+                                                            LocalDate date,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, date, format)),
+            format::consumeDayAheadTotalLoadForecastRecordsForSpecificDay
         );
     }
 

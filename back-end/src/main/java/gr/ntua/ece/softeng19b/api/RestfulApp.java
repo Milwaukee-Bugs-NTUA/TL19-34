@@ -42,7 +42,10 @@ public class RestfulApp extends Application {
             ActualTotalLoadForSpecificDate.class
         );
         //Add more datasets
-
+        router.attach(
+            "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/date/{date}",
+            DayAheadTotalLoadForecastForSpecificDate.class
+        );
 
         //Enable CORS for all origins (don't use this in a production service)
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
