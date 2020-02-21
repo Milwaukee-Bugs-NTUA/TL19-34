@@ -3,6 +3,7 @@ package gr.ntua.ece.softeng19b.api;
 import com.google.gson.stream.JsonWriter;
 import gr.ntua.ece.softeng19b.api.representation.RepresentationGenerator;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -43,9 +44,39 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
+        public Representation generateRepresentation1(List<ATLRecordForSpecificMonth> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(ATLRecordForSpecificMonth rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                       // w.name("Day").value(rec.getDay());
+                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadByDayValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
     },
     CSV {
         public Representation generateRepresentation(List<ATLRecordForSpecificDay> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentation1(List<ATLRecordForSpecificMonth> result) {
             throw new UnsupportedOperationException("Implement this");
         }
     };

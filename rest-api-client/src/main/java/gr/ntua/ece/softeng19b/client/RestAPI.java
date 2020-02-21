@@ -1,6 +1,7 @@
 package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -20,6 +21,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -56,10 +58,19 @@ public class RestAPI {
         this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
     }
 
+    //for day
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for month
+    String urlForActualDataLoad(String areaName, String resolutionCode, YearMonth month, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/month/" + month.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -221,6 +232,7 @@ public class RestAPI {
     }
 
 
+    //for date
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
                                                             String resolutionCode,
                                                             LocalDate date,
@@ -231,6 +243,16 @@ public class RestAPI {
         );
     }
 
+    //for month
+    public List<ATLRecordForSpecificMonth> getActualTotalLoad(String areaName,
+                                                            String resolutionCode,
+                                                            YearMonth yearMonth,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, yearMonth, format)),
+            format::consumeActualTotalLoadRecordsForSpecificMonth
+        );
+    }
 
     //Helper method to create a new http client that can tolerate self-signed or improper ssl certificates
     private static HttpClient newHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
