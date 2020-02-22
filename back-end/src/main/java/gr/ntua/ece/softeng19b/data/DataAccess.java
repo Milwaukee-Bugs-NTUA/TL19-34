@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 public class DataAccess {
@@ -113,6 +114,47 @@ public class DataAccess {
                           "from dayaheadtotalloadforecast as datlf, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
                           "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? " +
                           "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId";
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDay(rs.getInt(7));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName,
+                                                                                        String resolution,
+                                                                                        YearMonth yearMonth)
+            throws DataAccessException {
+
+        Integer year = yearMonth.getYear();
+        Integer month = yearMonth.getMonthValue();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, "+
+                          "datlf.month, datlf.day, sum(datlf.TotalLoadValue) as TotalLoadForecastValue "+
+                          "from dayaheadtotalloadforecast as datlf, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
+                          "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? " +
+                          "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId " +
+                          "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day asc";
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();

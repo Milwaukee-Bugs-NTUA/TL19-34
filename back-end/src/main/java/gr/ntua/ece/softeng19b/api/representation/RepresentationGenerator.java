@@ -9,6 +9,8 @@ import java.util.List;
 public interface RepresentationGenerator {
 
     Representation generateRepresentation(List<ATLRecordForSpecificDay> result);
-    Representation generateRepresentation2(List<DATLFRecordForSpecificDay> result);
+    Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result);
+    Representation generateRepresentationDATLFRFSM(List<DATLFRecordForSpecificMonth> result);
+    //Representation generateRepresentationDATLFRFSY(List<DATLFRecordForSpecificDay> result);
 
 }
