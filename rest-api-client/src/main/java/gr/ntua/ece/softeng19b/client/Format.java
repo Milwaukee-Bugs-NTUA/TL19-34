@@ -177,7 +177,7 @@ public enum Format implements ResponseBodyProcessor {
 
     private static DATLFRecordForSpecificMonth readDayAheadTotalLoadForecastRecordForSpecificMonth(JsonReader reader)
             throws IOException {
-        DATLFRecordForSpecificDay rec = new DATLFRecordForSpecificDay();
+        DATLFRecordForSpecificMonth rec = new DATLFRecordForSpecificMonth();
         reader.beginObject();
         while(reader.hasNext()) {
             String name = reader.nextName();

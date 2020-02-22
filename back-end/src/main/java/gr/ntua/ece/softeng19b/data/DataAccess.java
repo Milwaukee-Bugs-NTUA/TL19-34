@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng19b.data;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -133,7 +134,7 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
-    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName,
+    public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName,
                                                                                         String resolution,
                                                                                         YearMonth yearMonth)
             throws DataAccessException {
@@ -157,7 +158,7 @@ public class DataAccess {
                           "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day asc";
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
-						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();
+						DATLFRecordForSpecificMonth dataLoad = new DATLFRecordForSpecificMonth();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
 						dataLoad.setMapCode(rs.getString(3));

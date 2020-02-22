@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -21,6 +22,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;

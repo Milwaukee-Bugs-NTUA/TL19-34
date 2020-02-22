@@ -3,9 +3,11 @@ package gr.ntua.ece.softeng19b.cli;
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import picocli.CommandLine;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -34,7 +36,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
-            else if (dateArgs.date != null){
+            else if (dateArgs.month != null){
                 List<DATLFRecordForSpecificMonth> records = new RestAPI().
                         getDayAheadTotalLoadForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                 // Do something with the records :)

@@ -4,6 +4,7 @@ import gr.ntua.ece.softeng19b.api.Format;
 import gr.ntua.ece.softeng19b.conf.Configuration;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.DataAccess;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -47,7 +48,7 @@ public class DayAheadTotalLoadForecastForSpecificMonth extends EnergyResource {
                     resolution,
                     yearmonth
             );
-            return format.generateRepresentationDATLFFSM(result);
+            return format.generateRepresentationDATLFRFSM(result);
         } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }

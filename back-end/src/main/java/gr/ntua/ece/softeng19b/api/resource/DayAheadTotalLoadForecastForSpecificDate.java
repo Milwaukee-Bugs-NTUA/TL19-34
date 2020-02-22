@@ -47,7 +47,7 @@ public class DayAheadTotalLoadForecastForSpecificDate extends EnergyResource {
                     resolution,
                     date
             );
-            return format.generateRepresentation2(result);
+            return format.generateRepresentationDATLFRFSD(result);
         } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }

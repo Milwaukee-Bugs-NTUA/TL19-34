@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng19b.api.representation;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import org.restlet.representation.Representation;
 
 import java.util.List;

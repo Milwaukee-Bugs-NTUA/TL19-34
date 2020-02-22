@@ -4,6 +4,7 @@ import com.google.gson.stream.JsonWriter;
 import gr.ntua.ece.softeng19b.api.representation.RepresentationGenerator;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -71,7 +72,7 @@ public enum Format implements RepresentationGenerator {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
                     w.beginArray(); // [
-                    for(DATLFRecordForSpecificDay rec: result) {
+                    for(DATLFRecordForSpecificMonth rec: result) {
                         w.beginObject(); // {
                         w.name("Source").value(rec.getSource());
                         w.name("DataSet").value(rec.getDataSet());
