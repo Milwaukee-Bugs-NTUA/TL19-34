@@ -71,6 +71,13 @@ public class RestAPI {
                 "?format=" + format.name().toLowerCase();
     }
 
+    String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, YearMonth yearMonth, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encResCode + "/month/" + yearMonth.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
     String urlForHealthCheck() {
         return urlPrefix + "/HealthCheck";
     }
@@ -246,6 +253,16 @@ public class RestAPI {
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, date, format)),
             format::consumeDayAheadTotalLoadForecastRecordsForSpecificDay
+        );
+    }
+
+    public List<DATLFRecordForSpecificMonth> getDayAheadTotalLoadForecast(String areaName,
+                                                            String resolutionCode,
+                                                            YearMonth yearMonth,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, yearMonth, format)),
+            format::consumeDayAheadTotalLoadForecastRecordsForSpecificMonth
         );
     }
 

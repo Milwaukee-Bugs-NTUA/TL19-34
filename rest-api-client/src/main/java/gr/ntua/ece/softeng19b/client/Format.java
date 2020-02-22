@@ -3,6 +3,7 @@ package gr.ntua.ece.softeng19b.client;
 import com.google.gson.stream.JsonReader;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -31,6 +32,17 @@ public enum Format implements ResponseBodyProcessor {
                 throw new RuntimeException(e.getMessage(), e);
             }
 
+        }
+        
+        @Override
+        public List<DATLFRecordForSpecificMonth> consumeDayAheadTotalLoadForecastRecordsForSpecificMonth(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readDayAheadTotalLoadForecastRecordsForSpecificMonth(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
         }  
     },
     CSV {
@@ -41,6 +53,11 @@ public enum Format implements ResponseBodyProcessor {
         
         @Override
         public List<DATLFRecordForSpecificDay> consumeDayAheadTotalLoadForecastRecordsForSpecificDay(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        @Override
+        public List<DATLFRecordForSpecificMonth> consumeDayAheadTotalLoadForecastRecordsForSpecificMonth(Reader reader) {
             throw new UnsupportedOperationException("Implement this");
         }
     };
@@ -147,4 +164,51 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    private static List<DATLFRecordForSpecificMonth> readDayAheadTotalLoadForecastRecordsForSpecificMonth(JsonReader reader)
+            throws IOException {
+        List<DATLFRecordForSpecificMonth> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readDayAheadTotalLoadForecastRecordForSpecificMonth(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static DATLFRecordForSpecificMonth readDayAheadTotalLoadForecastRecordForSpecificMonth(JsonReader reader)
+            throws IOException {
+        DATLFRecordForSpecificDay rec = new DATLFRecordForSpecificDay();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "DayAheadTotalLoadForecastValue":
+                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
 }
