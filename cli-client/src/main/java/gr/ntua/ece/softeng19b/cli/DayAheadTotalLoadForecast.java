@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng19b.cli;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import picocli.CommandLine;
 
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
 
         try {
             if (dateArgs.date != null ) {
-                List<ATLRecordForSpecificDay> records = new RestAPI().
+                List<DATLFRecordForSpecificDay> records = new RestAPI().
                         getDayAheadTotalLoadForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
                 System.out.println("Fetched " + records.size() + " records");

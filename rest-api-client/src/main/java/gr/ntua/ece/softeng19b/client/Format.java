@@ -25,7 +25,7 @@ public enum Format implements ResponseBodyProcessor {
         @Override
         public List<DATLFRecordForSpecificDay> consumeDayAheadTotalLoadForecastRecordsForSpecificDay(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
-                return readActualDataLoadRecordsForSpecificDay(jsonReader);
+                return readDayAheadTotalLoadForecastRecordsForSpecificDay(jsonReader);
             }
             catch(IOException e) {
                 throw new RuntimeException(e.getMessage(), e);

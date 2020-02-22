@@ -234,7 +234,7 @@ public class RestAPI {
                                                             LocalDate date,
                                                             Format format) {
         return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newGetRequest(urlForDayActualDataLoad(areaName, resolutionCode, date, format)),
+            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
             format::consumeActualTotalLoadRecordsForSpecificDay
         );
     }
