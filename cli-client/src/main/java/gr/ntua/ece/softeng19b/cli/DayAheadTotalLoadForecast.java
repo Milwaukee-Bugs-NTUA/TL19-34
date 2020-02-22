@@ -34,6 +34,13 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
+            else if (dateArgs.date != null){
+                List<DATLFRecordForSpecificMonth> records = new RestAPI().
+                        getDayAheadTotalLoadForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
+                // Do something with the records :)
+                System.out.println("Fetched " + records.size() + " records");
+                return 0;
+            }
             else {
                 // Implement the other cases
                 System.err.println("Not implemented yet");
