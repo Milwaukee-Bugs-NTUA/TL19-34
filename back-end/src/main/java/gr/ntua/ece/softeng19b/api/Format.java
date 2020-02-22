@@ -4,6 +4,7 @@ import com.google.gson.stream.JsonWriter;
 import gr.ntua.ece.softeng19b.api.representation.RepresentationGenerator;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
 public enum Format implements RepresentationGenerator {
     JSON {
 
-        public Representation generateRepresentation(List<ATLRecordForSpecificDay> result) {
+        public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
                     w.beginArray(); // [
@@ -44,7 +45,7 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
-        public Representation generateRepresentation1(List<ATLRecordForSpecificMonth> result) {
+        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
                     w.beginArray(); // [
@@ -58,7 +59,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                       // w.name("Day").value(rec.getDay());
+                        w.name("Day").value(rec.getDay());
                         w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadByDayValue());
                         w.endObject(); // }
                         w.flush();
@@ -70,13 +71,43 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
+        //for year
+        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(ATLRecordForSpecificYear rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        //w.name("Day").value(rec.getDay());
+                        w.name("ActualDataLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
     },
     CSV {
-        public Representation generateRepresentation(List<ATLRecordForSpecificDay> result) {
+        public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
             throw new UnsupportedOperationException("Implement this");
         }
 
-        public Representation generateRepresentation1(List<ATLRecordForSpecificMonth> result) {
+        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
     };

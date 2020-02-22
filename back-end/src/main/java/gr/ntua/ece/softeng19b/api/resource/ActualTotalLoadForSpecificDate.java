@@ -47,7 +47,7 @@ public class ActualTotalLoadForSpecificDate extends EnergyResource {
                     resolution,
                     date
             );
-            return format.generateRepresentation(result);
+            return format.generateRepresentationATLFSD(result);
         } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }

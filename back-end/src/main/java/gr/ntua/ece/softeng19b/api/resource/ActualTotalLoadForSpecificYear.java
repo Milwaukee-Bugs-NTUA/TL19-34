@@ -4,6 +4,7 @@ import gr.ntua.ece.softeng19b.api.Format;
 import gr.ntua.ece.softeng19b.conf.Configuration;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.DataAccess;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * The Restlet resource that deals with the /ActualDataLoad/... payloads.
  */
-public class ActualTotalLoadForSpecificMonth extends EnergyResource {
+public class ActualTotalLoadForSpecificYear extends EnergyResource {
 
     private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
 
@@ -30,27 +31,25 @@ public class ActualTotalLoadForSpecificMonth extends EnergyResource {
         String resolution = getMandatoryAttribute("Resolution", "Resolution is missing");
 
         //Read the optional date attribute
-        String monthParam = getAttributeDecoded("month");
-        String values[] = monthParam.split("-");
-        int year = Integer.parseInt(values[0]);
-        int month = Integer.parseInt(values[1]);
+        String yearParam = getAttributeDecoded("year");
+        int year = Integer.parseInt(yearParam);
        
         //Use the EnergyResource.parseXXX methods to parse the dates and implement the required business logic
         //For the sake of this example, we hard-code a date
-        YearMonth yearMonth = YearMonth.of(year, month);
-        System.out.println(year +"-"+ month);
+        Year year1 = Year.of(year);
+        System.out.println(year);
 
         //Read the format query parameter
         Format format = parseFormat(getQueryValue("format"));
 
         try {
 
-            List<ATLRecordForSpecificMonth> result = dataAccess.fetchActualDataLoadForSpecificMonth(
+            List<ATLRecordForSpecificYear> result = dataAccess.fetchActualDataLoadForSpecificYear(
                     areaName,
                     resolution,
-                    yearMonth
+                    year1
             );
-            return format.generateRepresentationATLFSM(result);
+            return format.generateRepresentationATLFSY(result);
         } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }

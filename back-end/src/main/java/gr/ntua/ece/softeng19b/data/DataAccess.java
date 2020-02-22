@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng19b.data;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -9,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.Year;
+
 import java.util.List;
 
 public class DataAccess {
@@ -131,6 +134,48 @@ public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(Strin
                 throw new DataAccessException(e.getMessage(), e);
         }
 
+
+
+    }
+
+public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year)
+        
+        throws DataAccessException {
+    
+    Integer year1 = year.getValue();
+   // Integer month = yearmonth.getMonthValue();
+
+    Object[] sqlParams = new Object[] {
+    areaName,
+    resolution,
+    year1
+   // month
+    };
+
+    String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, sum(atl.TotalLoadValue) "+
+                "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+                "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? "+
+                "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId "+
+                "group by atl.Month, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.Month";
+
+    try {
+        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+        ATLRecordForSpecificYear dataLoad = new ATLRecordForSpecificYear();
+        dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+        dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+        dataLoad.setMapCode(rs.getString(3));
+        dataLoad.setResolutionCode(rs.getString(4));
+        dataLoad.setYear(rs.getInt(5));
+        dataLoad.setMonth(rs.getInt(6));
+        //dataLoad.setDay(rs.getInt(7));
+        dataLoad.setActualDataLoadByMonthValue(rs.getDouble(7));
+        return dataLoad;
+
+    });
+}
+catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+    }
 
 
     }

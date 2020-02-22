@@ -47,16 +47,15 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
-            /*else if (dateArgs.year!=null){
+            else {
                 List<ATLRecordForSpecificYear> records = new RestAPI().
                         getActualTotalLoad(areaName, timeres.name(), Year.parse(dateArgs.year), format);
          
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
 
-            }*/
-            else return 0;
-  
+            }
+            
         } catch (RuntimeException e) {
             cli.getOut().println(e.getMessage());
             e.printStackTrace(cli.getOut());
