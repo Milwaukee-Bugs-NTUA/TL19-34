@@ -50,6 +50,10 @@ public class RestfulApp extends Application {
             "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/month/{month}",
             DayAheadTotalLoadForecastForSpecificMonth.class
         );
+        router.attach(
+            "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/year/{year}",
+            DayAheadTotalLoadForecastForSpecificYear.class
+        );
 
         //Enable CORS for all origins (don't use this in a production service)
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
