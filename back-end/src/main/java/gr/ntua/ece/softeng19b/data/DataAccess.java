@@ -97,6 +97,47 @@ public class DataAccess {
         }
     }
 
+    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName,
+                                                                                        String resolution,
+                                                                                        LocalDate date)
+            throws DataAccessException {
+
+        Integer year = date.getYear();
+        Integer month = date.getMonthValue();
+        Integer day = date.getDayOfMonth();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month,
+                day
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, datlf.day, datlf.TotalLoadValue "+
+                          "from dayaheadtotalloadforecast as datlf, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
+                          "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? " +
+                          "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId";
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDay(rs.getInt(7));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 
     public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName,
                                                                                         String resolution,
