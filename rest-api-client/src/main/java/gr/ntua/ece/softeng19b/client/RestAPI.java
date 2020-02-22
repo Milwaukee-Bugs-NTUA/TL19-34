@@ -4,6 +4,8 @@ import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -61,12 +63,30 @@ public class RestAPI {
         this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
     }
 
+    //for day
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
                 "?format=" + format.name().toLowerCase();
     }
+
+    //for month
+    String urlForActualDataLoad(String areaName, String resolutionCode, YearMonth month, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/month/" + month.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for year
+    String urlForActualDataLoad(String areaName, String resolutionCode, Year year, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/year/" + year.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
 
     String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
@@ -247,6 +267,7 @@ public class RestAPI {
     }
 
 
+    //for date
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
                                                             String resolutionCode,
                                                             LocalDate date,
@@ -264,6 +285,16 @@ public class RestAPI {
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, date, format)),
             format::consumeDayAheadTotalLoadForecastRecordsForSpecificDay
+        );
+    }
+    //for month
+    public List<ATLRecordForSpecificMonth> getActualTotalLoad(String areaName,
+                                                            String resolutionCode,
+                                                            YearMonth yearMonth,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, yearMonth, format)),
+            format::consumeActualTotalLoadRecordsForSpecificMonth
         );
     }
 
@@ -284,6 +315,17 @@ public class RestAPI {
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, year, format)),
             format::consumeDayAheadTotalLoadForecastRecordsForSpecificYear
+        );
+    }
+
+     //for year
+    public List<ATLRecordForSpecificYear> getActualTotalLoad(String areaName,
+                                                            String resolutionCode,
+                                                            Year year,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, year, format)), 
+            format::consumeActualTotalLoadRecordsForSpecificYear
         );
     }
 

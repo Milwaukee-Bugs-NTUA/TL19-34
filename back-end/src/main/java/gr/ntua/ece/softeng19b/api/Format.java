@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 public enum Format implements RepresentationGenerator {
     JSON {
+
         public Representation generateRepresentation(List<ATLRecordForSpecificDay> result) {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
@@ -95,6 +96,58 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
+        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(ATLRecordForSpecificMonth rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadByDayValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
+        //for year
+        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(ATLRecordForSpecificYear rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        //w.name("Day").value(rec.getDay());
+                        w.name("ActualDataLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
         public Representation generateRepresentationDATLFRFSY(List<DATLFRecordForSpecificYear> result) {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
@@ -122,7 +175,15 @@ public enum Format implements RepresentationGenerator {
 
     },
     CSV {
-        public Representation generateRepresentation(List<ATLRecordForSpecificDay> result) {
+        public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
         public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {

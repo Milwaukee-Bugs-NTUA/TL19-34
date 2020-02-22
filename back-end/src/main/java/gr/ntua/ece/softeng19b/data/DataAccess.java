@@ -1,6 +1,8 @@
 package gr.ntua.ece.softeng19b.data;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
@@ -95,43 +97,6 @@ public class DataAccess {
         }
     }
 
-    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName,
-                                                                                        String resolution,
-                                                                                        LocalDate date)
-            throws DataAccessException {
-
-        Integer year = date.getYear();
-        Integer month = date.getMonthValue();
-        Integer day = date.getDayOfMonth();
-
-        Object[] sqlParams = new Object[] {
-                areaName,
-                resolution,
-                year,
-                month,
-                day
-        };
-
-        //TODO: Insert a valid SQL query
-        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, datlf.day, datlf.TotalLoadValue "+
-                          "from dayaheadtotalloadforecast as datlf, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
-                          "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? " +
-                          "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId";
-		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
-						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();
-						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
-						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
-						dataLoad.setMapCode(rs.getString(3));
-						dataLoad.setResolutionCode(rs.getString(4));
-						dataLoad.setYear(rs.getInt(5));
-						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
-						return dataLoad;
-
-					});
-        }
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
@@ -145,8 +110,8 @@ public class DataAccess {
         Integer month = yearMonth.getMonthValue();
 
         Object[] sqlParams = new Object[] {
-                areaName,
                 resolution,
+                areaName,
                 year,
                 month
         };
@@ -158,8 +123,8 @@ public class DataAccess {
                           "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? " +
                           "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId " +
                           "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day asc";
-		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+		try {
 						DATLFRecordForSpecificMonth dataLoad = new DATLFRecordForSpecificMonth();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -170,14 +135,14 @@ public class DataAccess {
 						dataLoad.setDay(rs.getInt(7));
 						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
 						return dataLoad;
-
 					});
+
         }
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
-    }
 
+    }
     public List<DATLFRecordForSpecificYear> fetchDayAheadTotalLoadForecastForSpecificYear(String areaName,
                                                                                         String resolution,
                                                                                         Year year)
@@ -188,8 +153,8 @@ public class DataAccess {
         Object[] sqlParams = new Object[] {
                 areaName,
                 resolution,
-                yearInt
         };
+                yearInt
 
         //TODO: Insert a valid SQL query
         String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, "+
@@ -204,17 +169,101 @@ public class DataAccess {
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
 						dataLoad.setMapCode(rs.getString(3));
-						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(7));
 						return dataLoad;
-
 					});
+
         }
-        catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
+        catch(Exception e) {
         }
     }
 
+public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(String areaName, String resolution, YearMonth yearmonth)
+        
+        throws DataAccessException {
+        
+    Integer year = yearmonth.getYear();
+
+    Integer month = yearmonth.getMonthValue();
+        areaName,
+    Object[] sqlParams = new Object[] {
+        resolution,
+        year,
+        month
+    };
+
+    String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, atl.day, sum(atl.TotalLoadValue) "+
+                    "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+                    "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? and atl.Month=? "+
+                    "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId "+
+                    "group by atl.day, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.day";
+
+    try {
+        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+        ATLRecordForSpecificMonth dataLoad = new ATLRecordForSpecificMonth();
+        dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+        dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+        dataLoad.setMapCode(rs.getString(3));
+        dataLoad.setYear(rs.getInt(5));
+        dataLoad.setResolutionCode(rs.getString(4));
+        dataLoad.setMonth(rs.getInt(6));
+        dataLoad.setDay(rs.getInt(7));
+        dataLoad.setActualTotalLoadByDayValue(rs.getDouble(8));
+    
+        return dataLoad;
+        });
+    }
+    catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+        }
+
+
+
+    }
+
+public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year)
+        
+        throws DataAccessException {
+    Integer year1 = year.getValue();
+    
+   // Integer month = yearmonth.getMonthValue();
+    Object[] sqlParams = new Object[] {
+
+    areaName,
+    resolution,
+    year1
+    };
+   // month
+
+    String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, sum(atl.TotalLoadValue) "+
+                "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+                "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? "+
+                "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId "+
+                "group by atl.Month, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.Month";
+
+    try {
+        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+        ATLRecordForSpecificYear dataLoad = new ATLRecordForSpecificYear();
+        dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+        dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+        dataLoad.setMapCode(rs.getString(3));
+        dataLoad.setResolutionCode(rs.getString(4));
+        dataLoad.setYear(rs.getInt(5));
+        dataLoad.setMonth(rs.getInt(6));
+        //dataLoad.setDay(rs.getInt(7));
+        dataLoad.setActualDataLoadByMonthValue(rs.getDouble(7));
+        return dataLoad;
+
+    });
+}
+catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+    }
+
+
+    }
 }

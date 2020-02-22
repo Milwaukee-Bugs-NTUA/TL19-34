@@ -43,6 +43,10 @@ public class RestfulApp extends Application {
         );
         //Add more datasets
         router.attach(
+            "/ActualTotalLoad/{AreaName}/{Resolution}/month/{month}",
+            ActualTotalLoadForSpecificMonth.class
+        );
+        router.attach(
             "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/date/{date}",
             DayAheadTotalLoadForecastForSpecificDate.class
         );
@@ -53,6 +57,11 @@ public class RestfulApp extends Application {
         router.attach(
             "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/year/{year}",
             DayAheadTotalLoadForecastForSpecificYear.class
+        );
+
+        router.attach(
+            "/ActualTotalLoad/{AreaName}/{Resolution}/year/{year}",
+            ActualTotalLoadForSpecificYear.class
         );
 
         //Enable CORS for all origins (don't use this in a production service)
