@@ -31,7 +31,6 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
         CommandLine cli = spec.commandLine();
 
         if (usageHelpRequested) {
-            CommandLine cli = spec.commandLine();
             cli.usage(cli.getOut());
             return 0;
         }
@@ -68,7 +67,5 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
             e.printStackTrace(cli.getOut());
             return -1;
         }
-      
-        return 0;
     }
 }
