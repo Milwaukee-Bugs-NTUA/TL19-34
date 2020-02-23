@@ -217,28 +217,42 @@ public class DataAccess {
         Integer month = date.getMonthValue();
         Integer day = date.getDayOfMonth();
 
-        Object[] sqlParams = new Object[] {
+        String sqlQuery;
+        Object[] sqlParams;
+        //TODO: Insert a valid SQL query
+        if(!productionType.equals("AllTypes")){
+            
+            sqlParams = new Object[] {
                 areaName,
                 resolution,
                 productionType,
                 year,
                 month,
                 day
-        };
-        String sqlQuery;
-        //TODO: Insert a valid SQL query
-        if(productionType!="AllTypes") 
+            };
+            
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? and agpt.Month=? and agpt.Day=? " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? and agpt.Month=? and agpt.Day=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
-        else
+        }
+        else{
+            
+            sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month,
+                day
+            };
+            
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? and agpt.Month=? and agpt.Day=? " +
-                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid"; 
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? and agpt.Month=? and agpt.Day=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
+        } 
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AGPTRecordForSpecificDay dataLoad = new AGPTRecordForSpecificDay();
@@ -280,14 +294,14 @@ public class DataAccess {
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? and agpt.Month=? " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day";
         else
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? and agpt.Month=? " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day"; 
 					
@@ -330,14 +344,14 @@ public class DataAccess {
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month";
         else
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
-                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month"; 
 
