@@ -175,8 +175,6 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }    
 
-    // for month
-
     private static List<ATLRecordForSpecificMonth> readActualDataLoadRecordsForSpecificMonth(JsonReader reader)
             throws IOException {
         List<ATLRecordForSpecificMonth> result = new ArrayList<>();
@@ -186,6 +184,94 @@ public enum Format implements ResponseBodyProcessor {
         }
         reader.endArray();
         return result;
+    }
+
+    private static ATLRecordForSpecificMonth readActualDataLoadRecordForSpecificMonth(JsonReader reader)
+            throws IOException {
+        ATLRecordForSpecificMonth rec = new ATLRecordForSpecificMonth();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "Day":
+                    rec.setDay(reader.nextInt());
+                    break;
+                case "ActualTotalLoadByDayValue":
+                    rec.setActualTotalLoadByDayValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
+
+    private static List<ATLRecordForSpecificYear> readActualDataLoadRecordsForSpecificYear(JsonReader reader)
+            throws IOException {
+        List<ATLRecordForSpecificYear> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readActualDataLoadRecordForSpecificYear(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static ATLRecordForSpecificYear readActualDataLoadRecordForSpecificYear(JsonReader reader)
+            throws IOException {
+        ATLRecordForSpecificYear rec = new ATLRecordForSpecificYear();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "actualDataLoadByMonthValue":
+                    rec.setActualDataLoadByMonthValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
     }
 
     private static List<DATLFRecordForSpecificDay> readDayAheadTotalLoadForecastRecordsForSpecificDay(JsonReader reader)
@@ -328,94 +414,6 @@ public enum Format implements ResponseBodyProcessor {
                     break;
                 case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
-                    break;
-                default:
-                    reader.skipValue();
-                    break;
-            }
-        }
-        reader.endObject();
-        return rec;
-    }
-
-    private static ATLRecordForSpecificMonth readActualDataLoadRecordForSpecificMonth(JsonReader reader)
-            throws IOException {
-        ATLRecordForSpecificMonth rec = new ATLRecordForSpecificMonth();
-        reader.beginObject();
-        while(reader.hasNext()) {
-            String name = reader.nextName();
-            switch (name) {
-                case "AreaName":
-                    rec.setAreaName(reader.nextString());
-                    break;
-                case "AreaTypeCode":
-                    rec.setAreaTypeCode(reader.nextString());
-                    break;
-                case "MapCode":
-                    rec.setMapCode(reader.nextString());
-                    break;
-                case "ResolutionCode":
-                    rec.setResolutionCode(reader.nextString());
-                    break;
-                case "Year":
-                    rec.setYear(reader.nextInt());
-                    break;
-                case "Month":
-                    rec.setMonth(reader.nextInt());
-                    break;
-                case "Day":
-                    rec.setDay(reader.nextInt());
-                    break;
-                case "ActualTotalLoadByDayValue":
-                    rec.setActualTotalLoadByDayValue(reader.nextDouble());
-                    break;
-                default:
-                    reader.skipValue();
-                    break;
-            }
-        }
-        reader.endObject();
-        return rec;
-    }
-
-     private static List<ATLRecordForSpecificYear> readActualDataLoadRecordsForSpecificYear(JsonReader reader)
-            throws IOException {
-        List<ATLRecordForSpecificYear> result = new ArrayList<>();
-        reader.beginArray();
-        while(reader.hasNext()) {
-            result.add(readActualDataLoadRecordForSpecificYear(reader));
-        }
-        reader.endArray();
-        return result;
-    }
-
-    private static ATLRecordForSpecificYear readActualDataLoadRecordForSpecificYear(JsonReader reader)
-            throws IOException {
-        ATLRecordForSpecificYear rec = new ATLRecordForSpecificYear();
-        reader.beginObject();
-        while(reader.hasNext()) {
-            String name = reader.nextName();
-            switch (name) {
-                case "AreaName":
-                    rec.setAreaName(reader.nextString());
-                    break;
-                case "AreaTypeCode":
-                    rec.setAreaTypeCode(reader.nextString());
-                    break;
-                case "MapCode":
-                    rec.setMapCode(reader.nextString());
-                    break;
-                case "ResolutionCode":
-                    rec.setResolutionCode(reader.nextString());
-                    break;
-                case "Year":
-                    rec.setYear(reader.nextInt());
-                    break;
-                case "Month":
-                    rec.setMonth(reader.nextInt());
-                    break;
-                case "actualDataLoadByMonthValue":
-                    rec.setActualDataLoadByMonthValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();

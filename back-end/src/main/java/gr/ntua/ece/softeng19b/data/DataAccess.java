@@ -55,10 +55,7 @@ public class DataAccess {
     }
 
 
-    public List<ATLRecordForSpecificDay> fetchActualDataLoadForSpecificDate(String areaName,
-                                                                                        String resolution,
-                                                                                        LocalDate date)
-            throws DataAccessException {
+    public List<ATLRecordForSpecificDay> fetchActualDataLoadForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
@@ -97,10 +94,7 @@ public class DataAccess {
         }
     }
 
-    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName,
-                                                                                        String resolution,
-                                                                                        LocalDate date)
-            throws DataAccessException {
+    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
@@ -139,17 +133,14 @@ public class DataAccess {
         }
     }
 
-    public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName,
-                                                                                        String resolution,
-                                                                                        YearMonth yearMonth)
-            throws DataAccessException {
+    public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth) throws DataAccessException {
 
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
 
         Object[] sqlParams = new Object[] {
-                resolution,
                 areaName,
+                resolution,
                 year,
                 month
         };
@@ -172,7 +163,8 @@ public class DataAccess {
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+                        dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+                        System.out.println("+1");
 						return dataLoad;
 					});
 
@@ -182,10 +174,7 @@ public class DataAccess {
         }
 
     }
-    public List<DATLFRecordForSpecificYear> fetchDayAheadTotalLoadForecastForSpecificYear(String areaName,
-                                                                                        String resolution,
-                                                                                        Year year)
-            throws DataAccessException {
+    public List<DATLFRecordForSpecificYear> fetchDayAheadTotalLoadForecastForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
 
         Integer yearInt = year.getValue();
 
@@ -221,9 +210,7 @@ public class DataAccess {
         }
     }
 
-    public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(String areaName, String resolution, YearMonth yearmonth)
-            
-            throws DataAccessException {
+    public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(String areaName, String resolution, YearMonth yearmonth) throws DataAccessException {
             
         Integer year = yearmonth.getYear();
 
@@ -258,47 +245,43 @@ public class DataAccess {
         }
         catch(Exception e) {
                     throw new DataAccessException(e.getMessage(), e);
-            }
+        }
     }
 
-public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year)
+    public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
+        Integer year1 = year.getValue();
         
-        throws DataAccessException {
-    Integer year1 = year.getValue();
-    
-   // Integer month = yearmonth.getMonthValue();
-    Object[] sqlParams = new Object[] {
+        Object[] sqlParams = new Object[] {
 
-    areaName,
-    resolution,
-    year1
-    };
-   // month
+        areaName,
+        resolution,
+        year1
+        };
 
-    String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, sum(atl.TotalLoadValue) "+
-                "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
-                "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? "+
-                "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId "+
-                "group by atl.Month, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.Month";
+        String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, sum(atl.TotalLoadValue) "+
+                    "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+                    "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? "+
+                    "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId "+
+                    "group by atl.Month, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.Month";
 
-    try {
-        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
-        ATLRecordForSpecificYear dataLoad = new ATLRecordForSpecificYear();
-        dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
-        dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
-        dataLoad.setMapCode(rs.getString(3));
-        dataLoad.setResolutionCode(rs.getString(4));
-        dataLoad.setYear(rs.getInt(5));
-        dataLoad.setMonth(rs.getInt(6));
-        //dataLoad.setDay(rs.getInt(7));
-        dataLoad.setActualDataLoadByMonthValue(rs.getDouble(7));
-        return dataLoad;
+        try {
+            return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+            ATLRecordForSpecificYear dataLoad = new ATLRecordForSpecificYear();
+            dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+            dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+            dataLoad.setMapCode(rs.getString(3));
+            dataLoad.setResolutionCode(rs.getString(4));
+            dataLoad.setYear(rs.getInt(5));
+            dataLoad.setMonth(rs.getInt(6));
+            //dataLoad.setDay(rs.getInt(7));
+            dataLoad.setActualDataLoadByMonthValue(rs.getDouble(7));
+            return dataLoad;
 
-    });
-}
-catch(Exception e) {
-            throw new DataAccessException(e.getMessage(), e);
-    }
+            });
+        }
+        catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+        }
 
 
     }
