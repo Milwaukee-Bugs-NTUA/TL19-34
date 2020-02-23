@@ -58,6 +58,18 @@ public class RestfulApp extends Application {
             "/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/year/{year}",
             DayAheadTotalLoadForecastForSpecificYear.class
         );
+        router.attach(
+            "/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/date/{date}",
+            AggregatedGenerationPerTypeForSpecificDate.class
+        );
+        router.attach(
+            "/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/month/{month}",
+            AggregatedGenerationPerTypeForSpecificMonth.class
+        );
+        router.attach(
+            "/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/year/{year}",
+            AggregatedGenerationPerTypeForSpecificYear.class
+        );
 
         router.attach(
             "/ActualTotalLoad/{AreaName}/{Resolution}/year/{year}",
