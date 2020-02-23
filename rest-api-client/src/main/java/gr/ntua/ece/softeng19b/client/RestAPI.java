@@ -122,7 +122,7 @@ public class RestAPI {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
-        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/date/" + date.toString() +
+        return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName + "/" + encProdType + "/" + encResCode + "/date/" + date.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -131,7 +131,7 @@ public class RestAPI {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
-        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/month/" + yearMonth.toString() +
+        return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName + "/" + encProdType + "/" + encResCode + "/month/" + yearMonth.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -140,7 +140,7 @@ public class RestAPI {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
-        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/year/" + year.toString() +
+        return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName + "/" + encProdType + "/" + encResCode + "/year/" + year.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
