@@ -2,12 +2,14 @@ package gr.ntua.ece.softeng19b.client;
 
 import com.google.gson.stream.JsonReader;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
-
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,6 +19,8 @@ import java.util.List;
 public enum Format implements ResponseBodyProcessor {
 
     JSON {
+        /* Actual Total Load related consume methods */
+        //for date
         @Override
         public List<ATLRecordForSpecificDay> consumeActualTotalLoadRecordsForSpecificDay(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -27,9 +31,7 @@ public enum Format implements ResponseBodyProcessor {
             }
 
         }
-
         //for month
-
         @Override
         public List<ATLRecordForSpecificMonth> consumeActualTotalLoadRecordsForSpecificMonth(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -40,9 +42,7 @@ public enum Format implements ResponseBodyProcessor {
             }
 
         }
-
         //for year
-        
         @Override
         public List<ATLRecordForSpecificYear> consumeActualTotalLoadRecordsForSpecificYear(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -53,8 +53,8 @@ public enum Format implements ResponseBodyProcessor {
             }
         }
 
-
-
+        /* Day Ahead Total Load Forecast related consume methods */
+        //for date
         @Override
         public List<DATLFRecordForSpecificDay> consumeDayAheadTotalLoadForecastRecordsForSpecificDay(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -65,7 +65,7 @@ public enum Format implements ResponseBodyProcessor {
             }
 
         }
-        
+        //for month
         @Override
         public List<DATLFRecordForSpecificMonth> consumeDayAheadTotalLoadForecastRecordsForSpecificMonth(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -76,7 +76,7 @@ public enum Format implements ResponseBodyProcessor {
             }
 
         }
-
+        //for year
         @Override
         public List<DATLFRecordForSpecificYear> consumeDayAheadTotalLoadForecastRecordsForSpecificYear(Reader reader) {
             try (JsonReader jsonReader = new JsonReader(reader)) {
@@ -86,44 +86,99 @@ public enum Format implements ResponseBodyProcessor {
                 throw new RuntimeException(e.getMessage(), e);
             }
 
-        } 
+        }
+
+        /* Aggregated Generation Per Type related consume methods */
+        //for day
+        @Override
+        public List<AGPTRecordForSpecificDay> consumeAggregatedGenerationPerTypeRecordsForSpecificDay(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readAggregatedGenerationPerTypeRecordsForSpecificDay(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+        }
+        //for month
+        @Override
+        public List<AGPTRecordForSpecificMonth> consumeAggregatedGenerationPerTypeRecordsForSpecificMonth(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readAggregatedGenerationPerTypeRecordsForSpecificMonth(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+        }
+        //for year
+        @Override
+        public List<AGPTRecordForSpecificYear> consumeAggregatedGenerationPerTypeRecordsForSpecificYear(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readAggregatedGenerationPerTypeRecordsForSpecificYear(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+        }
     },
     CSV {
+        /* Actual Total Load related consume methods */
+        //for date
         @Override
         public List<ATLRecordForSpecificDay> consumeActualTotalLoadRecordsForSpecificDay(Reader reader) {
             throw new UnsupportedOperationException("Implement this");
         }
-        
-        @Override
-        public List<DATLFRecordForSpecificDay> consumeDayAheadTotalLoadForecastRecordsForSpecificDay(Reader reader) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-
-        @Override
-        public List<DATLFRecordForSpecificMonth> consumeDayAheadTotalLoadForecastRecordsForSpecificMonth(Reader reader) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-
-        @Override
-        public List<DATLFRecordForSpecificYear> consumeDayAheadTotalLoadForecastRecordsForSpecificYear(Reader reader) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-
         //for month
-
         @Override
         public List<ATLRecordForSpecificMonth> consumeActualTotalLoadRecordsForSpecificMonth(Reader reader) {
             throw new UnsupportedOperationException("Implement this");
         }
-
         //for year
-
         @Override
         public List<ATLRecordForSpecificYear> consumeActualTotalLoadRecordsForSpecificYear(Reader reader) {
             throw new UnsupportedOperationException("Implement this");
         }
+
+        /* Day Ahead Total Load Forecast related consume methods */
+        //for date
+        @Override
+        public List<DATLFRecordForSpecificDay> consumeDayAheadTotalLoadForecastRecordsForSpecificDay(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for month
+        @Override
+        public List<DATLFRecordForSpecificMonth> consumeDayAheadTotalLoadForecastRecordsForSpecificMonth(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for year
+        @Override
+        public List<DATLFRecordForSpecificYear> consumeDayAheadTotalLoadForecastRecordsForSpecificYear(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        
+        /* Aggregated Generation Per Type related consume methods */
+        //for date
+        @Override
+        public List<AGPTRecordForSpecificDay> consumeAggregatedGenerationPerTypeRecordsForSpecificDay(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for month
+        @Override
+        public List<AGPTRecordForSpecificMonth> consumeAggregatedGenerationPerTypeRecordsForSpecificMonth(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for year
+        @Override
+        public List<AGPTRecordForSpecificYear> consumeAggregatedGenerationPerTypeRecordsForSpecificYear(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
     };
 
+    /*****  READ *****/
+    /* Actual Total Load related read methods */
+    //for day
     private static List<ATLRecordForSpecificDay> readActualDataLoadRecordsForSpecificDay(JsonReader reader)
             throws IOException {
         List<ATLRecordForSpecificDay> result = new ArrayList<>();
@@ -175,6 +230,7 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }    
 
+    //for month
     private static List<ATLRecordForSpecificMonth> readActualDataLoadRecordsForSpecificMonth(JsonReader reader)
             throws IOException {
         List<ATLRecordForSpecificMonth> result = new ArrayList<>();
@@ -226,6 +282,7 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    //for year
     private static List<ATLRecordForSpecificYear> readActualDataLoadRecordsForSpecificYear(JsonReader reader)
             throws IOException {
         List<ATLRecordForSpecificYear> result = new ArrayList<>();
@@ -274,6 +331,8 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    /* Day Ahead Total Load Forecast related read methods */
+    //for day
     private static List<DATLFRecordForSpecificDay> readDayAheadTotalLoadForecastRecordsForSpecificDay(JsonReader reader)
             throws IOException {
         List<DATLFRecordForSpecificDay> result = new ArrayList<>();
@@ -325,6 +384,7 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    //for month
     private static List<DATLFRecordForSpecificMonth> readDayAheadTotalLoadForecastRecordsForSpecificMonth(JsonReader reader)
             throws IOException {
         List<DATLFRecordForSpecificMonth> result = new ArrayList<>();
@@ -376,6 +436,7 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    //for year
     private static List<DATLFRecordForSpecificYear> readDayAheadTotalLoadForecastRecordsForSpecificYear(JsonReader reader)
             throws IOException {
         List<DATLFRecordForSpecificYear> result = new ArrayList<>();
@@ -424,4 +485,166 @@ public enum Format implements ResponseBodyProcessor {
         return rec;
     }
 
+    /* Aggregated Generation Per Type related read methods */
+    //for day
+    private static List<AGPTRecordForSpecificDay> readAggregatedGenerationPerTypeRecordsForSpecificDay(JsonReader reader)
+            throws IOException {
+        List<AGPTRecordForSpecificDay> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readAggregatedGenerationPerTypeRecordForSpecificDay(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AGPTRecordForSpecificDay readAggregatedGenerationPerTypeRecordForSpecificDay(JsonReader reader)
+            throws IOException {
+        AGPTRecordForSpecificDay rec = new AGPTRecordForSpecificDay();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "Day":
+                    rec.setDay(reader.nextInt());
+                    break;
+                case "ProductionType":
+                    rec.setProductionType(reader.nextString());
+                    break;
+                case "ActualGenerationOutputValue":
+                    rec.setActualGenerationOutputValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
+
+    //for month
+    private static List<AGPTRecordForSpecificMonth> readAggregatedGenerationPerTypeRecordsForSpecificMonth(JsonReader reader)
+            throws IOException {
+        List<AGPTRecordForSpecificMonth> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readAggregatedGenerationPerTypeRecordForSpecificMonth(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AGPTRecordForSpecificMonth readAggregatedGenerationPerTypeRecordForSpecificMonth(JsonReader reader)
+            throws IOException {
+        AGPTRecordForSpecificMonth rec = new AGPTRecordForSpecificMonth();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "Day":
+                    rec.setDay(reader.nextInt());
+                    break;
+                case "ProductionType":
+                    rec.setProductionType(reader.nextString());
+                    break;
+                case "ActualGenerationOutputValue":
+                    rec.setActualGenerationOutputValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
+
+    //for year
+    private static List<AGPTRecordForSpecificYear> readAggregatedGenerationPerTypeRecordsForSpecificYear(JsonReader reader)
+            throws IOException {
+        List<AGPTRecordForSpecificYear> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readAggregatedGenerationPerTypeRecordForSpecificYear(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AGPTRecordForSpecificYear readAggregatedGenerationPerTypeRecordForSpecificYear(JsonReader reader)
+            throws IOException {
+        AGPTRecordForSpecificYear rec = new AGPTRecordForSpecificYear();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "ProductionType":
+                    rec.setProductionType(reader.nextString());
+                    break;
+                case "ActualGenerationOutputValue":
+                    rec.setActualGenerationOutputValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
 }

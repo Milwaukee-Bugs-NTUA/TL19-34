@@ -1,7 +1,6 @@
 package gr.ntua.ece.softeng19b.cli;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;

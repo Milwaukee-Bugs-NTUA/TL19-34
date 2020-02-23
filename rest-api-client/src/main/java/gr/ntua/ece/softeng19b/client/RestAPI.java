@@ -1,11 +1,14 @@
 package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -63,6 +66,7 @@ public class RestAPI {
         this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
     }
 
+    /* Actual Total Load related url methods */
     //for day
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
@@ -87,7 +91,8 @@ public class RestAPI {
                 "?format=" + format.name().toLowerCase();
     }
 
-
+    /* Day Ahead Total Load Forecast related url methods */
+    //for day
     String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
@@ -95,6 +100,7 @@ public class RestAPI {
                 "?format=" + format.name().toLowerCase();
     }
 
+    //for month
     String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, YearMonth yearMonth, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
@@ -102,10 +108,39 @@ public class RestAPI {
                 "?format=" + format.name().toLowerCase();
     }
 
+    //for year
     String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, Year year, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encResCode + "/year/" + year.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    /* Aggregated Generation Per Type related url methods */
+    //for day
+    String urlForAggregatedGenerationPerType(String areaName, String productionType, String resolutionCode, LocalDate date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/date/" + date.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for month
+    String urlForAggregatedGenerationPerType(String areaName, String productionType, String resolutionCode, YearMonth yearMonth, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/month/" + yearMonth.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for year
+    String urlForAggregatedGenerationPerType(String areaName, String productionType, String resolutionCode, Year year, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encProdType + "/" + encResCode + "/year/" + year.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -267,6 +302,7 @@ public class RestAPI {
     }
 
 
+    /* Actual Total Load related get methods */
     //for date
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
                                                             String resolutionCode,
@@ -278,15 +314,6 @@ public class RestAPI {
         );
     }
 
-    public List<DATLFRecordForSpecificDay> getDayAheadTotalLoadForecast(String areaName,
-                                                            String resolutionCode,
-                                                            LocalDate date,
-                                                            Format format) {
-        return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, date, format)),
-            format::consumeDayAheadTotalLoadForecastRecordsForSpecificDay
-        );
-    }
     //for month
     public List<ATLRecordForSpecificMonth> getActualTotalLoad(String areaName,
                                                             String resolutionCode,
@@ -298,6 +325,30 @@ public class RestAPI {
         );
     }
 
+    //for year
+    public List<ATLRecordForSpecificYear> getActualTotalLoad(String areaName,
+                                                            String resolutionCode,
+                                                            Year year,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, year, format)), 
+            format::consumeActualTotalLoadRecordsForSpecificYear
+        );
+    }
+
+    /* Day Ahead Total Load Forecast related get methods */
+    //for day
+    public List<DATLFRecordForSpecificDay> getDayAheadTotalLoadForecast(String areaName,
+                                                            String resolutionCode,
+                                                            LocalDate date,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, date, format)),
+            format::consumeDayAheadTotalLoadForecastRecordsForSpecificDay
+        );
+    }
+
+    //for month
     public List<DATLFRecordForSpecificMonth> getDayAheadTotalLoadForecast(String areaName,
                                                             String resolutionCode,
                                                             YearMonth yearMonth,
@@ -308,6 +359,7 @@ public class RestAPI {
         );
     }
 
+    //for year
     public List<DATLFRecordForSpecificYear> getDayAheadTotalLoadForecast(String areaName,
                                                             String resolutionCode,
                                                             Year year,
@@ -318,14 +370,40 @@ public class RestAPI {
         );
     }
 
-     //for year
-    public List<ATLRecordForSpecificYear> getActualTotalLoad(String areaName,
+    /* Aggregated Generation Per Type related get methods */
+    //for day
+    public List<AGPTRecordForSpecificDay> getAggregatedGenerationPerType(String areaName,
+                                                            String productionType,
+                                                            String resolutionCode,
+                                                            LocalDate date,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForAggregatedGenerationPerType(areaName, productionType, resolutionCode, date, format)),
+            format::consumeAggregatedGenerationPerTypeRecordsForSpecificDay
+        );
+    }
+
+    //for month
+    public List<AGPTRecordForSpecificMonth> getAggregatedGenerationPerType(String areaName,
+                                                            String productionType,
+                                                            String resolutionCode,
+                                                            YearMonth yearMonth,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForAggregatedGenerationPerType(areaName, productionType, resolutionCode, yearMonth, format)),
+            format::consumeAggregatedGenerationPerTypeRecordsForSpecificMonth
+        );
+    }
+
+    //for year
+    public List<AGPTRecordForSpecificYear> getAggregatedGenerationPerType(String areaName,
+                                                            String productionType,
                                                             String resolutionCode,
                                                             Year year,
                                                             Format format) {
         return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, year, format)), 
-            format::consumeActualTotalLoadRecordsForSpecificYear
+            () -> newGetRequest(urlForAggregatedGenerationPerType(areaName, productionType, resolutionCode, year, format)),
+            format::consumeAggregatedGenerationPerTypeRecordsForSpecificYear
         );
     }
 
