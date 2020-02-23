@@ -6,6 +6,9 @@ import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -164,7 +167,6 @@ public class DataAccess {
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDay(rs.getInt(7));
                         dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
-                        System.out.println("+1");
 						return dataLoad;
 					});
 
@@ -201,6 +203,155 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(7));
+						return dataLoad;
+					});
+
+        }        
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+    public List<AGPTRecordForSpecificDay> fetchAggregatedGenerationPerTypeForSpecificDate(String areaName, String resolution, String productionType, LocalDate date) throws DataAccessException {
+
+        Integer year = date.getYear();
+        Integer month = date.getMonthValue();
+        Integer day = date.getDayOfMonth();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                productionType,
+                year,
+                month,
+                day
+        };
+        String sqlQuery;
+        //TODO: Insert a valid SQL query
+        if(productionType!="AllTypes") 
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? and agpt.Month=? and agpt.Day=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
+        else
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? and agpt.Month=? and agpt.Day=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid"; 
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AGPTRecordForSpecificDay dataLoad = new AGPTRecordForSpecificDay();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+                        dataLoad.setDay(rs.getInt(7));
+                        dataLoad.setProductionType(rs.getString(8));
+						dataLoad.setActualGenerationOutputValue(rs.getDouble(9));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    public List<AGPTRecordForSpecificMonth> fetchAggregatedGenerationPerTypeForSpecificMonth(String areaName, String resolution, String productionType, YearMonth yearMonth) throws DataAccessException {
+
+        Integer year = yearMonth.getYear();
+        Integer month = yearMonth.getMonthValue();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                productionType,
+                year,
+                month
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(productionType!="AllTypes") 
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? and agpt.Month=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
+                       "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day";
+        else
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? and agpt.Month=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
+                       "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day"; 
+					
+		try {
+                        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AGPTRecordForSpecificMonth dataLoad = new AGPTRecordForSpecificMonth();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDay(rs.getInt(7));
+                        dataLoad.setProductionType(rs.getString(8));
+                        dataLoad.setActualGenerationOutputValue(rs.getDouble(9));
+                        return dataLoad;
+					});
+
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+    }
+    public List<AGPTRecordForSpecificYear> fetchAggregatedGenerationPerTypeForSpecificYear(String areaName, String resolution, String productionType, Year year) throws DataAccessException {
+
+        Integer yearInt = year.getValue();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                productionType,
+                yearInt
+            };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(productionType!="AllTypes") 
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agptf.Year=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
+                       "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month";
+        else
+            sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
+                       "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
+                       "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
+                       "where agpt.areaname=? and rc.resolutioncodetext=? and agptf.Year=? " +
+                       "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
+                       "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month"; 
+
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AGPTRecordForSpecificYear dataLoad = new AGPTRecordForSpecificYear();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setMonth(rs.getInt(6));
+                        dataLoad.setProductionType(rs.getString(7));
+                        dataLoad.setActualGenerationOutputValue(rs.getDouble(8));
 						return dataLoad;
 					});
 
