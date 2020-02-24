@@ -9,6 +9,9 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -141,6 +144,31 @@ public class RestAPI {
         String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName + "/" + encProdType + "/" + encResCode + "/year/" + year.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    /* Actual Total Load VS Day Ahead Forecast related url methods */
+    //for day
+    String urlForActualvsForecast(String areaName, String resolutionCode, LocalDate date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualvsForecast/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for month
+    String urlForActualvsForecast(String areaName, String resolutionCode, YearMonth month, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualvsForecast/" + encAreaName + "/" + encResCode + "/month/" + month.toString() +
+                "?format=" + format.name().toLowerCase();
+    }
+
+    //for year
+    String urlForActualvsForecast(String areaName, String resolutionCode, Year year, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        return urlPrefix + "/ActualvsForecast/" + encAreaName + "/" + encResCode + "/year/" + year.toString() +
                 "?format=" + format.name().toLowerCase();
     }
 
@@ -404,6 +432,40 @@ public class RestAPI {
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForAggregatedGenerationPerType(areaName, productionType, resolutionCode, year, format)),
             format::consumeAggregatedGenerationPerTypeRecordsForSpecificYear
+        );
+    }
+
+    /* Actual Total Load VS Day Ahead Forecast related get methods */
+    //for date
+    public List<AVFRecordForSpecificDay> getActualvsForecast(String areaName,
+                                                            String resolutionCode,
+                                                            LocalDate date,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualvsForecast(areaName, resolutionCode, date, format)),
+            format::consumeActualvsForecastRecordsForSpecificDay
+        );
+    }
+
+    //for month
+    public List<AVFRecordForSpecificMonth> getActualvsForecast(String areaName,
+                                                            String resolutionCode,
+                                                            YearMonth yearMonth,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualvsForecast(areaName, resolutionCode, yearMonth, format)),
+            format::consumeActualvsForecastRecordsForSpecificMonth
+        );
+    }
+
+    //for year
+    public List<AVFRecordForSpecificYear> getActualvsForecast(String areaName,
+                                                            String resolutionCode,
+                                                            Year year,
+                                                            Format format) {
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newGetRequest(urlForActualvsForecast(areaName, resolutionCode, year, format)), 
+            format::consumeActualvsForecastRecordsForSpecificYear
         );
     }
 
