@@ -374,7 +374,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "actualDataLoadByMonthValue":
+                case "ActualTotalLoadByMonthValue":
                     rec.setActualDataLoadByMonthValue(reader.nextDouble());
                     break;
                 default:
@@ -479,7 +479,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByDayValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 default:
@@ -528,7 +528,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByMonthValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 default:
@@ -639,7 +639,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "ProductionType":
                     rec.setProductionType(reader.nextString());
                     break;
-                case "ActualGenerationOutputValue":
+                case "ActualGenerationOutputByDayValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
                     break;
                 default:
@@ -691,7 +691,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "ProductionType":
                     rec.setProductionType(reader.nextString());
                     break;
-                case "ActualGenerationOutputValue":
+                case "ActualGenerationOutputByMonthValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
                     break;
                 default:
@@ -799,10 +799,10 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByDayValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
-                case "ActualTotalLoadValue":
+                case "ActualTotalLoadByDayValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 default:
@@ -851,10 +851,10 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByMonthValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
-                case "ActualTotalLoadValue":
+                case "ActualTotalLoadByMonthValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 default:

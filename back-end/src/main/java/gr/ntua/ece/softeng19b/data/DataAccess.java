@@ -282,31 +282,44 @@ public class DataAccess {
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
 
-        Object[] sqlParams = new Object[] {
+        Object[] sqlParams;
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(!productionType.equals("AllTypes")){
+            
+            sqlParams = new Object[] {
                 areaName,
                 resolution,
                 productionType,
                 year,
                 month
-        };
+            };
 
-        //TODO: Insert a valid SQL query
-        String sqlQuery;
-
-        if(productionType!="AllTypes") 
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day";
-        else
+        }
+        else{
+        
+            sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month
+            };
+        
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day"; 
+        }
 					
 		try {
                         return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
@@ -333,30 +346,43 @@ public class DataAccess {
 
         Integer yearInt = year.getValue();
 
-        Object[] sqlParams = new Object[] {
+        Object[] sqlParams;
+        
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(!productionType.equals("AllTypes")){
+
+            sqlParams = new Object[] {
                 areaName,
                 resolution,
                 productionType,
                 yearInt
             };
 
-        //TODO: Insert a valid SQL query
-        String sqlQuery;
-
-        if(productionType!="AllTypes") 
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month";
-        else
+        }
+        else{
+
+            sqlParams = new Object[] {
+                areaName,
+                resolution,
+                yearInt
+            };
+
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month"; 
+        }
 
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
