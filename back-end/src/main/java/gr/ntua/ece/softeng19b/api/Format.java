@@ -53,32 +53,6 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
-        public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
-            return new CustomJsonRepresentation( (JsonWriter w) -> {
-                try {
-                    w.beginArray(); // [
-                    for(DATLFRecordForSpecificDay rec: result) {
-                        w.beginObject(); // {
-                        w.name("Source").value(rec.getSource());
-                        w.name("DataSet").value(rec.getDataSet());
-                        w.name("AreaName").value(rec.getAreaName());
-                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
-                        w.name("MapCode").value(rec.getMapCode());
-                        w.name("ResolutionCode").value(rec.getResolutionCode());
-                        w.name("Year").value(rec.getYear());
-                        w.name("Month").value(rec.getMonth());
-                        w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.endObject(); // }
-                        w.flush();
-                    }
-                    w.endArray(); // ]
-                } catch (IOException e) {
-                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
-                }
-            });
-        }
-
         public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
             return new CustomJsonRepresentation( (JsonWriter w) -> {
                 try {
@@ -119,7 +93,33 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("ActualDataLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
+        public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(DATLFRecordForSpecificDay rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -145,7 +145,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -170,7 +170,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -223,7 +223,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -248,7 +248,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -301,8 +301,8 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -327,8 +327,8 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadValue());
                         w.endObject(); // }
                         w.flush();
                     }
