@@ -9,6 +9,11 @@ export class Login extends Component {
     this.username = React.createRef();
     this.password = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      style: {
+        backgroundColor: "yellow"
+      }
+    };
   }
 
   handleSubmit(event) {
@@ -53,17 +58,24 @@ export class Login extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input id="username" type="text" ref={this.username} />
-
-        <label htmlFor="password">Password</label>
-        <input id="password" type="password" ref={this.password} />
-
-        <button className="btn btn-danger" type="submit">
-          Login
-        </button>
-      </form>
+      <div className="row">
+        <div className="col">25%</div>
+        <form onSubmit={this.handleSubmit}>
+          <div class="form-group">
+            <label htmlFor="username">Username</label>
+            <input id="username" type="text" ref={this.username} />
+          </div>
+          <div class="form-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" type="password" ref={this.password} />
+          </div>
+          <button className="btn btn-dark">Login</button>
+        </form>
+        <div className="col">25%</div>
+        <div className="col">25%</div>
+        <div className="col">25%</div>
+        <div className="col">25%</div>
+      </div>
     );
   }
 }

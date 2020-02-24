@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import UserConfirmationModal from "./UserConfirmationModal";
+import HelpModal from "./HelpModal";
 
 class Footer extends Component {
   constructor(props) {
@@ -28,11 +29,11 @@ class Footer extends Component {
       <div className="row">
         <div className="col-lg-3">
           <button className="btn btn-info" onClick={this.showModal}>
-            Confirm
+            Need Help?
           </button>
-          <UserConfirmationModal
-            title="Confirm something"
-            message="Are you sure?"
+          <HelpModal
+            title="This is the most useless help ever"
+            message="I simply cannot help"
             visible={this.state.modalVisible}
             onHide={this.hideModal}
           />
