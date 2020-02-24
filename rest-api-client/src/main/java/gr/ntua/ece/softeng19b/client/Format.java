@@ -851,10 +851,10 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "dayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
-                case "actualDataLoadByMonthValue":
+                case "ActualTotalLoadValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 default:
