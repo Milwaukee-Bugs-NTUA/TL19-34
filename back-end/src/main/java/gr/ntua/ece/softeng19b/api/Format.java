@@ -11,6 +11,9 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -256,6 +259,86 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
+        public Representation generateRepresentationAVFFSD(List<AVFRecordForSpecificDay> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AVFRecordForSpecificDay rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
+        public Representation generateRepresentationAVFFSM(List<AVFRecordForSpecificMonth> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AVFRecordForSpecificMonth rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
+        public Representation generateRepresentationAVFFSY(List<AVFRecordForSpecificYear> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AVFRecordForSpecificYear rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
     },
     CSV {
         public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
@@ -287,6 +370,17 @@ public enum Format implements RepresentationGenerator {
         }
 
         public Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        public Representation generateRepresentationAVFFSD(List<AVFRecordForSpecificDay> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationAVFFSM(List<AVFRecordForSpecificMonth> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationAVFFSY(List<AVFRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
     };

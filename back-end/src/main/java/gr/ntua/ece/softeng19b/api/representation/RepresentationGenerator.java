@@ -9,6 +9,9 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 import org.restlet.representation.Representation;
 
 import java.util.List;
@@ -24,4 +27,7 @@ public interface RepresentationGenerator {
     Representation generateRepresentationAGPTFSD(List<AGPTRecordForSpecificDay> result);
     Representation generateRepresentationAGPTFSM(List<AGPTRecordForSpecificMonth> result);
     Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result);
+    Representation generateRepresentationAVFFSD(List<AVFRecordForSpecificDay> result);
+    Representation generateRepresentationAVFFSM(List<AVFRecordForSpecificMonth> result);
+    Representation generateRepresentationAVFFSY(List<AVFRecordForSpecificYear> result);
 }

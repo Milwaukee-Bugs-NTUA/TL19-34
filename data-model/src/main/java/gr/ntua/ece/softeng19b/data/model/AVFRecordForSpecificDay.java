@@ -1,12 +1,12 @@
 package gr.ntua.ece.softeng19b.data.model;
 
-public class AVFFRecordForSpecificDay extends AbstractEntsoeRecord {
+public class AVFRecordForSpecificDay extends AbstractEntsoeRecord {
 
     private int day;
     private double dayAheadTotalLoadForecastValue;
     private double actualTotalLoadValue;
 
-    public AVFFRecordForSpecificDay() {
+    public AVFRecordForSpecificDay() {
         super(DataSet.ActualVSForecastedTotalLoad);
     }
 
