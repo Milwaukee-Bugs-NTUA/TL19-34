@@ -472,9 +472,9 @@ public class DataAccess {
         String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, "+
         "datlf.day, datlf.TotalLoadValue, atl.TotalLoadValue, atl.DateTime "+
         "from dayaheadtotalloadforecast as datlf, actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
-        "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=?and datlf.Month=? and datlf.Day=? "+
+        "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? "+
         "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId and "+
-        "atl.areaname=datlf.areaname and atl.Year=datlf.Year and atl.Month=datlf.Month and atl.Day=datlf.Month "+
+        "atl.areaname=datlf.areaname and atl.Year=datlf.Year and atl.Month=datlf.Month and atl.Day=datlf.Day "+
         "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
         "order by datlf.DateTime";
 		try {
