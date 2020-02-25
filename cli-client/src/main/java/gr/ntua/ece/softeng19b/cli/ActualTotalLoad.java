@@ -1,5 +1,8 @@
 package gr.ntua.ece.softeng19b.cli;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
@@ -31,12 +34,17 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
             return 0;
         }
 
-
         try {
             if (dateArgs.date != null ) {
                 List<ATLRecordForSpecificDay> records = new RestAPI().
                         getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
+                Gson gson = new GsonBuilder().setPrettyPrinting().create(); //Pretty Builder for gson
+                for(ATLRecordForSpecificDay rec: records){
+                        String jsonString = gson.toJson(rec);
+                        System.out.println(jsonString);
+                } //Doesn't work. Can't import packages import com.google.gson.Gson, import com.google.gson.GsonBuilder */ 
+                
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }

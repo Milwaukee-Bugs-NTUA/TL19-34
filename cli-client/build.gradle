@@ -14,6 +14,7 @@ dependencies {
     implementation project(':data-model'),
                    project(':rest-api-client'),
                    'info.picocli:picocli:4.1.4'
+   compile "com.google.code.gson:gson:2.8.2"                  //json library
 }
 
 application {
