@@ -26,17 +26,23 @@ class Footer extends Component {
 
   render() {
     return (
-      <div className="row">
-        <div className="col-lg-3">
-          <button className="btn btn-info" onClick={this.showModal}>
-            Need Help?
-          </button>
-          <HelpModal
-            title="This is the most useless help ever"
-            message="I simply cannot help"
-            visible={this.state.modalVisible}
-            onHide={this.hideModal}
-          />
+      <div>
+        <div className="row justify-content-center" style={{ marginTop: 10 }}>
+          <div className="col-lg-3 ">
+            <button
+              className="btn btn-primary"
+              onClick={this.showModal}
+              style={{ marginLeft: 57 }}
+            >
+              Need Help?
+            </button>
+            <HelpModal
+              title="This is the most useless help ever"
+              message="I simply cannot help"
+              visible={this.state.modalVisible}
+              onHide={this.hideModal}
+            />
+          </div>
         </div>
       </div>
     );
