@@ -39,12 +39,16 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 List<ATLRecordForSpecificDay> records = new RestAPI().
                         getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
-                Gson gson = new GsonBuilder().setPrettyPrinting().create(); //Pretty Builder for gson
-                for(ATLRecordForSpecificDay rec: records){
-                        String jsonString = gson.toJson(rec);
-                        System.out.println(jsonString);
-                } //Doesn't work. Can't import packages import com.google.gson.Gson, import com.google.gson.GsonBuilder */ 
-                
+                System.out.print("[");
+                for(ATLRecordForSpecificDay rec : records){
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create(); //Pretty Builder for gson
+                    String jsonString = gson.toJson(rec);
+                    System.out.print(jsonString);
+                    if (records.indexOf(rec) != (records.size() - 1)) {
+                        System.out.println(",");
+                    }
+                }
+                System.out.println("]");
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
