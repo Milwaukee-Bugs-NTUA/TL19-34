@@ -1,6 +1,7 @@
 package gr.ntua.ece.softeng19b.cli;
 
-import org.json.simple.JSONObject;
+//import org.json.simple.JSONObject;
+import com.google.gson.stream.JsonWriter;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
@@ -16,6 +17,7 @@ import java.time.Year;
 import java.time.Month;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.io.OutputStreamWriter;
 
 import static picocli.CommandLine.Command;
 
@@ -38,9 +40,11 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 List<ATLRecordForSpecificDay> records = new RestAPI().
                         getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
-                System.out.print("[");
+                JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
+                w.beginArray();
+                //System.out.print("[");
                 for(ATLRecordForSpecificDay rec : records){
-                    JSONObject jsonObj  = new JSONObject();
+                    /*JSONObject jsonObj  = new JSONObject();
                     jsonObj.put("Source",rec.getSource());
                     jsonObj.put("Dataset",rec.getDataSet());
                     jsonObj.put("AreaName",rec.getAreaName());
@@ -51,12 +55,26 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                     jsonObj.put("Month",String.valueOf(rec.getMonth()));
                     jsonObj.put("Day",String.valueOf(rec.getDay()));
                     jsonObj.put("ActualTotalLoadValue",String.valueOf(rec.getActualTotalLoadValue()));
-                    System.out.print(jsonObj.toJSONString());
-                    if (records.indexOf(rec) != (records.size() - 1)) {
-                        System.out.println(",");
-                    }
+                    System.out.print(jsonObj.toJSONString());*/
+                    w.beginObject(); // {
+                    w.name("Source").value(rec.getSource());
+                    w.name("DataSet").value(rec.getDataSet());
+                    w.name("AreaName").value(rec.getAreaName());
+                    w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                    w.name("MapCode").value(rec.getMapCode());
+                    w.name("ResolutionCode").value(rec.getResolutionCode());
+                    w.name("Year").value(rec.getYear());
+                    w.name("Month").value(rec.getMonth());
+                    w.name("Day").value(rec.getDay());
+                    w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                    w.endObject(); // }
+                    w.flush();
+                    //if (records.indexOf(rec) != (records.size() - 1)) {
+                    //    System.out.println(",");
+                    //}
                 }
-                System.out.println("]");
+                w.endArray();
+                //System.out.println("]");
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
