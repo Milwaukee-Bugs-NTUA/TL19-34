@@ -41,6 +41,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                         getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
                 JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
+                w.setIndent("  ");
                 w.beginArray();
                 //System.out.print("[");
                 for(ATLRecordForSpecificDay rec : records){
@@ -74,6 +75,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                     //}
                 }
                 w.endArray();
+                w.flush();
                 //System.out.println("]");
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
