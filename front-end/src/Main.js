@@ -1,135 +1,123 @@
 import React, { Component } from "react";
+import $ from "jquery";
+import "./Main.css";
+import ATLParams from "./ATLParams";
+import DATLParams from "./DATLParams";
+
+$(document).ready(function() {
+  $(".first-button").on("click", function() {
+    $(".animated-icon1").toggleClass("open");
+  });
+  $(".second-button").on("click", function() {
+    $().toggleClass("open");
+  });
+});
 
 class Main extends Component {
   render() {
     return (
-      <div className="container">
-        <nav class="navbar navbar-light amber lighten-4 mb-4">
-          <a class="navbar-brand" href="#">
-            Navbar
-          </a>
-
-          <button
-            class="navbar-toggler first-button"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent20"
-            aria-controls="navbarSupportedContent20"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+      <div>
+        <row class="row">
+          <nav
+            class="navbar"
+            style={{ marginTop: 15, backgroundColor: "#007bff", width: "25%" }}
           >
-            <div class="animated-icon1">
-              <span></span>
-              <span></span>
-              <span></span>
+            <a
+              class="navbar-brand"
+              class="navbar-toggler first-button"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent20"
+              aria-controls="navbarSupportedContent20"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              style={{ color: "white" }}
+            >
+              Available Datasets
+            </a>
+
+            <button
+              class="navbar-toggler first-button"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent20"
+              aria-controls="navbarSupportedContent20"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <div class="animated-icon1">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent20">
+              <ul class="navbar-nav mr-auto" style={{ marginTop: 10 }}>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    class="navbar-toggler second-button"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent23"
+                    aria-controls="navbarSupportedContent23"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style={{ color: "white" }}
+                  >
+                    Actual Total Load
+                  </a>
+                  <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent23"
+                  >
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <ATLParams />
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item" style={{ marginTop: 10 }}>
+                  <a
+                    class="nav-link"
+                    class="navbar-toggler second-button"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent26"
+                    aria-controls="navbarSupportedContent26"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style={{ color: "white" }}
+                  >
+                    Day Ahead Total Load
+                  </a>
+                  <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent26"
+                  >
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <DATLParams />
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#/main" style={{ color: "white" }}>
+                    Actual vs Forecast
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#/main" style={{ color: "white" }}>
+                    Agreggated
+                  </a>
+                </li>
+              </ul>
             </div>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent20">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">
-                  Home <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Features
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Pricing
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-
-        <nav class="navbar navbar-dark red lighten-1 mb-4">
-          <a class="navbar-brand" href="#">
-            Navbar
-          </a>
-
-          <button
-            class="navbar-toggler second-button"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent23"
-            aria-controls="navbarSupportedContent23"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <div class="animated-icon2">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent23">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">
-                  Home <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Features
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Pricing
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-
-        <nav class="navbar navbar-dark  indigo darken-2">
-          <a class="navbar-brand" href="#">
-            Navbar
-          </a>
-
-          <button
-            class="navbar-toggler third-button"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent22"
-            aria-controls="navbarSupportedContent22"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <div class="animated-icon3">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent22">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">
-                  Home <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Features
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Pricing
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
+          </nav>
+        </row>
       </div>
     );
   }

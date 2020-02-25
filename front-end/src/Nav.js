@@ -110,7 +110,6 @@ class Nav extends Component {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-
           <UserConsumer>
             {context => (
               <React.Fragment>
@@ -119,6 +118,9 @@ class Nav extends Component {
               </React.Fragment>
             )}
           </UserConsumer>
+          <text class="justify content-end" style={{ color: "white" }}>
+            Milwaukee Bugs
+          </text>
         </nav>
       </div>
     );

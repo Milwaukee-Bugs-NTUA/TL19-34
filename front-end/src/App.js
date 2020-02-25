@@ -6,6 +6,7 @@ import Main from "./Main";
 import Footer from "./Footer";
 import { Login, Logout } from "./Auth";
 import { UserProvider } from "./UserContext";
+import ATLParams from "./ATLParams";
 
 class App extends Component {
   constructor(props) {
