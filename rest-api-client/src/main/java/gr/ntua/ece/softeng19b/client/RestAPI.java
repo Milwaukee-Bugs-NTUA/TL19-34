@@ -201,7 +201,6 @@ public class RestAPI {
     }
 
     private HttpRequest newPostRequest(String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
-        System.out.println(bodyPublisher.toString());
         return newRequest("POST", url, contentType, bodyPublisher);
     }
 
@@ -308,7 +307,7 @@ public class RestAPI {
         formData.put("email", updatedUser.getEmail());
         formData.put("requestsPerDayQuota", String.valueOf(updatedUser.getRequestsPerDayQuota()));
         return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newPutRequest(urlForUpdateUser(updatedUser.getUsername()), URL_ENCODED, ofUrlEncodedFormData(formData)),
+            () -> newPutRequest(urlForUpdateUser(updatedUser.getUserName()), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonUser
         );
     }
