@@ -10,11 +10,7 @@ import gr.ntua.ece.softeng19b.conf.Configuration;
 import java.util.List;
 import org.restlet.data.Status;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import io.jsonwebtoken.*;
-import java.util.Date; 
+import io.jsonwebtoken.Jwts;
 
 import java.util.Map;
 
