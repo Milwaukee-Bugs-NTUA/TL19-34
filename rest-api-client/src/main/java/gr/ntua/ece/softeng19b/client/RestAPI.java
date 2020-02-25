@@ -201,6 +201,7 @@ public class RestAPI {
     }
 
     private HttpRequest newPostRequest(String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
+        System.out.println(bodyPublisher.toString());
         return newRequest("POST", url, contentType, bodyPublisher);
     }
 
@@ -278,6 +279,7 @@ public class RestAPI {
             () -> newPostRequest(urlForLogin(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonToken
         );
+        System.out.println(token);
     }
 
     public void logout() {
@@ -336,6 +338,7 @@ public class RestAPI {
                                                             String resolutionCode,
                                                             LocalDate date,
                                                             Format format) {
+        System.out.println(token);                                                                
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
             format::consumeActualTotalLoadRecordsForSpecificDay
