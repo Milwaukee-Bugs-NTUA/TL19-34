@@ -1,7 +1,6 @@
 package gr.ntua.ece.softeng19b.cli;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.json.simple.JSONObject;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
@@ -41,9 +40,18 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 // Do something with the records :)
                 System.out.print("[");
                 for(ATLRecordForSpecificDay rec : records){
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create(); //Pretty Builder for gson
-                    String jsonString = gson.toJson(rec);
-                    System.out.print(jsonString);
+                    JSONObject jsonObj  = new JSONObject();
+                    jsonObj.put("Source",rec.getSource());
+                    jsonObj.put("Dataset",rec.getDataSet());
+                    jsonObj.put("AreaName",rec.getAreaName());
+                    jsonObj.put("AreaTypeCode",rec.getAreaTypeCode());
+                    jsonObj.put("MapCode",rec.getMapCode());
+                    jsonObj.put("ResolutionCode",rec.getResolutionCode());
+                    jsonObj.put("Year",String.valueOf(rec.getYear()));
+                    jsonObj.put("Month",String.valueOf(rec.getMonth()));
+                    jsonObj.put("Day",String.valueOf(rec.getDay()));
+                    jsonObj.put("ActualTotalLoadValue",String.valueOf(rec.getActualTotalLoadValue()));
+                    System.out.print(jsonObj.toJSONString());
                     if (records.indexOf(rec) != (records.size() - 1)) {
                         System.out.println(",");
                     }
