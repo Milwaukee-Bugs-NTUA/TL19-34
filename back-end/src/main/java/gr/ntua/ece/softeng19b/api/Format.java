@@ -8,6 +8,9 @@ import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -175,6 +178,84 @@ public enum Format implements RepresentationGenerator {
             });
         }
 
+        public Representation generateRepresentationAGPTFSD(List<AGPTRecordForSpecificDay> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AGPTRecordForSpecificDay rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("ProductionType").value(rec.getProductionType());
+                        w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+        public Representation generateRepresentationAGPTFSM(List<AGPTRecordForSpecificMonth> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AGPTRecordForSpecificMonth rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("Day").value(rec.getDay());
+                        w.name("ProductionType").value(rec.getProductionType());
+                        w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+        public Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result) {
+            return new CustomJsonRepresentation( (JsonWriter w) -> {
+                try {
+                    w.beginArray(); // [
+                    for(AGPTRecordForSpecificYear rec: result) {
+                        w.beginObject(); // {
+                        w.name("Source").value(rec.getSource());
+                        w.name("DataSet").value(rec.getDataSet());
+                        w.name("AreaName").value(rec.getAreaName());
+                        w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                        w.name("MapCode").value(rec.getMapCode());
+                        w.name("ResolutionCode").value(rec.getResolutionCode());
+                        w.name("Year").value(rec.getYear());
+                        w.name("Month").value(rec.getMonth());
+                        w.name("ProductionType").value(rec.getProductionType());
+                        w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.endObject(); // }
+                        w.flush();
+                    }
+                    w.endArray(); // ]
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
     },
     CSV {
         public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
@@ -195,6 +276,17 @@ public enum Format implements RepresentationGenerator {
         }
 
         public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        public Representation generateRepresentationAGPTFSD(List<AGPTRecordForSpecificDay> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationAGPTFSM(List<AGPTRecordForSpecificMonth> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
     };
