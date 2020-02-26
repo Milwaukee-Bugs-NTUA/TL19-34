@@ -10,6 +10,10 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
+
 
 import java.io.IOException;
 import java.io.Reader;
@@ -122,6 +126,40 @@ public enum Format implements ResponseBodyProcessor {
             }
 
         }
+
+        /* Actual Total Load VS Day Ahead Forecast related consume methods */
+        //for date
+        @Override
+        public List<AVFRecordForSpecificDay> consumeActualvsForecastRecordsForSpecificDay(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readActualvsForecastRecordsForSpecificDay(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+        }
+        //for month
+        @Override
+        public List<AVFRecordForSpecificMonth> consumeActualvsForecastRecordsForSpecificMonth(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readActualvsForecastRecordsForSpecificMonth(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
+        }
+        //for year
+        @Override
+        public List<AVFRecordForSpecificYear> consumeActualvsForecastRecordsForSpecificYear(Reader reader) {
+            try (JsonReader jsonReader = new JsonReader(reader)) {
+                return readActualvsForecastRecordsForSpecificYear(jsonReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
     },
     CSV {
         /* Actual Total Load related consume methods */
@@ -172,6 +210,23 @@ public enum Format implements ResponseBodyProcessor {
         //for year
         @Override
         public List<AGPTRecordForSpecificYear> consumeAggregatedGenerationPerTypeRecordsForSpecificYear(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        /* Actual Total Load VS Day Ahead Forecast related get methods */
+        //for date
+        @Override
+        public List<AVFRecordForSpecificDay> consumeActualvsForecastRecordsForSpecificDay(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for month
+        @Override
+        public List<AVFRecordForSpecificMonth> consumeActualvsForecastRecordsForSpecificMonth(Reader reader) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        //for year
+        @Override
+        public List<AVFRecordForSpecificYear> consumeActualvsForecastRecordsForSpecificYear(Reader reader) {
             throw new UnsupportedOperationException("Implement this");
         }
     };
@@ -319,7 +374,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "actualDataLoadByMonthValue":
+                case "ActualTotalLoadByMonthValue":
                     rec.setActualDataLoadByMonthValue(reader.nextDouble());
                     break;
                 default:
@@ -424,7 +479,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByDayValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 default:
@@ -473,7 +528,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "Month":
                     rec.setMonth(reader.nextInt());
                     break;
-                case "DayAheadTotalLoadForecastValue":
+                case "DayAheadTotalLoadForecastByMonthValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 default:
@@ -584,7 +639,7 @@ public enum Format implements ResponseBodyProcessor {
                 case "ProductionType":
                     rec.setProductionType(reader.nextString());
                     break;
-                case "ActualGenerationOutputValue":
+                case "ActualGenerationOutputByDayValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
                     break;
                 default:
@@ -636,8 +691,171 @@ public enum Format implements ResponseBodyProcessor {
                 case "ProductionType":
                     rec.setProductionType(reader.nextString());
                     break;
-                case "ActualGenerationOutputValue":
+                case "ActualGenerationOutputByMonthValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
+
+    /* Actual Total Load VS Day Ahead Forecast related read methods */
+    //for day
+    private static List<AVFRecordForSpecificDay> readActualvsForecastRecordsForSpecificDay(JsonReader reader)
+            throws IOException {
+        List<AVFRecordForSpecificDay> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readActualvsForecastRecordForSpecificDay(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AVFRecordForSpecificDay readActualvsForecastRecordForSpecificDay(JsonReader reader)
+            throws IOException {
+        AVFRecordForSpecificDay rec = new AVFRecordForSpecificDay();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "Day":
+                    rec.setDay(reader.nextInt());
+                    break;
+                case "DayAheadTotalLoadForecastValue":
+                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    break;
+                case "ActualTotalLoadValue":
+                    rec.setActualTotalLoadValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }    
+
+    //for month
+    private static List<AVFRecordForSpecificMonth> readActualvsForecastRecordsForSpecificMonth(JsonReader reader)
+            throws IOException {
+        List<AVFRecordForSpecificMonth> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readActualvsForecastRecordForSpecificMonth(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AVFRecordForSpecificMonth readActualvsForecastRecordForSpecificMonth(JsonReader reader)
+            throws IOException {
+        AVFRecordForSpecificMonth rec = new AVFRecordForSpecificMonth();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "Day":
+                    rec.setDay(reader.nextInt());
+                    break;
+                case "DayAheadTotalLoadForecastByDayValue":
+                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    break;
+                case "ActualTotalLoadByDayValue":
+                    rec.setActualTotalLoadValue(reader.nextDouble());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+        return rec;
+    }
+
+    //for year
+    private static List<AVFRecordForSpecificYear> readActualvsForecastRecordsForSpecificYear(JsonReader reader)
+            throws IOException {
+        List<AVFRecordForSpecificYear> result = new ArrayList<>();
+        reader.beginArray();
+        while(reader.hasNext()) {
+            result.add(readActualvsForecastRecordForSpecificYear(reader));
+        }
+        reader.endArray();
+        return result;
+    }
+
+    private static AVFRecordForSpecificYear readActualvsForecastRecordForSpecificYear(JsonReader reader)
+            throws IOException {
+        AVFRecordForSpecificYear rec = new AVFRecordForSpecificYear();
+        reader.beginObject();
+        while(reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "AreaName":
+                    rec.setAreaName(reader.nextString());
+                    break;
+                case "AreaTypeCode":
+                    rec.setAreaTypeCode(reader.nextString());
+                    break;
+                case "MapCode":
+                    rec.setMapCode(reader.nextString());
+                    break;
+                case "ResolutionCode":
+                    rec.setResolutionCode(reader.nextString());
+                    break;
+                case "Year":
+                    rec.setYear(reader.nextInt());
+                    break;
+                case "Month":
+                    rec.setMonth(reader.nextInt());
+                    break;
+                case "DayAheadTotalLoadForecastByMonthValue":
+                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    break;
+                case "ActualTotalLoadByMonthValue":
+                    rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();

@@ -9,7 +9,9 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
-
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 
 import java.io.Reader;
 import java.util.List;
@@ -28,4 +30,8 @@ public interface ResponseBodyProcessor {
     List<AGPTRecordForSpecificDay> consumeAggregatedGenerationPerTypeRecordsForSpecificDay(Reader reader);
     List<AGPTRecordForSpecificMonth> consumeAggregatedGenerationPerTypeRecordsForSpecificMonth(Reader reader);
     List<AGPTRecordForSpecificYear> consumeAggregatedGenerationPerTypeRecordsForSpecificYear(Reader reader);
+    /* Actual Total Load VS Day Ahead Forecast related consume methods */
+    List<AVFRecordForSpecificDay> consumeActualvsForecastRecordsForSpecificDay(Reader reader);
+    List<AVFRecordForSpecificMonth> consumeActualvsForecastRecordsForSpecificMonth(Reader reader);
+    List<AVFRecordForSpecificYear> consumeActualvsForecastRecordsForSpecificYear(Reader reader);
 }

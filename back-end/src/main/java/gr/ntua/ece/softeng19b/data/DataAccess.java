@@ -9,6 +9,9 @@ import gr.ntua.ece.softeng19b.data.model.DATLFRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -279,31 +282,44 @@ public class DataAccess {
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
 
-        Object[] sqlParams = new Object[] {
+        Object[] sqlParams;
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(!productionType.equals("AllTypes")){
+            
+            sqlParams = new Object[] {
                 areaName,
                 resolution,
                 productionType,
                 year,
                 month
-        };
+            };
 
-        //TODO: Insert a valid SQL query
-        String sqlQuery;
-
-        if(productionType!="AllTypes") 
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day";
-        else
+        }
+        else{
+        
+            sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month
+            };
+        
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "agpt.day, pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? and agpt.Month=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.day"; 
+        }
 					
 		try {
                         return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
@@ -330,30 +346,43 @@ public class DataAccess {
 
         Integer yearInt = year.getValue();
 
-        Object[] sqlParams = new Object[] {
+        Object[] sqlParams;
+        
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery;
+
+        if(!productionType.equals("AllTypes")){
+
+            sqlParams = new Object[] {
                 areaName,
                 resolution,
                 productionType,
                 yearInt
             };
 
-        //TODO: Insert a valid SQL query
-        String sqlQuery;
-
-        if(productionType!="AllTypes") 
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month";
-        else
+        }
+        else{
+
+            sqlParams = new Object[] {
+                areaName,
+                resolution,
+                yearInt
+            };
+
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
                        "pt.productiontypetext, sum(agpt.actualgenerationoutput) "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid "+
                        "group by agpt.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, pt.productiontypetext order by agpt.month"; 
+        }
 
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
@@ -450,4 +479,131 @@ public class DataAccess {
 
 
     }
+
+    public List<AVFRecordForSpecificDay> fetchActualvsForecastForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
+
+        Integer year = date.getYear();
+        Integer month = date.getMonthValue();
+        Integer day = date.getDayOfMonth();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month,
+                day
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, "+
+        "datlf.day, datlf.TotalLoadValue, atl.TotalLoadValue, atl.DateTime "+
+        "from dayaheadtotalloadforecast as datlf, actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+        "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? "+
+        "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId and "+
+        "atl.areaname=datlf.areaname and atl.Year=datlf.Year and atl.Month=datlf.Month and atl.Day=datlf.Day "+
+        "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
+        "order by datlf.DateTime";
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AVFRecordForSpecificDay dataLoad = new AVFRecordForSpecificDay();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDay(rs.getInt(7));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+						dataLoad.setActualTotalLoadValue(rs.getDouble(9));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    public List<AVFRecordForSpecificMonth> fetchActualvsForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth) throws DataAccessException {
+
+        Integer year = yearMonth.getYear();
+        Integer month = yearMonth.getMonthValue();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                year,
+                month,
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, "+
+        "datlf.day, sum(datlf.TotalLoadValue), sum(atl.TotalLoadValue) "+
+        "from dayaheadtotalloadforecast as datlf, actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+        "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? "+
+        "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId and "+
+        "atl.areaname=datlf.areaname and atl.Year=datlf.Year and atl.Month=datlf.Month "+
+        "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
+        "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day";
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AVFRecordForSpecificMonth dataLoad = new AVFRecordForSpecificMonth();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDay(rs.getInt(7));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+						dataLoad.setActualTotalLoadValue(rs.getDouble(9));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    public List<AVFRecordForSpecificYear> fetchActualvsForecastForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
+
+        Integer yearParam = year.getValue();
+
+        Object[] sqlParams = new Object[] {
+                areaName,
+                resolution,
+                yearParam,
+
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, "+
+        "sum(datlf.TotalLoadValue), sum(atl.TotalLoadValue) "+
+        "from dayaheadtotalloadforecast as datlf, actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
+        "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? "+
+        "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId and "+
+        "atl.areaname=datlf.areaname and atl.Year=datlf.Year "+
+        "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
+        "group by datlf.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.month";
+		try {
+					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+						AVFRecordForSpecificYear dataLoad = new AVFRecordForSpecificYear();
+						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
+						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
+						dataLoad.setMapCode(rs.getString(3));
+						dataLoad.setResolutionCode(rs.getString(4));
+						dataLoad.setYear(rs.getInt(5));
+						dataLoad.setMonth(rs.getInt(6));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(7));
+						dataLoad.setActualTotalLoadValue(rs.getDouble(8));
+						return dataLoad;
+
+					});
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
 }

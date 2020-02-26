@@ -3,31 +3,25 @@ package gr.ntua.ece.softeng19b.cli;
 import com.google.gson.stream.JsonWriter;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
-import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificDay;
-import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificMonth;
-import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 import picocli.CommandLine;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
+import java.time.Month;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
 
-import static picocli.CommandLine.*;
+import static picocli.CommandLine.Command;
 
 @Command(
-    name="AggregatedGenerationPerType"
+    name="ActualvsForecast"
 )
-public class AggregatedGenerationPerType extends EnergyCliArgs implements Callable<Integer> {
-
-    @Option(
-        names = "--prodtype",
-        required = true,
-        description = "the production type."
-    )
-    protected String productionType;
+public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
@@ -40,8 +34,8 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
 
         try {
             if (dateArgs.date != null ) {
-                List<AGPTRecordForSpecificDay> records = new RestAPI().
-                        getAggregatedGenerationPerType(areaName, productionType, timeres.name(), LocalDate.parse(dateArgs.date), format);
+                List<AVFRecordForSpecificDay> records = new RestAPI().
+                        getActualvsForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                 // Do something with the records :)
                 if (records.isEmpty() == true) {
                     System.out.println("Fetched 0 records");
@@ -50,7 +44,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
                 w.setIndent("  ");
                 w.beginArray();
-                for(AGPTRecordForSpecificDay rec : records){
+                for(AVFRecordForSpecificDay rec : records){
                     w.beginObject(); // {
                     w.name("Source").value(rec.getSource());
                     w.name("DataSet").value(rec.getDataSet());
@@ -61,8 +55,8 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                     w.name("Year").value(rec.getYear());
                     w.name("Month").value(rec.getMonth());
                     w.name("Day").value(rec.getDay());
-                    w.name("ProductionType").value(rec.getProductionType());
-                    w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                    w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                    w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
                     w.endObject(); // }
                     w.flush();
                 }
@@ -72,10 +66,9 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
-            else if (dateArgs.month != null) {
-                List<AGPTRecordForSpecificMonth> records = new RestAPI().
-                        getAggregatedGenerationPerType(areaName, productionType, timeres.name(), YearMonth.parse(dateArgs.month), format);
-                // Do something with the records :)
+            else if (dateArgs.month != null){
+                List<AVFRecordForSpecificMonth> records = new RestAPI().
+                        getActualvsForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                 if (records.isEmpty() == true) {
                     System.out.println("Fetched 0 records");
                     return 0;
@@ -83,7 +76,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
                 w.setIndent("  ");
                 w.beginArray();
-                for(AGPTRecordForSpecificMonth rec : records){
+                for(AVFRecordForSpecificMonth rec : records){
                     w.beginObject(); // {
                     w.name("Source").value(rec.getSource());
                     w.name("DataSet").value(rec.getDataSet());
@@ -94,40 +87,8 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                     w.name("Year").value(rec.getYear());
                     w.name("Month").value(rec.getMonth());
                     w.name("Day").value(rec.getDay());
-                    w.name("ProductionType").value(rec.getProductionType());
-                    w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputValue());
-                    w.endObject(); // }
-                    w.flush();
-                }
-                w.endArray();
-                w.flush();
-                System.out.println();
-                System.out.println("Fetched " + records.size() + " records");
-                return 0;
-            }
-            else if (dateArgs.year != null) {
-                List<AGPTRecordForSpecificYear> records = new RestAPI().
-                        getAggregatedGenerationPerType(areaName, productionType, timeres.name(), Year.parse(dateArgs.year), format);
-                // Do something with the records :)
-                if (records.isEmpty() == true) {
-                    System.out.println("Fetched 0 records");
-                    return 0;
-                }
-                JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
-                w.setIndent("  ");
-                w.beginArray();
-                for(AGPTRecordForSpecificYear rec : records){
-                    w.beginObject(); // {
-                    w.name("Source").value(rec.getSource());
-                    w.name("DataSet").value(rec.getDataSet());
-                    w.name("AreaName").value(rec.getAreaName());
-                    w.name("AreaTypeCode").value(rec.getAreaTypeCode());
-                    w.name("MapCode").value(rec.getMapCode());
-                    w.name("ResolutionCode").value(rec.getResolutionCode());
-                    w.name("Year").value(rec.getYear());
-                    w.name("Month").value(rec.getMonth());
-                    w.name("ProductionType").value(rec.getProductionType());
-                    w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputValue());
+                    w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
+                    w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadValue());
                     w.endObject(); // }
                     w.flush();
                 }
@@ -138,10 +99,37 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 return 0;
             }
             else {
-                // Implement the other cases
-                System.err.println("Not implemented yet");
-                return -1;
+                List<AVFRecordForSpecificYear> records = new RestAPI().
+                        getActualvsForecast(areaName, timeres.name(), Year.parse(dateArgs.year), format);
+                if (records.isEmpty() == true) {
+                    System.out.println("Fetched 0 records");
+                    return 0;
+                }
+                JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
+                w.setIndent("  ");
+                w.beginArray();
+                for(AVFRecordForSpecificYear rec : records){
+                    w.beginObject(); // {
+                    w.name("Source").value(rec.getSource());
+                    w.name("DataSet").value(rec.getDataSet());
+                    w.name("AreaName").value(rec.getAreaName());
+                    w.name("AreaTypeCode").value(rec.getAreaTypeCode());
+                    w.name("MapCode").value(rec.getMapCode());
+                    w.name("ResolutionCode").value(rec.getResolutionCode());
+                    w.name("Year").value(rec.getYear());
+                    w.name("Month").value(rec.getMonth());
+                    w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
+                    w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadValue());
+                    w.endObject(); // }
+                    w.flush();
+                }
+                w.endArray();
+                w.flush();
+                System.out.println();
+                System.out.println("Fetched " + records.size() + " records");
+                return 0;
             }
+            
         } catch (RuntimeException e) {
             cli.getOut().println(e.getMessage());
             e.printStackTrace(cli.getOut());
