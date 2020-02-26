@@ -1,20 +1,16 @@
 package gr.ntua.ece.softeng19b.cli;
 
-//import org.json.simple.JSONObject;
 import com.google.gson.stream.JsonWriter;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
-
-
 import picocli.CommandLine;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
-import java.time.Month;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
