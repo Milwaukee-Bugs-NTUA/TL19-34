@@ -42,21 +42,8 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 // Do something with the records :)
                 JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out));
                 w.setIndent("  ");
-                w.beginArray();
-                //System.out.print("[");
+                w.beginArray();        //System.out.print("[");
                 for(ATLRecordForSpecificDay rec : records){
-                    /*JSONObject jsonObj  = new JSONObject();
-                    jsonObj.put("Source",rec.getSource());
-                    jsonObj.put("Dataset",rec.getDataSet());
-                    jsonObj.put("AreaName",rec.getAreaName());
-                    jsonObj.put("AreaTypeCode",rec.getAreaTypeCode());
-                    jsonObj.put("MapCode",rec.getMapCode());
-                    jsonObj.put("ResolutionCode",rec.getResolutionCode());
-                    jsonObj.put("Year",String.valueOf(rec.getYear()));
-                    jsonObj.put("Month",String.valueOf(rec.getMonth()));
-                    jsonObj.put("Day",String.valueOf(rec.getDay()));
-                    jsonObj.put("ActualTotalLoadValue",String.valueOf(rec.getActualTotalLoadValue()));
-                    System.out.print(jsonObj.toJSONString());*/
                     w.beginObject(); // {
                     w.name("Source").value(rec.getSource());
                     w.name("DataSet").value(rec.getDataSet());
@@ -70,13 +57,13 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                     w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
                     w.endObject(); // }
                     w.flush();
-                    //if (records.indexOf(rec) != (records.size() - 1)) {
-                    //    System.out.println(",");
-                    //}
+                    /*if (records.indexOf(rec) != (records.size() - 1)) {
+                          System.out.println(",");
+                    }*/
                 }
                 w.endArray();
-                w.flush();
-                //System.out.println("]");
+                w.flush();              //System.out.println("]");
+                System.out.println();
                 System.out.println("Fetched " + records.size() + " records");
                 return 0;
             }
