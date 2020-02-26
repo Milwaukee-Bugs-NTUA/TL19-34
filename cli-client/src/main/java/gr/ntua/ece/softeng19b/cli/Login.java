@@ -32,7 +32,8 @@ public class Login extends BasicCliArgs implements Callable<Integer> {
     @Option(
         names = "--passw",
         required = true,
-        description = "the password of the user trying to login."
+        description = "the password of the user trying to login.",
+        interactive = true
     )
     protected String password;
        
@@ -47,7 +48,6 @@ public class Login extends BasicCliArgs implements Callable<Integer> {
 
 
         try {
-            System.out.println("Hello "+userName);
             RestAPI restAPI = new RestAPI();
             restAPI.login(userName, password);
             return 0;

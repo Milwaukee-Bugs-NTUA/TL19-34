@@ -624,7 +624,7 @@ public class DataAccess {
                         dataLoad.setPassword(rs.getString(3));
                         dataLoad.setRequestsPerDayQuota(rs.getInt(4));
                         dataLoad.setAdmin(rs.getInt(5));
-                        if(password==dataLoad.getPassword()) return dataLoad;
+                        if(password.equals(dataLoad.getPassword())) return dataLoad;
                         else return null;
                     });
         }

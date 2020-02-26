@@ -10,8 +10,9 @@ import gr.ntua.ece.softeng19b.conf.Configuration;
 import java.util.List;
 import org.restlet.data.Status;
 
-import io.jsonwebtoken.Jwts;
-
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import java.util.Base64;
 import java.util.Map;
 
 public class Login extends EnergyResource {
@@ -25,14 +26,28 @@ public class Login extends EnergyResource {
         Form form = new Form(entity);
         String userName = form.getFirstValue("username");
         String password = form.getFirstValue("password");
-        System.out.println(userName+" "+password+" geia sas");
 
         try {
 
             User user = dataAccess.Login(userName, password);
-            if(user!=null) System.out.println(user.getUserName()+" "+user.getEmail()+" "+user.getPassword()+" "+user.getAdmin()+" "+user.getRequestsPerDayQuota());
-            else System.out.println("no such user");
-            return new JsonMapRepresentation(Map.of("token", "dummy-user-token"));
+            if(user!=null){ 
+
+                //The JWT signature algorithm we will be using to sign the token
+                SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+    
+                //We will sign our JWT with our ApiKey secret
+                byte[] secret = Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc=");
+    
+                //Let's set the JWT Claims
+                String jwt = Jwts.builder().claim("username", user.getUserName())
+                                           .claim("email", user.getEmail())
+                                           .claim("admin",user.getAdmin())
+                                           .claim("requested per day quotas", user.getRequestsPerDayQuota())
+                                           .signWith(Keys.hmacShaKeyFor(secret))
+                                           .compact();
+                return new JsonMapRepresentation(Map.of("token", jwt));                                           
+            }
+            else return new JsonMapRepresentation(Map.of("token", null));
         } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }
