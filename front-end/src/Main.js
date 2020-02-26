@@ -3,12 +3,20 @@ import $ from "jquery";
 import "./Main.css";
 import ATLParams from "./ATLParams";
 import DATLParams from "./DATLParams";
+import AggParams from "./AggParams";
+import VsParams from "./VsParams";
 
 $(document).ready(function() {
   $(".first-button").on("click", function() {
     $(".animated-icon1").toggleClass("open");
   });
   $(".second-button").on("click", function() {
+    $().toggleClass("open");
+  });
+  $(".third-button").on("click", function() {
+    $().toggleClass("open");
+  });
+  $(".fourth-button").on("click", function() {
     $().toggleClass("open");
   });
 });
@@ -105,14 +113,54 @@ class Main extends Component {
                   </div>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#/main" style={{ color: "white" }}>
+                  <a
+                    class="nav-link"
+                    class="navbar-toggler third-button"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent26"
+                    aria-controls="navbarSupportedContent26"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style={{ color: "white" }}
+                  >
                     Actual vs Forecast
                   </a>
+                  <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent29"
+                  >
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <VsParams />
+                      </li>
+                    </ul>
+                  </div>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#/main" style={{ color: "white" }}>
+                  <a
+                    class="nav-link"
+                    class="navbar-toggler fourth-button"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent29"
+                    aria-controls="navbarSupportedContent29"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    style={{ color: "white" }}
+                  >
                     Agreggated
                   </a>
+                  <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent29"
+                  >
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <AggParams />
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </ul>
             </div>

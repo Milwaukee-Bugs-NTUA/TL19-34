@@ -1,20 +1,7 @@
 import React, { Component } from "react";
 import $ from "jquery";
 
-class ATLParams extends Component {
-  state = {
-    areaName: null
-  };
-  constructor() {
-    super();
-    this.datepicker = React.createRef();
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ areaName: event.target.value });
-  }
-
+class VsParams extends Component {
   render() {
     return (
       <div>
@@ -22,10 +9,10 @@ class ATLParams extends Component {
           class="dropdown scrollable-menu"
           style={{ marginTop: 10, width: "100%" }}
         >
-          <label htmlfor="areaName" class="col-lg-6">
+          <label htmlfor="sel1" class="col-lg-6">
             Area Name
           </label>
-          <select onChange={this.handleChange} id="areaName" class="col-lg-6">
+          <select dataLiveSearch="true" id="sel1" class="col-lg-6">
             <option>None</option>
             <option>Austria</option>
             <option>Bulgaria</option>
@@ -54,7 +41,6 @@ class ATLParams extends Component {
             <option>Greece</option>
             <option>Slovenia</option>
           </select>
-          <div>{this.state.areaName}</div>
         </div>
 
         <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
@@ -72,15 +58,9 @@ class ATLParams extends Component {
             <option>PT1D</option>
           </select>
         </div>
-        <div class="form-group" style={{ marginTop: 10, width: "2%" }}>
-          <label htmlFor="datepicker" style={{ color: "white" }}>
-            YYYY-MM-DD/YYYY-MM/YYYY
-          </label>
-          <input id="datepicker" type="text" ref={this.datepicker} />
-        </div>
       </div>
     );
   }
 }
 
-export default ATLParams;
+export default VsParams;
