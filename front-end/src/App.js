@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import { Login, Logout } from "./Auth";
 import { UserProvider } from "./UserContext";
 import ATLParams from "./ATLParams";
+import ATLTable from "./ATLTable";
 
 class App extends Component {
   constructor(props) {
@@ -58,6 +59,7 @@ class App extends Component {
                 }}
               />
               <Route path="/main" component={Main} />
+              <Route path="/ActualTotalLoad" component={ATLTable} />
               <Route path="/login" component={Login} />
               <Route
                 path="/logout"
