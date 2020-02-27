@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import ATLTable from "./ATLTable";
 class ATLParams extends Component {
   state = {
     areaName: null,
     timeRes: null,
-    datePicker: null,
-    displayTable: false
+    datePicker: null
   };
   constructor(props) {
     super(props);
@@ -14,12 +12,6 @@ class ATLParams extends Component {
     this.datePicker = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  displayTable = () => {
-    this.setState({
-      displayTable: !this.state.displayTable
-    });
-  };
 
   handleSubmit(event) {
     console.log("ref to areaName: ", this.areaName.current.value);
@@ -121,15 +113,11 @@ class ATLParams extends Component {
             className="btn btn-primary  "
             type="submit"
             style={{ marginLeft: 100 }}
+            onClick={this.props.display}
           >
             Execute
           </button>
         </form>
-        <button className="btn btn-primary" onClick={this.displayTable}>
-          View Tables
-        </button>
-        {this.state.displayTable ? "null" : <ATLTable></ATLTable>}
-        {this.state.username === null ? "Friend" : this.state.username}
       </div>
     );
   }

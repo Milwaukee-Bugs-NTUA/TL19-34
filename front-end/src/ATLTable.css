@@ -1,0 +1,14 @@
+.table-earnings {
+  background: #dfd3df;
+}
+.table {
+  display: block;
+  max-height: 80000px;
+  overflow-y: scroll;
+  width: 800px;
+}
+.table-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  display: inline-block;
+}
