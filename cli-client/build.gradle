@@ -16,7 +16,7 @@ dependencies {
                    'info.picocli:picocli:4.1.4'
    //compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
    compile "com.google.code.gson:gson:2.8.2"                  //json library
-
+   compile 'org.apache.commons:commons-csv:1.8'
 }
 
 application {
