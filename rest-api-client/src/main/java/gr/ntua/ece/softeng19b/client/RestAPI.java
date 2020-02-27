@@ -309,7 +309,7 @@ public class RestAPI {
               }
             } 
             else {
-              System.out.println("File already exists.");
+              System.out.println("User already logged in!");
             }
         } 
           catch (IOException e) {
@@ -324,6 +324,14 @@ public class RestAPI {
             null
         );
         token = null;
+        File myObj = new File(System.getProperty("user.home")+"/softeng19bAPI.token");
+        if (myObj.delete()) {
+            System.out.println("User succesfully logged out!");
+        }
+        else{
+            System.out.println("An error occured during logout proccess! Please try again!");
+        }
+
     }
 
     public User addUser(String username, String email, String password, int quota) {
