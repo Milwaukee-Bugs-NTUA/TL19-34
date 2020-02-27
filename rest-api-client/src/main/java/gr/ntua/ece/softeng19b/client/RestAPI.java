@@ -229,7 +229,6 @@ public class RestAPI {
         }   
         
         if (token != null) {
-            System.out.println(token);
             builder.header(CUSTOM_HEADER, token);
         }
         return builder.
@@ -243,6 +242,7 @@ public class RestAPI {
                                                             Function<Reader, T> bodyProcessor) {
         HttpRequest request = requestSupplier.get();
         try {
+            System.out.println("Sending "+request.method()+" to "+request.uri());
             HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             int statusCode = response.statusCode();
             if (statusCode == 200) {
