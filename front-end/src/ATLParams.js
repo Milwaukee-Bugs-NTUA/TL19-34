@@ -1,17 +1,19 @@
 import React, { Component } from "react";
+import "./ATLTable.css";
+
 class ATLParams extends Component {
   state = {
     areaName: null,
     timeRes: null,
     datePicker: null,
-    myjson: null
+    myjson: null,
+    isLoaded: false
   };
   constructor(props) {
     super(props);
     this.areaName = React.createRef();
     this.timeRes = React.createRef();
     this.datePicker = React.createRef();
-    this.myjson = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -43,13 +45,14 @@ class ATLParams extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        this.setState({ myjson: json });
-
-        // console.log("first json", json);
+        this.setState({ myjson: json, isLoaded: true });
+        console.log(this.state.myjson);
+        console.log(this.state.isLoaded);
+        console.log("ela ela");
       });
   }
-
   render() {
+    const to_show = this.state.myjson;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -60,7 +63,6 @@ class ATLParams extends Component {
             <label htmlfor="areaName" class="col-lg-6">
               Area Name
             </label>
-            {console.log("this is the json", this.state.myjson)}
             <select ref={this.areaName} id="areaName" class="col-lg-6">
               <option>None</option>
               <option>Austria</option>
@@ -93,9 +95,7 @@ class ATLParams extends Component {
           </div>
 
           <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
-            <label htmlfor="timeRes" class="col-lg-6">
-              Time Resolution
-            </label>
+            <label htmlfor="timeRes" class="col-lg-6"></label>
             <select ref={this.timeRes} id="timeRes" class="col-lg-6">
               <option>None</option>
               <option>PT15M</option>
@@ -107,27 +107,24 @@ class ATLParams extends Component {
               <option>PT1D</option>
             </select>
           </div>
-          <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
+          <div class="form-group" style={{ marginTop: 10, width: "50%" }}>
             <label htmlFor="datePicker" style={{ color: "white" }}>
               YYYY-MM-DD/YYYY-MM/YYYY
             </label>
             <input id="datePicker" type="text" ref={this.datePicker} />
           </div>
           <button
-            to="/ATLTable"
             className="btn btn-primary  "
             type="submit"
             style={{ marginLeft: 100 }}
-            onClick={this.props.display}
+            onClick={() => this.props.sendData(to_show)}
+            onDoubleClick={this.props.display}
           >
             Execute
           </button>
-
-          <pre>{JSON.stringify(this.state.myjson, null, 2)}</pre>
         </form>
       </div>
     );
   }
 }
-
 export default ATLParams;

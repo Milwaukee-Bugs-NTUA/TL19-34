@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "@trendmicro/react-buttons/dist/react-buttons.css";
+import "@trendmicro/react-dropdown/dist/react-dropdown.css";
 import "./index.css";
 import "bootstrap";
 import App from "./App";
