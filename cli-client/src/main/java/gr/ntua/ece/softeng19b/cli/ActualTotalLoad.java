@@ -151,7 +151,8 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                         return 0;
                     }
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
-                                                            CSVFormat.DEFAULT.withHeader("Source", 
+                                                            CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
                                                             "DataSet", 
                                                             "AreaName" , 
                                                             "AreaTypeCode", 
@@ -181,12 +182,62 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 else if (dateArgs.month != null){
                     List<ATLRecordForSpecificMonth> records = new RestAPI().
                             getActualTotalLoad(areaName, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                    CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
+                                                            CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "ActualTotalLoadValue"));
+                    for(ATLRecordForSpecificMonth rec : records){
+                        csvPrinter.printRecord(rec.getSource(),
+                                                rec.getDataSet(), 
+                                                rec.getAreaName(), 
+                                                rec.getAreaTypeCode(), 
+                                                rec.getMapCode(), 
+                                                rec.getResolutionCode(), 
+                                                String.valueOf(rec.getYear()), 
+                                                String.valueOf(rec.getMonth()), 
+                                                String.valueOf(rec.getDay()), 
+                                                String.valueOf(rec.getActualTotalLoadByDayValue()));
+                    }
+                    csvPrinter.flush();
+                    System.out.println();
                     System.out.println("Fetched " + records.size() + " records");
                     return 0;
                 }
                 else {
                     List<ATLRecordForSpecificYear> records = new RestAPI().
                             getActualTotalLoad(areaName, timeres.name(), Year.parse(dateArgs.year), Format.JSON);
+                    CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
+                                                            CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "ActualTotalLoadByMonthValue"));
+                    for(ATLRecordForSpecificYear rec : records){
+                        csvPrinter.printRecord(rec.getSource(),
+                                                rec.getDataSet(), 
+                                                rec.getAreaName(), 
+                                                rec.getAreaTypeCode(), 
+                                                rec.getMapCode(), 
+                                                rec.getResolutionCode(), 
+                                                String.valueOf(rec.getYear()), 
+                                                String.valueOf(rec.getMonth()), 
+                                                String.valueOf(rec.getActualDataLoadByMonthValue()));
+                    }
+                    csvPrinter.flush();
+                    System.out.println();
                     System.out.println("Fetched " + records.size() + " records");
                     return 0;
 
