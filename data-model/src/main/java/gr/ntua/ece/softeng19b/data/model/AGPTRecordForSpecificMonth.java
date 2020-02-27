@@ -3,7 +3,7 @@ package gr.ntua.ece.softeng19b.data.model;
 public class AGPTRecordForSpecificMonth extends AbstractEntsoeRecord {
 
     private int day;
-    private double actualGenerationOutputValue;
+    private double actualGenerationOutputByDayValue;
     private String productionType;
 
     public AGPTRecordForSpecificMonth() {
@@ -18,12 +18,12 @@ public class AGPTRecordForSpecificMonth extends AbstractEntsoeRecord {
         this.day = day;
     }
 
-    public double getActualGenerationOutputValue() {
-        return actualGenerationOutputValue;
+    public double getActualGenerationOutputByDayValue() {
+        return actualGenerationOutputByDayValue;
     }
 
-    public void setActualGenerationOutputValue(double actualGenerationOutputValue) {
-        this.actualGenerationOutputValue = actualGenerationOutputValue;
+    public void setActualGenerationOutputByDayValue(double actualGenerationOutputByDayValue) {
+        this.actualGenerationOutputByDayValue = actualGenerationOutputByDayValue;
     }
 
     public String getProductionType(){
