@@ -42,7 +42,7 @@ class Main extends Component {
               style={{
                 marginTop: 15,
                 backgroundColor: "#007bff",
-                width: "80%"
+                width: "100%"
               }}
             >
               <a

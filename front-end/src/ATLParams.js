@@ -3,13 +3,15 @@ class ATLParams extends Component {
   state = {
     areaName: null,
     timeRes: null,
-    datePicker: null
+    datePicker: null,
+    myjson: null
   };
   constructor(props) {
     super(props);
     this.areaName = React.createRef();
     this.timeRes = React.createRef();
     this.datePicker = React.createRef();
+    this.myjson = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -41,7 +43,9 @@ class ATLParams extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        this.setState({ myjson: json });
+
+        // console.log("first json", json);
       });
   }
 
@@ -56,6 +60,7 @@ class ATLParams extends Component {
             <label htmlfor="areaName" class="col-lg-6">
               Area Name
             </label>
+            {console.log("this is the json", this.state.myjson)}
             <select ref={this.areaName} id="areaName" class="col-lg-6">
               <option>None</option>
               <option>Austria</option>
@@ -102,7 +107,7 @@ class ATLParams extends Component {
               <option>PT1D</option>
             </select>
           </div>
-          <div class="form-group" style={{ marginTop: 10, width: "2%" }}>
+          <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
             <label htmlFor="datePicker" style={{ color: "white" }}>
               YYYY-MM-DD/YYYY-MM/YYYY
             </label>
@@ -117,6 +122,8 @@ class ATLParams extends Component {
           >
             Execute
           </button>
+
+          <pre>{JSON.stringify(this.state.myjson, null, 2)}</pre>
         </form>
       </div>
     );
