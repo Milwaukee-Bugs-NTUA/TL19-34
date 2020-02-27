@@ -4,28 +4,22 @@ class ATLParams extends Component {
   state = {
     areaName: null,
     timeRes: null,
-    datePicker: null
+    datePicker: null,
+    displayTable: false
   };
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.areaName = React.createRef();
     this.timeRes = React.createRef();
     this.datePicker = React.createRef();
-    this.handleAreaName = this.handleAreaName.bind(this);
-    this.handletimeRes = this.handletimeRes.bind(this);
-    this.handledatePicker = this.handledatePicker.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleAreaName(event) {
-    this.setState({ areaName: event.target.value });
-  }
-  handletimeRes(event) {
-    this.setState({ timeRes: event.target.value });
-  }
-  handledatePicker(event) {
-    this.setState({ datePicker: event.target.value });
-  }
+  displayTable = () => {
+    this.setState({
+      displayTable: !this.state.displayTable
+    });
+  };
 
   handleSubmit(event) {
     console.log("ref to areaName: ", this.areaName.current.value);
@@ -70,12 +64,7 @@ class ATLParams extends Component {
             <label htmlfor="areaName" class="col-lg-6">
               Area Name
             </label>
-            <select
-              //onChange={this.handleAreaName}
-              ref={this.areaName}
-              id="areaName"
-              class="col-lg-6"
-            >
+            <select ref={this.areaName} id="areaName" class="col-lg-6">
               <option>None</option>
               <option>Austria</option>
               <option>Bulgaria</option>
@@ -125,12 +114,7 @@ class ATLParams extends Component {
             <label htmlFor="datePicker" style={{ color: "white" }}>
               YYYY-MM-DD/YYYY-MM/YYYY
             </label>
-            <input
-              //onChange={this.handledatePicker}
-              id="datePicker"
-              type="text"
-              ref={this.datePicker}
-            />
+            <input id="datePicker" type="text" ref={this.datePicker} />
           </div>
           <button
             to="/ATLTable"
@@ -141,6 +125,11 @@ class ATLParams extends Component {
             Execute
           </button>
         </form>
+        <button className="btn btn-primary" onClick={this.displayTable}>
+          View Tables
+        </button>
+        {this.state.displayTable ? "null" : <ATLTable></ATLTable>}
+        {this.state.username === null ? "Friend" : this.state.username}
       </div>
     );
   }
