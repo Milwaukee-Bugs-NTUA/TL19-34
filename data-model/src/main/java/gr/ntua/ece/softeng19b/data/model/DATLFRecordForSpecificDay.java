@@ -4,6 +4,7 @@ public class DATLFRecordForSpecificDay extends AbstractEntsoeRecord {
 
     private int day;
     private double dayAheadTotalLoadForecastValue;
+    private Timestamp dateTimeUTC, updateTimeUTC;
 
     public DATLFRecordForSpecificDay() {
         super(DataSet.DayAheadTotalLoadForecast);
@@ -24,4 +25,21 @@ public class DATLFRecordForSpecificDay extends AbstractEntsoeRecord {
     public void setDayAheadTotalLoadForecastValue(double dayAheadTotalLoadForecastValue) {
         this.dayAheadTotalLoadForecastValue = dayAheadTotalLoadForecastValue;
     }
+    public Timestamp getDateTimeUTC() {
+        return dateTimeUTC;
+    }
+
+    public void setDateTimeUTC(Timestamp dateTimeUTC) {
+        this.dateTimeUTC = dateTimeUTC;
+    }    
+
+
+    public Timestamp getUpdateTimeUTC() {
+        return updateTimeUTC;
+    }
+
+    public void setUpdateTimeUTC(Timestamp updateTimeUTC) {
+        this.dateTimeUTC = updateTimeUTC;
+    }    
+
 }

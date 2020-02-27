@@ -2,17 +2,17 @@ package gr.ntua.ece.softeng19b.data.model;
 
 public class DATLFRecordForSpecificYear extends AbstractEntsoeRecord {
 
-    private double dayAheadTotalLoadForecastValue;
+    private double dayAheadTotalLoadForecastByMonthValue;
 
     public DATLFRecordForSpecificYear() {
         super(DataSet.DayAheadTotalLoadForecast);
     }
 
-    public double getDayAheadTotalLoadForecastValue() {
-        return dayAheadTotalLoadForecastValue;
+    public double getDayAheadTotalLoadForecastByMonthValue() {
+        return dayAheadTotalLoadForecastByMonthValue;
     }
 
-    public void setDayAheadTotalLoadForecastValue(double dayAheadTotalLoadForecastValue) {
-        this.dayAheadTotalLoadForecastValue = dayAheadTotalLoadForecastValue;
+    public void setDayAheadTotalLoadForecastByMonthValue(double dayAheadTotalLoadForecastByMonthValue) {
+        this.dayAheadTotalLoadForecastByMonthValue = dayAheadTotalLoadForecastByMonthValue;
     }
 }
