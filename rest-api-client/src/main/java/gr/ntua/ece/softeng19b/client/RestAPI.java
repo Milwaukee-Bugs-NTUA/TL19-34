@@ -36,6 +36,10 @@ import java.time.Year;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File; 
+import java.io.IOException;
 
 public class RestAPI {
 
@@ -54,6 +58,7 @@ public class RestAPI {
     private final HttpClient client;
 
     private String token = null; //user is not logged in
+    private BufferedReader reader;
 
     public RestAPI() throws RuntimeException {
         this("localhost", 8765);
@@ -213,7 +218,18 @@ public class RestAPI {
                                    String contentType,
                                    HttpRequest.BodyPublisher bodyPublisher) {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+                                                                  
+        try {
+            reader = new BufferedReader(new FileReader(System.getProperty("user.home")+"/softeng19bAPI.token"));
+            token = reader.readLine();
+            reader.close();
+        } 
+        catch (IOException e) {
+              //e.printStackTrace();
+        }   
+        
         if (token != null) {
+            System.out.println(token);
             builder.header(CUSTOM_HEADER, token);
         }
         return builder.
@@ -227,7 +243,6 @@ public class RestAPI {
                                                             Function<Reader, T> bodyProcessor) {
         HttpRequest request = requestSupplier.get();
         try {
-            System.out.println("Sending " + request.method() + " to " + request.uri());
             HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             int statusCode = response.statusCode();
             if (statusCode == 200) {
@@ -278,6 +293,29 @@ public class RestAPI {
             () -> newPostRequest(urlForLogin(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonToken
         );
+        try {
+            File myObj = new File(System.getProperty("user.home")+"/softeng19bAPI.token");
+            if (myObj.createNewFile()) {
+              System.out.println("File created: " + myObj.getName());
+              try {
+                FileWriter myWriter = new FileWriter(System.getProperty("user.home")+"/softeng19bAPI.token");
+                myWriter.write(token);
+                myWriter.close();
+                System.out.println("User succesfully logged in!");
+              } 
+              catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+              }
+            } 
+            else {
+              System.out.println("File already exists.");
+            }
+        } 
+          catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        } 
     }
 
     public void logout() {
@@ -306,7 +344,7 @@ public class RestAPI {
         formData.put("email", updatedUser.getEmail());
         formData.put("requestsPerDayQuota", String.valueOf(updatedUser.getRequestsPerDayQuota()));
         return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newPutRequest(urlForUpdateUser(updatedUser.getUsername()), URL_ENCODED, ofUrlEncodedFormData(formData)),
+            () -> newPutRequest(urlForUpdateUser(updatedUser.getUserName()), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonUser
         );
     }

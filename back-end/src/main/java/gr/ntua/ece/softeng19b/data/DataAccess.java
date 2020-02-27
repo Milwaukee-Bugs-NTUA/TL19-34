@@ -12,6 +12,7 @@ import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -604,6 +605,35 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+    }
+
+    public User Login(String userName, String password) throws DataAccessException {
+        
+        Object[] sqlParams = new Object[] {
+            userName
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select username, email, password, quotas, admin from users where username = ?";
+        
+        try {
+                    return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                        User dataLoad = new User();
+                        dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                        dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                        dataLoad.setPassword(rs.getString(3));
+                        dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                        dataLoad.setAdmin(rs.getInt(5));
+                        if(password.equals(dataLoad.getPassword())) return dataLoad;
+                        else return null;
+                    });
+        }
+        
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
     }
 
 }
