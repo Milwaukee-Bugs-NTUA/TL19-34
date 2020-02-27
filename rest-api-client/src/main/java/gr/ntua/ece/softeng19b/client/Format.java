@@ -273,8 +273,14 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
+                case "DateTimeUTC":
+                    rec.setDateTimeUTC(reader.nextInt());
+                    break;
                 case "ActualTotalLoadValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
+                    break;
+                case "UpdateTimeUTC":
+                    rec.setUpdateTimeUTC(reader.nextInt());
                     break;
                 default:
                     reader.skipValue();
@@ -427,8 +433,14 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
+                case "DateTimeUTC":
+                    rec.setDateTimeUTC(reader.nextInt());
+                    break;
                 case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    break;
+                case "UpdateTimeUTC":
+                    rec.setUpdateTimeUTC(reader.nextInt());
                     break;
                 default:
                     reader.skipValue();
@@ -480,7 +492,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setDay(reader.nextInt());
                     break;
                 case "DayAheadTotalLoadForecastByDayValue":
-                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    rec.setDayAheadTotalLoadForecastByDayValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();
@@ -529,7 +541,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setMonth(reader.nextInt());
                     break;
                 case "DayAheadTotalLoadForecastByMonthValue":
-                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    rec.setDayAheadTotalLoadForecastByMonthValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();
@@ -584,8 +596,14 @@ public enum Format implements ResponseBodyProcessor {
                 case "ProductionType":
                     rec.setProductionType(reader.nextString());
                     break;
+                case "DateTimeUTC":
+                    rec.setDateTimeUTC(reader.nextInt());
+                    break;
                 case "ActualGenerationOutputValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
+                    break;
+                case "UpdateTimeUTC":
+                    rec.setUpdateTimeUTC(reader.nextInt());
                     break;
                 default:
                     reader.skipValue();
@@ -640,7 +658,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setProductionType(reader.nextString());
                     break;
                 case "ActualGenerationOutputByDayValue":
-                    rec.setActualGenerationOutputValue(reader.nextDouble());
+                    rec.setActualGenerationOutputByDayValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();
@@ -692,7 +710,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setProductionType(reader.nextString());
                     break;
                 case "ActualGenerationOutputByMonthValue":
-                    rec.setActualGenerationOutputValue(reader.nextDouble());
+                    rec.setActualGenerationOutputByMonthValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();
@@ -744,11 +762,17 @@ public enum Format implements ResponseBodyProcessor {
                 case "Day":
                     rec.setDay(reader.nextInt());
                     break;
+                case "DateTimeUTC":
+                    rec.setDateTimeUTC(reader.nextInt());
+                    break;
                 case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 case "ActualTotalLoadValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
+                    break;
+                case "UpdateTimeUTC":
+                    rec.setUpdateTimeUTC(reader.nextInt());
                     break;
                 default:
                     reader.skipValue();
@@ -800,10 +824,10 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setDay(reader.nextInt());
                     break;
                 case "DayAheadTotalLoadForecastByDayValue":
-                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    rec.setDayAheadTotalLoadForecastByDayValue(reader.nextDouble());
                     break;
                 case "ActualTotalLoadByDayValue":
-                    rec.setActualTotalLoadValue(reader.nextDouble());
+                    rec.setActualTotalLoadByDayValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();
@@ -852,10 +876,10 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setMonth(reader.nextInt());
                     break;
                 case "DayAheadTotalLoadForecastByMonthValue":
-                    rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
+                    rec.setDayAheadTotalLoadForecastByMonthValue(reader.nextDouble());
                     break;
                 case "ActualTotalLoadByMonthValue":
-                    rec.setActualTotalLoadValue(reader.nextDouble());
+                    rec.setActualTotalLoadByMonthValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();

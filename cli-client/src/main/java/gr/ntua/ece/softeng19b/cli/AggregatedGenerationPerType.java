@@ -14,6 +14,7 @@ import picocli.CommandLine;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
@@ -68,7 +69,9 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -102,7 +105,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -135,7 +138,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -174,7 +177,9 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                             "Month", 
                                                             "Day",
                                                             "ProductionType",
-                                                            "ActualGenerationOutputValue"));
+                                                            "DateTimeUTC",
+                                                            "ActualGenerationOutputValue"),
+                                                            "UpdateTimeUTC");
                     for(AGPTRecordForSpecificDay rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -185,8 +190,10 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
                                                 String.valueOf(rec.getDay()),
-                                                rec.getProductionType(), 
-                                                String.valueOf(rec.getActualGenerationOutputValue()));
+                                                rec.getProductionType(),
+                                                String.valueOf(rec.getDateTimeUTC()),
+                                                String.valueOf(rec.getActualGenerationOutputValue())
+                                                String.valueOf(rec.getUpdateTimeUTC()));
                     }
                     csvPrinter.flush();
                     System.out.println();
@@ -220,7 +227,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                 String.valueOf(rec.getMonth()), 
                                                 String.valueOf(rec.getDay()),
                                                 rec.getProductionType(), 
-                                                String.valueOf(rec.getActualGenerationOutputValue()));
+                                                String.valueOf(rec.getActualGenerationOutputByDayValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();
@@ -252,7 +259,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()),
                                                 rec.getProductionType(),
-                                                String.valueOf(rec.getActualGenerationOutputValue()));
+                                                String.valueOf(rec.getActualGenerationOutputByMonthValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();

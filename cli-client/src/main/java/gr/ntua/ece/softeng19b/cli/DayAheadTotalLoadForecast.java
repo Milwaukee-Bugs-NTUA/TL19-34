@@ -14,6 +14,7 @@ import picocli.CommandLine;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
@@ -61,7 +62,9 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -94,7 +97,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -126,7 +129,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -163,8 +166,10 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                                                             "ResolutionCode", 
                                                             "Year", 
                                                             "Month", 
-                                                            "Day", 
-                                                            "DayAheadTotalLoadForecastValue"));
+                                                            "Day",
+                                                            "DateTimeUTC",
+                                                            "DayAheadTotalLoadForecastValue",
+                                                            "UpdateTimeUTC"));
                     for(DATLFRecordForSpecificDay rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -174,8 +179,10 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                                                 rec.getResolutionCode(), 
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
-                                                String.valueOf(rec.getDay()), 
-                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()));
+                                                String.valueOf(rec.getDay()),
+                                                String.valueOf(rec.getDateTimeUTC()),
+                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
+                                                String.valueOf(rec.getUpdateTimeUTC()));
                     }
                     csvPrinter.flush();
                     System.out.println();
@@ -207,7 +214,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
                                                 String.valueOf(rec.getDay()), 
-                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()));
+                                                String.valueOf(rec.getDayAheadTotalLoadForecastByDayValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();
@@ -237,7 +244,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                                                 rec.getResolutionCode(), 
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
-                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()));
+                                                String.valueOf(rec.getDayAheadTotalLoadForecastByMonthValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();

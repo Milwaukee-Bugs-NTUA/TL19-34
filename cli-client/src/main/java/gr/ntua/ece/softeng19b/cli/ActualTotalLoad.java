@@ -14,6 +14,7 @@ import picocli.CommandLine;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
@@ -60,8 +61,10 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("Day").value(rec.getDay());
+                        w.name("Day").value(re.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                         /*if (records.indexOf(rec) != (records.size() - 1)) {
@@ -160,8 +163,10 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                                                             "ResolutionCode", 
                                                             "Year", 
                                                             "Month", 
-                                                            "Day", 
-                                                            "ActualTotalLoadValue"));
+                                                            "Day",
+                                                            "DateTimeUTC",
+                                                            "ActualTotalLoadValue",
+                                                            "UpdateTimeUTC"));
                     for(ATLRecordForSpecificDay rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -171,8 +176,10 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                                                 rec.getResolutionCode(), 
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
-                                                String.valueOf(rec.getDay()), 
-                                                String.valueOf(rec.getActualTotalLoadValue()));
+                                                String.valueOf(rec.getDay()),
+                                                String.valueOf(rec.getDateTimeUTC()),
+                                                String.valueOf(rec.getActualTotalLoadValue()),
+                                                String.valueOf(rec.getUpdateTimeUTC()));
                     }
                     csvPrinter.flush();
                     System.out.println();
