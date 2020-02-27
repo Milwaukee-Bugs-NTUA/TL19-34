@@ -42,7 +42,9 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -119,7 +121,9 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -145,7 +149,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -170,7 +174,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -197,7 +201,9 @@ public enum Format implements RepresentationGenerator {
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -223,7 +229,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByDayValue").value(rec.getActualGenerationOutputByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -248,7 +254,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputValue());
+                        w.name("ActualGenerationOutputByMonthValue").value(rec.getActualGenerationOutputByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -274,8 +280,10 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -301,8 +309,8 @@ public enum Format implements RepresentationGenerator {
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastByDayValue());
+                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -327,8 +335,8 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastByMonthValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }

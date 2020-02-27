@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
 import java.time.Month;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.io.OutputStreamWriter;
@@ -61,8 +62,10 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -94,8 +97,8 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByDayValue").value(rec.getDayAheadTotalLoadForecastByDayValue());
+                        w.name("ActualTotalLoadByDayValue").value(rec.getActualTotalLoadByDayValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -126,8 +129,8 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadValue());
+                        w.name("DayAheadTotalLoadForecastByMonthValue").value(rec.getDayAheadTotalLoadForecastByMonthValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -160,8 +163,10 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                                                             "Year", 
                                                             "Month", 
                                                             "Day",
+                                                            "DateTimeUTC",
                                                             "DayAheadTotalLoadForecastValue",
-                                                            "ActualTotalLoadValue"));
+                                                            "ActualTotalLoadValue",
+                                                            "UpdateTimeUTC"));
                     for(AVFRecordForSpecificDay rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -172,8 +177,10 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
                                                 String.valueOf(rec.getDay()),
+                                                String.valueOf(rec.getDateTimeUTC()),
                                                 String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
-                                                String.valueOf(rec.getActualTotalLoadValue()));
+                                                String.valueOf(rec.getActualTotalLoadValue()),
+                                                String.valueOf(rec.getUpdateTimeUTC()));
                     }
                     csvPrinter.flush();                    
                     System.out.println();
@@ -210,8 +217,8 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
                                                 String.valueOf(rec.getDay()),
-                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
-                                                String.valueOf(rec.getActualTotalLoadValue()));
+                                                String.valueOf(rec.getDayAheadTotalLoadForecastByDayValue()),
+                                                String.valueOf(rec.getActualTotalLoadByDayValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();
@@ -246,8 +253,8 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                                                 rec.getResolutionCode(), 
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
-                                                String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
-                                                String.valueOf(rec.getActualTotalLoadValue()));
+                                                String.valueOf(rec.getDayAheadTotalLoadForecastByMonthValue()),
+                                                String.valueOf(rec.getActualTotalLoadByMonthValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();
