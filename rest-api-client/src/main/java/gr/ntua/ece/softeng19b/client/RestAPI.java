@@ -218,15 +218,16 @@ public class RestAPI {
                                    String contentType,
                                    HttpRequest.BodyPublisher bodyPublisher) {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+                                                                  
         try {
-                reader = new BufferedReader(new FileReader(System.getProperty("user.home")+"/softeng19bAPI.token"));
-                token = reader.readLine();
-                reader.close();
+            reader = new BufferedReader(new FileReader(System.getProperty("user.home")+"/softeng19bAPI.token"));
+            token = reader.readLine();
+            reader.close();
         } 
         catch (IOException e) {
-                  e.printStackTrace();
-        }
-      
+              //e.printStackTrace();
+        }   
+        
         if (token != null) {
             System.out.println(token);
             builder.header(CUSTOM_HEADER, token);
@@ -242,7 +243,6 @@ public class RestAPI {
                                                             Function<Reader, T> bodyProcessor) {
         HttpRequest request = requestSupplier.get();
         try {
-            System.out.println("Sending " + request.method() + " to " + request.uri() + " with header "+request.headers());
             HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             int statusCode = response.statusCode();
             if (statusCode == 200) {
@@ -374,7 +374,6 @@ public class RestAPI {
                                                             String resolutionCode,
                                                             LocalDate date,
                                                             Format format) {
-        //System.out.println(token);                                                                
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
             format::consumeActualTotalLoadRecordsForSpecificDay
