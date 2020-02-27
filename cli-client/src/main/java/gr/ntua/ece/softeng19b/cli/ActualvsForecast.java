@@ -62,10 +62,10 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC().toString());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
-                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC().toString());
                         w.endObject(); // }
                         w.flush();
                     }

@@ -274,13 +274,13 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setDay(reader.nextInt());
                     break;
                 case "DateTimeUTC":
-                    rec.setDateTimeUTC(reader.nextInt());
+                    rec.setDateTimeUTC(reader.nextString());
                     break;
                 case "ActualTotalLoadValue":
                     rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 case "UpdateTimeUTC":
-                    rec.setUpdateTimeUTC(reader.nextInt());
+                    rec.setUpdateTimeUTC(reader.nextString());
                     break;
                 default:
                     reader.skipValue();
@@ -434,13 +434,13 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setDay(reader.nextInt());
                     break;
                 case "DateTimeUTC":
-                    rec.setDateTimeUTC(reader.nextInt());
+                    rec.setDateTimeUTC(reader.nextString());
                     break;
                 case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
                     break;
                 case "UpdateTimeUTC":
-                    rec.setUpdateTimeUTC(reader.nextInt());
+                    rec.setUpdateTimeUTC(reader.nextString());
                     break;
                 default:
                     reader.skipValue();
@@ -597,13 +597,13 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setProductionType(reader.nextString());
                     break;
                 case "DateTimeUTC":
-                    rec.setDateTimeUTC(reader.nextInt());
+                    rec.setDateTimeUTC(reader.nextString());
                     break;
                 case "ActualGenerationOutputValue":
                     rec.setActualGenerationOutputValue(reader.nextDouble());
                     break;
                 case "UpdateTimeUTC":
-                    rec.setUpdateTimeUTC(reader.nextInt());
+                    rec.setUpdateTimeUTC(reader.nextString());
                     break;
                 default:
                     reader.skipValue();
@@ -763,7 +763,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setDay(reader.nextInt());
                     break;
                 case "DateTimeUTC":
-                    rec.setDateTimeUTC(reader.nextInt());
+                    rec.setDateTimeUTC(reader.nextString());
                     break;
                 case "DayAheadTotalLoadForecastValue":
                     rec.setDayAheadTotalLoadForecastValue(reader.nextDouble());
@@ -772,7 +772,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setActualTotalLoadValue(reader.nextDouble());
                     break;
                 case "UpdateTimeUTC":
-                    rec.setUpdateTimeUTC(reader.nextInt());
+                    rec.setUpdateTimeUTC(reader.nextString());
                     break;
                 default:
                     reader.skipValue();

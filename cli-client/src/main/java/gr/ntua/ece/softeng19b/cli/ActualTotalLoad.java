@@ -61,10 +61,10 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("Day").value(re.getDay());
-                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
+                        w.name("Day").value(rec.getDay());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC().toString());
                         w.name("ActualTotalLoadValue").value(rec.getActualTotalLoadValue());
-                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC().toString());
                         w.endObject(); // }
                         w.flush();
                         /*if (records.indexOf(rec) != (records.size() - 1)) {

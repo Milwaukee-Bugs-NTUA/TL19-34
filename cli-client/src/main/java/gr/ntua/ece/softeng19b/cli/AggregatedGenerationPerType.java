@@ -69,9 +69,9 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
                         w.name("ProductionType").value(rec.getProductionType());
-                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC().toString());
                         w.name("ActualGenerationOutputValue").value(rec.getActualGenerationOutputValue());
-                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC().toString());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -178,8 +178,8 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                             "Day",
                                                             "ProductionType",
                                                             "DateTimeUTC",
-                                                            "ActualGenerationOutputValue"),
-                                                            "UpdateTimeUTC");
+                                                            "ActualGenerationOutputValue",
+                                                            "UpdateTimeUTC"));
                     for(AGPTRecordForSpecificDay rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -192,7 +192,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                                                 String.valueOf(rec.getDay()),
                                                 rec.getProductionType(),
                                                 String.valueOf(rec.getDateTimeUTC()),
-                                                String.valueOf(rec.getActualGenerationOutputValue())
+                                                String.valueOf(rec.getActualGenerationOutputValue()),
                                                 String.valueOf(rec.getUpdateTimeUTC()));
                     }
                     csvPrinter.flush();

@@ -1,5 +1,6 @@
 package gr.ntua.ece.softeng19b.data.model;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 
 public class AGPTRecordForSpecificDay extends AbstractEntsoeRecord {
@@ -43,14 +44,21 @@ public class AGPTRecordForSpecificDay extends AbstractEntsoeRecord {
 
     public void setDateTimeUTC(Timestamp dateTimeUTC) {
         this.dateTimeUTC = dateTimeUTC;
-    }    
+    }
 
+    public void setDateTimeUTC(String string) {
+        this.dateTimeUTC = Timestamp.valueOf(string);
+    }
 
     public Timestamp getUpdateTimeUTC() {
         return updateTimeUTC;
     }
 
     public void setUpdateTimeUTC(Timestamp updateTimeUTC) {
-        this.dateTimeUTC = updateTimeUTC;
-    }    
+        this.updateTimeUTC = updateTimeUTC;
+    }
+    
+    public void setUpdateTimeUTC(String string) {
+        this.updateTimeUTC = Timestamp.valueOf(string);
+    }
 }

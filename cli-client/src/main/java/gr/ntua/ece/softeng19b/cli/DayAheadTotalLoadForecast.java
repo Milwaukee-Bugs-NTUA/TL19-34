@@ -62,9 +62,9 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
                         w.name("Day").value(rec.getDay());
-                        w.name("DateTimeUTC").value(rec.getDateTimeUTC());
+                        w.name("DateTimeUTC").value(rec.getDateTimeUTC().toString());
                         w.name("DayAheadTotalLoadForecastValue").value(rec.getDayAheadTotalLoadForecastValue());
-                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC());
+                        w.name("UpdateTimeUTC").value(rec.getUpdateTimeUTC().toString());
                         w.endObject(); // }
                         w.flush();
                     }
