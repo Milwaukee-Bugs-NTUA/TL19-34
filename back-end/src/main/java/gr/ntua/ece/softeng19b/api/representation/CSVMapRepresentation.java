@@ -24,6 +24,6 @@ public class CSVMapRepresentation extends WriterRepresentation {
     @Override
     public void write(Writer writer) throws IOException {
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
-        csvPrinter.printRecord(map/*StringUtils.join(map)*/);
+        csvPrinter.printRecord(map);
     }
 }

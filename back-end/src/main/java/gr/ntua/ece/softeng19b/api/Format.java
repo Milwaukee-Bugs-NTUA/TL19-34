@@ -24,6 +24,7 @@ import org.restlet.resource.ResourceException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.BufferedWriter;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -357,7 +358,7 @@ public enum Format implements RepresentationGenerator {
         }
 
         public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
-            return new CustomCSVRepresentation( (Writer w) -> {
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
                 try {
                     CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT
                                                             .withHeader(
@@ -446,9 +447,9 @@ public enum Format implements RepresentationGenerator {
     }
     private static final class CustomCSVRepresentation extends WriterRepresentation {
 
-        private final Consumer<Writer> consumer;
+        private final Consumer<BufferedWriter> consumer;
 
-        CustomCSVRepresentation(Consumer<Writer> consumer) {
+        CustomCSVRepresentation(Consumer<BufferedWriter> consumer) {
             super(MediaType.TEXT_CSV);
             this.consumer = consumer;
         }
@@ -456,7 +457,7 @@ public enum Format implements RepresentationGenerator {
         @Override
         public void write(Writer writer) throws IOException {
             //CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
-            consumer.accept(writer);
+            consumer.accept(new BufferedWriter(writer));
         }
     }
 }
