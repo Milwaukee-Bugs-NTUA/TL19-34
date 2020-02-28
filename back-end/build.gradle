@@ -26,6 +26,8 @@ dependencies {
     compile "org.restlet.jee:org.restlet.ext.fileupload:2.4.2" //for handling file uploads in Restlet
     compile "com.google.code.gson:gson:2.8.2"                  //json library
     compile "org.apache.commons:commons-dbcp2:2.7.0"           //db connection pool
+    compile "org.apache.commons:commons-csv:1.8"               // csv formating
+    //compile "org.apache.commons:commons-collections4:4.4"    // map to string
     compile "org.springframework:spring-jdbc:5.2.2.RELEASE"    //spring JDBC classes
 
     testCompile project(':rest-api-client')                    //for performing functional tests

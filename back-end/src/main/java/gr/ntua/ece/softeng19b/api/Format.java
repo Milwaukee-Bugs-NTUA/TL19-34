@@ -1,6 +1,8 @@
 package gr.ntua.ece.softeng19b.api;
 
 import com.google.gson.stream.JsonWriter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import gr.ntua.ece.softeng19b.api.representation.RepresentationGenerator;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
@@ -349,6 +351,49 @@ public enum Format implements RepresentationGenerator {
 
     },
     CSV {
+        // Actual Total Load generateRepresentation
+        public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+
+        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
+            return new CustomCSVRepresentation( (Writer w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT
+                                                            .withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "ActualTotalLoadByDayValue"));
+                    for(ATLRecordForSpecificMonth rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getActualTotalLoadByDayValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+
+        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
+            throw new UnsupportedOperationException("Implement this");
+        }
+        // Day Ahead Total Load Forecast generateRepresentation
         public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
             throw new UnsupportedOperationException("Implement this");
         }
@@ -358,17 +403,7 @@ public enum Format implements RepresentationGenerator {
         public Representation generateRepresentationDATLFRFSY(List<DATLFRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
-        public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-
-        public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-
-        public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
+        // Aggregated Generation Per Type generateRepresentation
         public Representation generateRepresentationAGPTFSD(List<AGPTRecordForSpecificDay> result) {
             throw new UnsupportedOperationException("Implement this");
         }
@@ -380,6 +415,7 @@ public enum Format implements RepresentationGenerator {
         public Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result) {
             throw new UnsupportedOperationException("Implement this");
         }
+        // Actual VS Forecast generateRepresentation
         public Representation generateRepresentationAVFFSD(List<AVFRecordForSpecificDay> result) {
             throw new UnsupportedOperationException("Implement this");
         }
@@ -406,6 +442,21 @@ public enum Format implements RepresentationGenerator {
         public void write(Writer writer) throws IOException {
             JsonWriter jsonWriter = new JsonWriter(writer);
             consumer.accept(jsonWriter);
+        }
+    }
+    private static final class CustomCSVRepresentation extends WriterRepresentation {
+
+        private final Consumer<Writer> consumer;
+
+        CustomCSVRepresentation(Consumer<Writer> consumer) {
+            super(MediaType.TEXT_CSV);
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void write(Writer writer) throws IOException {
+            //CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
+            consumer.accept(writer);
         }
     }
 }
