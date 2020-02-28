@@ -1,6 +1,9 @@
 package gr.ntua.ece.softeng19b.client;
 
 import com.google.gson.stream.JsonReader;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
@@ -17,6 +20,7 @@ import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +175,12 @@ public enum Format implements ResponseBodyProcessor {
         //for month
         @Override
         public List<ATLRecordForSpecificMonth> consumeActualTotalLoadRecordsForSpecificMonth(Reader reader) {
-            throw new UnsupportedOperationException("Implement this");
+            try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+                return readActualDataLoadRecordsForSpecificMonth(bufferedReader);
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
         }
         //for year
         @Override
@@ -340,6 +349,33 @@ public enum Format implements ResponseBodyProcessor {
             }
         }
         reader.endObject();
+        return rec;
+    }
+
+    private static List<ATLRecordForSpecificMonth> readActualDataLoadRecordsForSpecificMonth(BufferedReader reader)
+            throws IOException {
+        List<ATLRecordForSpecificMonth> result = new ArrayList<>();
+        CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                                                            .withFirstRecordAsHeader()
+                                                            .withIgnoreHeaderCase()
+                                                            .withTrim());
+        for (CSVRecord csvRecord : csvParser) {
+            result.add(readActualDataLoadRecordForSpecificMonth(csvRecord));
+        }
+        return result;
+    }
+
+    private static ATLRecordForSpecificMonth readActualDataLoadRecordForSpecificMonth(CSVRecord csvRecord)
+            throws IOException {
+        ATLRecordForSpecificMonth rec = new ATLRecordForSpecificMonth();
+        rec.setAreaName(csvRecord.get("AreaName"));
+        rec.setAreaTypeCode(csvRecord.get("AreaTypeCode"));
+        rec.setMapCode(csvRecord.get("MapCode"));
+        rec.setResolutionCode(csvRecord.get("ResolutionCode"));
+        rec.setYear(Integer.valueOf(csvRecord.get("Year")));
+        rec.setMonth(Integer.valueOf(csvRecord.get("Month")));
+        rec.setDay(Integer.valueOf(csvRecord.get("Day")));
+        rec.setActualTotalLoadByDayValue(Double.valueOf(csvRecord.get("ActualTotalLoadByDayValue")));
         return rec;
     }
 

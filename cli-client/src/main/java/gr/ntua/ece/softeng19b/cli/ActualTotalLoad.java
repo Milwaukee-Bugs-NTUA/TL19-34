@@ -188,7 +188,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 }
                 else if (dateArgs.month != null){
                     List<ATLRecordForSpecificMonth> records = new RestAPI().
-                            getActualTotalLoad(areaName, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                            getActualTotalLoad(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
@@ -200,7 +200,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                                                             "Year", 
                                                             "Month",
                                                             "Day",
-                                                            "ActualTotalLoadValue"));
+                                                            "ActualTotalLoadByDayValue"));
                     for(ATLRecordForSpecificMonth rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
