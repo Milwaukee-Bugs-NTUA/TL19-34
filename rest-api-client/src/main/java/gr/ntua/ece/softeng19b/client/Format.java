@@ -706,7 +706,7 @@ public enum Format implements ResponseBodyProcessor {
         rec.setYear(Integer.valueOf(csvRecord.get("Year")));
         rec.setMonth(Integer.valueOf(csvRecord.get("Month")));
         rec.setDay(Integer.valueOf(csvRecord.get("Day")));
-        rec.setDayAheadTotalLoadForecastByDayValue(Double.valueOf(csvRecord.get("DayAheadTotalLoadByDayValue")));
+        rec.setDayAheadTotalLoadForecastByDayValue(Double.valueOf(csvRecord.get("DayAheadTotalLoadForecastByDayValue")));
         return rec;
     }
 
@@ -782,7 +782,7 @@ public enum Format implements ResponseBodyProcessor {
         rec.setResolutionCode(csvRecord.get("ResolutionCode"));
         rec.setYear(Integer.valueOf(csvRecord.get("Year")));
         rec.setMonth(Integer.valueOf(csvRecord.get("Month")));
-        rec.setDayAheadTotalLoadForecastByMonthValue(Double.valueOf(csvRecord.get("DayAheadTotalLoadByMonthValue")));
+        rec.setDayAheadTotalLoadForecastByMonthValue(Double.valueOf(csvRecord.get("DayAheadTotalLoadForecastByMonthValue")));
         return rec;
     }
 
@@ -875,7 +875,7 @@ public enum Format implements ResponseBodyProcessor {
         rec.setProductionType(csvRecord.get("ProductionType"));
         rec.setDateTimeUTC(csvRecord.get("DateTimeUTC"));
         rec.setActualGenerationOutputValue(Double.valueOf(csvRecord.get("ActualGenerationOutputValue")));
-        rec.setDateTimeUTC(csvRecord.get("UpdateTimeUTC"));
+        rec.setUpdateTimeUTC(csvRecord.get("UpdateTimeUTC"));
         return rec;
     }
 
