@@ -296,6 +296,7 @@ public class RestAPI {
         );
         try {
             File myObj = new File(System.getProperty("user.home")+"/softeng19bAPI.token");
+            myObj.delete();
             if (myObj.createNewFile()) {
               System.out.println("File created: " + myObj.getName());
               try {

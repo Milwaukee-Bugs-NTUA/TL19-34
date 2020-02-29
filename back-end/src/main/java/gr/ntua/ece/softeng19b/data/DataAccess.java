@@ -22,8 +22,12 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.Year;
 import java.util.List;
+import org.restlet.data.Status;
+import org.restlet.resource.ResourceException;
 
 public class DataAccess {
+
+    private static Status outOfQuotasStatus = new Status(402, "Out of Quotas");
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 
@@ -61,13 +65,52 @@ public class DataAccess {
         }
     }
 
+    public void resetDatabase() throws DataAccessException {
+        try {
+            int rows1 = jdbcTemplate.update("delete from users where admin=0");
+            int rows2 = jdbcTemplate.update("delete from actualtotalload");
+            int rows3 = jdbcTemplate.update("delete from aggregatedgenerationpertype");
+            int rows4 = jdbcTemplate.update("delete from dayaheadtotalloadforecast");
+            System.out.println("Deleted "+rows1+" rows from Users table!");
+            System.out.println("Deleted "+rows2+" rows from ActualTotalLoad table!");
+            System.out.println("Deleted "+rows3+" rows from AggregatedGenerationPerType table!");
+            System.out.println("Deleted "+rows4+" rows from DayAheadTotalLoadForecast table!");
+        } 
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 
-    public List<ATLRecordForSpecificDay> fetchActualDataLoadForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
+    public List<ATLRecordForSpecificDay> fetchActualDataLoadForSpecificDate(String areaName, String resolution, LocalDate date, String userName) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
         Integer day = date.getDayOfMonth();
+        User u;
+        List<ATLRecordForSpecificDay> records;
 
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        
         Object[] sqlParams = new Object[] {
                 areaName,
                 resolution,
@@ -82,7 +125,7 @@ public class DataAccess {
                           "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? and atl.Month=? and atl.Day=? " +
                           "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId order by atl.datetime";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						ATLRecordForSpecificDay dataLoad = new ATLRecordForSpecificDay();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -101,13 +144,52 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
+    public List<DATLFRecordForSpecificDay> fetchDayAheadTotalLoadForecastForSpecificDate(String areaName, String resolution, LocalDate date, String userName) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
         Integer day = date.getDayOfMonth();
+        User u;
+        List<DATLFRecordForSpecificDay> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -123,7 +205,7 @@ public class DataAccess {
                           "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? " +
                           "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						DATLFRecordForSpecificDay dataLoad = new DATLFRecordForSpecificDay();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -142,12 +224,51 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth) throws DataAccessException {
+    public List<DATLFRecordForSpecificMonth> fetchDayAheadTotalLoadForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth, String userName) throws DataAccessException {
 
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
+        User u;
+        List<DATLFRecordForSpecificMonth> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -165,7 +286,7 @@ public class DataAccess {
                           "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day asc";
 					
 		try {
-                        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                        records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						DATLFRecordForSpecificMonth dataLoad = new DATLFRecordForSpecificMonth();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -183,10 +304,49 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
 
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
-    public List<DATLFRecordForSpecificYear> fetchDayAheadTotalLoadForecastForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
+    public List<DATLFRecordForSpecificYear> fetchDayAheadTotalLoadForecastForSpecificYear(String areaName, String resolution, Year year, String userName) throws DataAccessException {
 
         Integer yearInt = year.getValue();
+
+        User u;
+        List<DATLFRecordForSpecificYear> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -202,7 +362,7 @@ public class DataAccess {
                           "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId " +
                           "group by datlf.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.month asc";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						DATLFRecordForSpecificYear dataLoad = new DATLFRecordForSpecificYear();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -218,12 +378,51 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
-    public List<AGPTRecordForSpecificDay> fetchAggregatedGenerationPerTypeForSpecificDate(String areaName, String resolution, String productionType, LocalDate date) throws DataAccessException {
+    public List<AGPTRecordForSpecificDay> fetchAggregatedGenerationPerTypeForSpecificDate(String areaName, String resolution, String productionType, LocalDate date, String userName) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
         Integer day = date.getDayOfMonth();
+        User u;
+        List<AGPTRecordForSpecificDay> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         String sqlQuery;
         Object[] sqlParams;
@@ -262,7 +461,7 @@ public class DataAccess {
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
         } 
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AGPTRecordForSpecificDay dataLoad = new AGPTRecordForSpecificDay();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -282,12 +481,51 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<AGPTRecordForSpecificMonth> fetchAggregatedGenerationPerTypeForSpecificMonth(String areaName, String resolution, String productionType, YearMonth yearMonth) throws DataAccessException {
+    public List<AGPTRecordForSpecificMonth> fetchAggregatedGenerationPerTypeForSpecificMonth(String areaName, String resolution, String productionType, YearMonth yearMonth, String userName) throws DataAccessException {
 
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
+        User u;
+        List<AGPTRecordForSpecificMonth> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams;
 
@@ -329,7 +567,7 @@ public class DataAccess {
         }
 					
 		try {
-                        return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                        records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AGPTRecordForSpecificMonth dataLoad = new AGPTRecordForSpecificMonth();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -347,11 +585,50 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
 
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
-    public List<AGPTRecordForSpecificYear> fetchAggregatedGenerationPerTypeForSpecificYear(String areaName, String resolution, String productionType, Year year) throws DataAccessException {
+
+    public List<AGPTRecordForSpecificYear> fetchAggregatedGenerationPerTypeForSpecificYear(String areaName, String resolution, String productionType, Year year, String userName) throws DataAccessException {
 
         Integer yearInt = year.getValue();
+        User u;
+        List<AGPTRecordForSpecificYear> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams;
         
@@ -392,7 +669,7 @@ public class DataAccess {
         }
 
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AGPTRecordForSpecificYear dataLoad = new AGPTRecordForSpecificYear();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -409,13 +686,51 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(String areaName, String resolution, YearMonth yearmonth) throws DataAccessException {
+    public List<ATLRecordForSpecificMonth> fetchActualDataLoadForSpecificMonth(String areaName, String resolution, YearMonth yearMonth, String userName) throws DataAccessException {
             
-        Integer year = yearmonth.getYear();
+        Integer year = yearMonth.getYear();
+        Integer month = yearMonth.getMonthValue();
+        User u;
+        List<ATLRecordForSpecificMonth> records;
 
-        Integer month = yearmonth.getMonthValue();
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
         Object[] sqlParams = new Object[] {
             areaName,
             resolution,
@@ -430,7 +745,7 @@ public class DataAccess {
                         "group by atl.day, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.day";
 
         try {
-            return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+            records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
             ATLRecordForSpecificMonth dataLoad = new ATLRecordForSpecificMonth();
             dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
             dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -447,10 +762,49 @@ public class DataAccess {
         catch(Exception e) {
                     throw new DataAccessException(e.getMessage(), e);
         }
+
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
+    public List<ATLRecordForSpecificYear> fetchActualDataLoadForSpecificYear(String areaName, String resolution, Year year, String userName) throws DataAccessException {
         Integer year1 = year.getValue();
+        User u;
+        List<ATLRecordForSpecificYear> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
         
         Object[] sqlParams = new Object[] {
 
@@ -466,7 +820,7 @@ public class DataAccess {
                     "group by atl.Month, atc.AreaTypeCodeText, mc.MapCodeText, rc.ResolutionCodeText order by atl.Month";
 
         try {
-            return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+            records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
             ATLRecordForSpecificYear dataLoad = new ATLRecordForSpecificYear();
             dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
             dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -484,14 +838,51 @@ public class DataAccess {
                 throw new DataAccessException(e.getMessage(), e);
         }
 
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
 
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<AVFRecordForSpecificDay> fetchActualvsForecastForSpecificDate(String areaName, String resolution, LocalDate date) throws DataAccessException {
+    public List<AVFRecordForSpecificDay> fetchActualvsForecastForSpecificDate(String areaName, String resolution, LocalDate date, String userName) throws DataAccessException {
 
         Integer year = date.getYear();
         Integer month = date.getMonthValue();
         Integer day = date.getDayOfMonth();
+        User u;
+        List<AVFRecordForSpecificDay> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -511,7 +902,7 @@ public class DataAccess {
         "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
         "order by datlf.DateTime";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AVFRecordForSpecificDay dataLoad = new AVFRecordForSpecificDay();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -531,12 +922,50 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<AVFRecordForSpecificMonth> fetchActualvsForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth) throws DataAccessException {
+    public List<AVFRecordForSpecificMonth> fetchActualvsForecastForSpecificMonth(String areaName, String resolution, YearMonth yearMonth, String userName) throws DataAccessException {
 
         Integer year = yearMonth.getYear();
         Integer month = yearMonth.getMonthValue();
+        User u;
+        List<AVFRecordForSpecificMonth> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -555,7 +984,7 @@ public class DataAccess {
         "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
         "group by datlf.day, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.day";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AVFRecordForSpecificMonth dataLoad = new AVFRecordForSpecificMonth();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -573,11 +1002,49 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
-    public List<AVFRecordForSpecificYear> fetchActualvsForecastForSpecificYear(String areaName, String resolution, Year year) throws DataAccessException {
+    public List<AVFRecordForSpecificYear> fetchActualvsForecastForSpecificYear(String areaName, String resolution, Year year, String userName) throws DataAccessException {
 
         Integer yearParam = year.getValue();
+        User u;
+        List<AVFRecordForSpecificYear> records;
+
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, 'none', 'none', quotas - usedquotas, admin from users where username = ?";
+
+        try {
+                u = jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                dataLoad.setPassword(rs.getString(3));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                dataLoad.setAdmin(rs.getInt(5));
+                if (dataLoad.getRequestsPerDayQuota()<=0) throw new ResourceException(outOfQuotasStatus, "Out of Quotas!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
 
         Object[] sqlParams = new Object[] {
                 areaName,
@@ -596,7 +1063,7 @@ public class DataAccess {
         "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId and atl.DateTime=datlf.DateTime "+
         "group by datlf.month, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext order by datlf.month";
 		try {
-					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+					records = jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						AVFRecordForSpecificYear dataLoad = new AVFRecordForSpecificYear();
 						dataLoad.setAreaName(rs.getString(1)); //get the string located at the 1st column of the result set
 						dataLoad.setAreaTypeCode(rs.getString(2)); //get the int located at the 2nd column of the result set
@@ -613,6 +1080,20 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+        
+        if(u.getAdmin()==0){
+            Object [] sqlParamsForQuotas = new Object [] {userName};
+
+            String sqlQueryForQuotas = "update users set usedquotas = usedquotas + 1 where username = ?";
+
+            try {
+                int rows1 = jdbcTemplate.update(sqlQueryForQuotas, sqlParamsForQuotas);
+            }
+            catch(Exception e) {
+                throw new DataAccessException(e.getMessage(), e);
+            }
+        }
+        return records;
     }
 
     public User Login(String userName, String password) throws DataAccessException {

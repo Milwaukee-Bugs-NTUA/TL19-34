@@ -40,9 +40,6 @@ public class Login extends EnergyResource {
     
                 //Let's set the JWT Claims
                 String jwt = Jwts.builder().claim("username", user.getUserName())
-                                           .claim("email", user.getEmail())
-                                           .claim("admin",user.getAdmin())
-                                           .claim("requested per day quotas", user.getRequestsPerDayQuota())
                                            .signWith(Keys.hmacShaKeyFor(secret))
                                            .compact();
                 return new JsonMapRepresentation(Map.of("token", jwt));                                           
