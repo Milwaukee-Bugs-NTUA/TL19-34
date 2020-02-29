@@ -6,6 +6,7 @@ import DATLParams from "./DATLParams";
 import AggParams from "./AggParams";
 import VsParams from "./VsParams";
 import ATLTable from "./ATLTable";
+import { UserConsumer } from "./UserContext";
 
 $(document).ready(function() {
   $(".first-button").on("click", function() {
@@ -103,9 +104,17 @@ class Main extends Component {
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                          <ATLParams
-                            sendData={this.getjson_and_getdisplayTable}
-                          />
+                          <UserConsumer>
+                            {context => (
+                              <React.Fragment>
+                                <ATLParams
+                                  sendData={this.getjson_and_getdisplayTable}
+                                  location={this.props.location}
+                                  context={context}
+                                />
+                              </React.Fragment>
+                            )}
+                          </UserConsumer>
                         </li>
                       </ul>
                     </div>

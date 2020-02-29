@@ -8,7 +8,14 @@ class ATLParams extends Component {
     datePicker: null,
     myjson: null,
     isLoaded: false,
-    displayTable: false
+    displayTable: false,
+    token: null,
+    username: null,
+    setUserData: (token, username) =>
+      this.setState({
+        token: token,
+        username: username
+      })
   };
 
   constructor(props) {
@@ -33,6 +40,8 @@ class ATLParams extends Component {
     console.log("ref to datePicker: ", this.datePicker.current.value);
     var url;
 
+    var u;
+    var tokenhelp;
     const Name = this.areaName.current.value;
     const Res = this.timeRes.current.value;
     const Time = this.datePicker.current.value;
@@ -84,12 +93,15 @@ class ATLParams extends Component {
     }
 
     console.log("executing...", url);
+    console.log("Executing for user: ", this.props.context.username);
+    console.log("Executing for user: ", this.props.context.token);
 
     fetch(url, {
       //mode: "no-cors",
       method: "GET",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-OBSERVATORY-AUTH": this.props.context.token
       }
     })
       .then(response => response.json())

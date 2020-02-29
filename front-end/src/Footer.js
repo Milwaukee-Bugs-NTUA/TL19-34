@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import UserConfirmationModal from "./UserConfirmationModal";
 import HelpModal from "./HelpModal";
 
 class Footer extends Component {
