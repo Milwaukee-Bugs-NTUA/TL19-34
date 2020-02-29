@@ -150,7 +150,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                 // CSV Formating
                 if (dateArgs.date != null ) {
                     List<DATLFRecordForSpecificDay> records = new RestAPI().
-                            getDayAheadTotalLoadForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), Format.JSON);
+                            getDayAheadTotalLoadForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                     // Do something with the records :)
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
@@ -191,7 +191,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                 }
                 else if (dateArgs.month != null){
                     List<DATLFRecordForSpecificMonth> records = new RestAPI().
-                            getDayAheadTotalLoadForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                            getDayAheadTotalLoadForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
@@ -223,7 +223,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
                 }
                 else {
                     List<DATLFRecordForSpecificYear> records = new RestAPI().
-                            getDayAheadTotalLoadForecast(areaName, timeres.name(), Year.parse(dateArgs.year), Format.JSON);
+                            getDayAheadTotalLoadForecast(areaName, timeres.name(), Year.parse(dateArgs.year), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 

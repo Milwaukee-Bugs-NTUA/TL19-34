@@ -1,6 +1,8 @@
 package gr.ntua.ece.softeng19b.api;
 
 import com.google.gson.stream.JsonWriter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import gr.ntua.ece.softeng19b.api.representation.RepresentationGenerator;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
@@ -22,6 +24,7 @@ import org.restlet.resource.ResourceException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.BufferedWriter;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -95,7 +98,7 @@ public enum Format implements RepresentationGenerator {
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -349,47 +352,419 @@ public enum Format implements RepresentationGenerator {
 
     },
     CSV {
-        public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-        public Representation generateRepresentationDATLFRFSM(List<DATLFRecordForSpecificMonth> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
-        public Representation generateRepresentationDATLFRFSY(List<DATLFRecordForSpecificYear> result) {
-            throw new UnsupportedOperationException("Implement this");
-        }
+        // Actual Total Load generateRepresentation
         public Representation generateRepresentationATLFSD(List<ATLRecordForSpecificDay> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "DateTimeUTC",
+                                                            "ActualTotalLoadValue",
+                                                            "UpdateTimeUTC"));
+                    for(ATLRecordForSpecificDay rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getDateTimeUTC()),
+                                        String.valueOf(rec.getActualTotalLoadValue()),
+                                        String.valueOf(rec.getUpdateTimeUTC()));
+                    }
+                    p.flush();//w.name("DateTimeUTC").value(rec.getDateTimeUTC().toString());
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationATLFSM(List<ATLRecordForSpecificMonth> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "ActualTotalLoadByDayValue"));
+                    for(ATLRecordForSpecificMonth rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getActualTotalLoadByDayValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationATLFSY(List<ATLRecordForSpecificYear> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "ActualTotalLoadByMonthValue"));
+                    for(ATLRecordForSpecificYear rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getActualTotalLoadByMonthValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
+        // Day Ahead Total Load Forecast generateRepresentation
+        public Representation generateRepresentationDATLFRFSD(List<DATLFRecordForSpecificDay> result) {
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "DateTimeUTC",
+                                                            "DayAheadTotalLoadForecastValue",
+                                                            "UpdateTimeUTC"));
+                    for(DATLFRecordForSpecificDay rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getDateTimeUTC()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
+                                        String.valueOf(rec.getUpdateTimeUTC()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+        public Representation generateRepresentationDATLFRFSM(List<DATLFRecordForSpecificMonth> result) {
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "DayAheadTotalLoadForecastByDayValue"));
+                    for(DATLFRecordForSpecificMonth rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastByDayValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+        public Representation generateRepresentationDATLFRFSY(List<DATLFRecordForSpecificYear> result) {
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "DayAheadTotalLoadForecastByMonthValue"));
+                    for(DATLFRecordForSpecificYear rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastByMonthValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
+        }
+        // Aggregated Generation Per Type generateRepresentation
         public Representation generateRepresentationAGPTFSD(List<AGPTRecordForSpecificDay> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "ProductionType",
+                                                            "DateTimeUTC",
+                                                            "ActualGenerationOutputValue",
+                                                            "UpdateTimeUTC"));
+                    for(AGPTRecordForSpecificDay rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        rec.getProductionType(),
+                                        String.valueOf(rec.getDateTimeUTC()),
+                                        String.valueOf(rec.getActualGenerationOutputValue()),
+                                        String.valueOf(rec.getUpdateTimeUTC()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationAGPTFSM(List<AGPTRecordForSpecificMonth> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "ProductionType",
+                                                            "ActualGenerationOutputByDayValue"));
+                    for(AGPTRecordForSpecificMonth rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        rec.getProductionType(),
+                                        String.valueOf(rec.getActualGenerationOutputByDayValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationAGPTFSY(List<AGPTRecordForSpecificYear> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "ProductionType",
+                                                            "ActualGenerationOutputByMonthValue"));
+                    for(AGPTRecordForSpecificYear rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        rec.getProductionType(),
+                                        String.valueOf(rec.getActualGenerationOutputByMonthValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
+        // Actual VS Forecast generateRepresentation
         public Representation generateRepresentationAVFFSD(List<AVFRecordForSpecificDay> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "DateTimeUTC",
+                                                            "DayAheadTotalLoadForecastValue",
+                                                            "ActualTotalLoadValue",
+                                                            "UpdateTimeUTC"));
+                    for(AVFRecordForSpecificDay rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getDateTimeUTC()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastValue()),
+                                        String.valueOf(rec.getActualTotalLoadValue()),
+                                        String.valueOf(rec.getUpdateTimeUTC()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationAVFFSM(List<AVFRecordForSpecificMonth> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "Day",
+                                                            "DayAheadTotalLoadForecastByDayValue",
+                                                            "ActualTotalLoadByDayValue"));
+                    for(AVFRecordForSpecificMonth rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDay()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastByDayValue()),
+                                        String.valueOf(rec.getActualTotalLoadByDayValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
 
         public Representation generateRepresentationAVFFSY(List<AVFRecordForSpecificYear> result) {
-            throw new UnsupportedOperationException("Implement this");
+            return new CustomCSVRepresentation( (BufferedWriter w) -> {
+                try {
+                    CSVPrinter p = new CSVPrinter(w,CSVFormat.DEFAULT.withHeader(
+                                                            "Source", 
+                                                            "DataSet", 
+                                                            "AreaName" , 
+                                                            "AreaTypeCode", 
+                                                            "MapCode" , 
+                                                            "ResolutionCode", 
+                                                            "Year", 
+                                                            "Month",
+                                                            "DayAheadTotalLoadForecastByMonthValue",
+                                                            "ActualTotalLoadByMonthValue"));
+                    for(AVFRecordForSpecificYear rec : result){
+                        p.printRecord(rec.getSource(),
+                                        rec.getDataSet(), 
+                                        rec.getAreaName(), 
+                                        rec.getAreaTypeCode(), 
+                                        rec.getMapCode(), 
+                                        rec.getResolutionCode(), 
+                                        String.valueOf(rec.getYear()), 
+                                        String.valueOf(rec.getMonth()),
+                                        String.valueOf(rec.getDayAheadTotalLoadForecastByMonthValue()),
+                                        String.valueOf(rec.getActualTotalLoadByMonthValue()));
+                    }
+                    p.flush();
+                } catch (IOException e) {
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                }
+            });
         }
     };
 
@@ -406,6 +781,21 @@ public enum Format implements RepresentationGenerator {
         public void write(Writer writer) throws IOException {
             JsonWriter jsonWriter = new JsonWriter(writer);
             consumer.accept(jsonWriter);
+        }
+    }
+    private static final class CustomCSVRepresentation extends WriterRepresentation {
+
+        private final Consumer<BufferedWriter> consumer;
+
+        CustomCSVRepresentation(Consumer<BufferedWriter> consumer) {
+            super(MediaType.TEXT_CSV);
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void write(Writer writer) throws IOException {
+            //CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
+            consumer.accept(new BufferedWriter(writer));
         }
     }
 }

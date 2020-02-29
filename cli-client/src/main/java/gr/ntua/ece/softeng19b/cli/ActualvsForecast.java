@@ -146,7 +146,7 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                 // CSV Format
                 if (dateArgs.date != null ) {
                     List<AVFRecordForSpecificDay> records = new RestAPI().
-                            getActualvsForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), Format.JSON);
+                            getActualvsForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                     // Do something with the records :)
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
@@ -189,7 +189,7 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                 }
                 else if (dateArgs.month != null){
                     List<AVFRecordForSpecificMonth> records = new RestAPI().
-                            getActualvsForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                            getActualvsForecast(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
                         return 0;
@@ -227,7 +227,7 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
                 }
                 else {
                     List<AVFRecordForSpecificYear> records = new RestAPI().
-                            getActualvsForecast(areaName, timeres.name(), Year.parse(dateArgs.year), Format.JSON);
+                            getActualvsForecast(areaName, timeres.name(), Year.parse(dateArgs.year), format);
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
                         return 0;

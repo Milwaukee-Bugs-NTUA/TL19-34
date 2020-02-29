@@ -130,7 +130,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                         w.name("ResolutionCode").value(rec.getResolutionCode());
                         w.name("Year").value(rec.getYear());
                         w.name("Month").value(rec.getMonth());
-                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualDataLoadByMonthValue());
+                        w.name("ActualTotalLoadByMonthValue").value(rec.getActualTotalLoadByMonthValue());
                         w.endObject(); // }
                         w.flush();
                     }
@@ -147,7 +147,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 // CSV Formating
                 if (dateArgs.date != null ) {
                     List<ATLRecordForSpecificDay> records = new RestAPI().
-                            getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), Format.JSON);
+                            getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
                     // Do something with the records :)
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
@@ -188,7 +188,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 }
                 else if (dateArgs.month != null){
                     List<ATLRecordForSpecificMonth> records = new RestAPI().
-                            getActualTotalLoad(areaName, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                            getActualTotalLoad(areaName, timeres.name(), YearMonth.parse(dateArgs.month), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
@@ -200,7 +200,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                                                             "Year", 
                                                             "Month",
                                                             "Day",
-                                                            "ActualTotalLoadValue"));
+                                                            "ActualTotalLoadByDayValue"));
                     for(ATLRecordForSpecificMonth rec : records){
                         csvPrinter.printRecord(rec.getSource(),
                                                 rec.getDataSet(), 
@@ -220,7 +220,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                 }
                 else {
                     List<ATLRecordForSpecificYear> records = new RestAPI().
-                            getActualTotalLoad(areaName, timeres.name(), Year.parse(dateArgs.year), Format.JSON);
+                            getActualTotalLoad(areaName, timeres.name(), Year.parse(dateArgs.year), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
@@ -241,7 +241,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
                                                 rec.getResolutionCode(), 
                                                 String.valueOf(rec.getYear()), 
                                                 String.valueOf(rec.getMonth()), 
-                                                String.valueOf(rec.getActualDataLoadByMonthValue()));
+                                                String.valueOf(rec.getActualTotalLoadByMonthValue()));
                     }
                     csvPrinter.flush();
                     System.out.println();

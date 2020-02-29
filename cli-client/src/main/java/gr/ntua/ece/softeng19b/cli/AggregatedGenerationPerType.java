@@ -159,7 +159,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 // CSV Formating
                 if (dateArgs.date != null ) {
                     List<AGPTRecordForSpecificDay> records = new RestAPI().
-                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), LocalDate.parse(dateArgs.date), Format.JSON);
+                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), LocalDate.parse(dateArgs.date), format);
                     // Do something with the records :)
                     if (records.isEmpty() == true) {
                         System.out.println("Fetched 0 records");
@@ -202,7 +202,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 }
                 else if (dateArgs.month != null){
                     List<AGPTRecordForSpecificMonth> records = new RestAPI().
-                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), YearMonth.parse(dateArgs.month), Format.JSON);
+                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), YearMonth.parse(dateArgs.month), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
@@ -236,7 +236,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
                 }
                 else {
                     List<AGPTRecordForSpecificYear> records = new RestAPI().
-                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), Year.parse(dateArgs.year), Format.JSON);
+                            getAggregatedGenerationPerType(areaName, productionType, timeres.name(), Year.parse(dateArgs.year), format);
                     CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(System.out, "UTF-8"), 
                                                             CSVFormat.DEFAULT.withHeader(
                                                             "Source", 
