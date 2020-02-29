@@ -37,7 +37,6 @@ class Main extends Component {
   };
 
   render() {
-    const to_show = this.state.myjson;
     return (
       <div>
         <row class="row">
@@ -55,7 +54,7 @@ class Main extends Component {
                 class="navbar-toggler first-button"
                 type="button"
                 data-toggle="collapse"
-                data-target="#navbarSupportedContent20"
+                data-target="#navbarSupportedContent21"
                 aria-controls="navbarSupportedContent20"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
@@ -210,7 +209,17 @@ class Main extends Component {
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                          <AggParams />
+                          <UserConsumer>
+                            {context => (
+                              <React.Fragment>
+                                <AggParams
+                                  sendData={this.getjson_and_getdisplayTable}
+                                  location={this.props.location}
+                                  context={context}
+                                />
+                              </React.Fragment>
+                            )}
+                          </UserConsumer>
                         </li>
                       </ul>
                     </div>

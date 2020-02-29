@@ -68,7 +68,11 @@ class NavMenu extends Component {
  */
 const UserAvatar = props => {
   if (props.context.username) {
-    return <span className="navbar-text">{props.context.username}</span>;
+    return (
+      <span className="navbar-text" style={{ marginRight: 300 }}>
+        <h5>User: {props.context.username}</h5>
+      </span>
+    );
   } else {
     return null;
   }
@@ -83,7 +87,7 @@ class Nav extends Component {
           style={css.fullWidth}
         >
           <Link className="navbar-brand" to="/">
-            Home
+            <h3> Home</h3>
           </Link>
           <button
             className="navbar-toggler"
@@ -106,7 +110,7 @@ class Nav extends Component {
             )}
           </UserConsumer>
           <text class="justify content-end" style={{ color: "white" }}>
-            Milwaukee Bugs
+            <h3>Milwaukee Bugs</h3>
           </text>
         </nav>
       </div>

@@ -13,7 +13,7 @@ class TableRepresentation extends Component {
           <div>
             {this.props.isLoaded ? (
               <div class="table-responsive-xl">
-                <table class="table table-bordered">
+                <table class="table table-bordered" style={{ marginTop: 30 }}>
                   <div>
                     {Object.keys(this.props.myjson[0]).map((key, index) => {
                       //insert headers
