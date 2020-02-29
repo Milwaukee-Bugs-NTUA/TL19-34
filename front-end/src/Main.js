@@ -28,13 +28,9 @@ class Main extends Component {
     isLoaded: false,
     myjson: null
   };
-  displayTable = () => {
-    this.setState({
-      displayTable: !this.state.displayTable
-    });
-  };
 
-  getjson = passjson => {
+  getjson_and_getdisplayTable = (passjson, passdisplayTable) => {
+    this.setState({ displayTable: passdisplayTable });
     this.setState({ myjson: passjson, isLoaded: true });
   };
 
@@ -49,7 +45,7 @@ class Main extends Component {
               style={{
                 marginTop: 15,
                 backgroundColor: "#007bff",
-                width: "80%"
+                width: "100%"
               }}
             >
               <a
@@ -108,8 +104,7 @@ class Main extends Component {
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                           <ATLParams
-                            display={this.displayTable}
-                            sendData={this.getjson}
+                            sendData={this.getjson_and_getdisplayTable}
                           />
                         </li>
                       </ul>
@@ -195,54 +190,11 @@ class Main extends Component {
             </nav>
           </col1>
           <col2 class="col-8">
-            {this.state.displayTable ? (
-              <div>
-                {this.state.isLoaded ? (
-                  <div class="table-wrapper">
-                    <table class="table table-earnings">
-                      <thead>
-                        <tr>
-                          <th scope="col">Source</th>
-                          <th scope="col">Dataset</th>
-                          <th scope="col">AreaName</th>
-                          <th scope="col">AreaTypeCode</th>
-                          <th scope="col">MapCode</th>
-                          <th scope="col">ResolutionCode</th>
-                          <th scope="col">Year</th>
-                          <th scope="col">Month</th>
-                          <th scope="col">Day</th>
-                          <th scope="col">ActualTotalLoadValue</th>
-                        </tr>
-                      </thead>
-                      <div>
-                        {to_show.map((myobj, i) => {
-                          return (
-                            <tbody>
-                              <tr>
-                                <td>{myobj.Source}</td>
-                                <td>{myobj.DataSet}</td>
-                                <td>{myobj.AreaName}</td>
-                                <td>{myobj.AreaTypeCode}</td>
-                                <td>{myobj.MapCode}</td>
-                                <td>{myobj.ResolutionCode}</td>
-                                <td>{myobj.Year}</td>
-                                <td>{myobj.Month}</td>
-                                <td>{myobj.Day}</td>
-                                <td>{myobj.ActualTotalLoadValue}</td>
-                              </tr>
-                            </tbody>
-                          );
-                        })}
-                      </div>
-                    </table>
-                  </div>
-                ) : (
-                  <div>Loading</div>
-                )}
-              </div>
-            ) : (
-              ""
-            )}
+            <ATLTable
+              isLoaded={this.state.isLoaded}
+              myjson={this.state.myjson}
+              displayTable={this.state.displayTable}
+            />
           </col2>
         </row>
       </div>

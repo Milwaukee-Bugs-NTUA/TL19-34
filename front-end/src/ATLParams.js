@@ -7,8 +7,10 @@ class ATLParams extends Component {
     timeRes: null,
     datePicker: null,
     myjson: null,
-    isLoaded: false
+    isLoaded: false,
+    displayTable: false
   };
+
   constructor(props) {
     super(props);
     this.areaName = React.createRef();
@@ -17,22 +19,69 @@ class ATLParams extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  isEmpty(obj) {
+    //check if an object is empty
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   handleSubmit(event) {
     console.log("ref to areaName: ", this.areaName.current.value);
     console.log("ref to timeRes: ", this.timeRes.current.value);
     console.log("ref to datePicker: ", this.datePicker.current.value);
+    var url;
 
     const Name = this.areaName.current.value;
     const Res = this.timeRes.current.value;
     const Time = this.datePicker.current.value;
-    const url =
-      "https://localhost:8765/energy/api/ActualTotalLoad/" +
-      Name +
-      "/" +
-      Res +
-      "/date/" +
-      Time +
-      "?format=json";
+
+    var array_of_time = Time.split("-"); //split the time
+
+    if (
+      typeof array_of_time[0] != "undefined" &&
+      typeof array_of_time[1] != "undefined" &&
+      typeof array_of_time[2] != "undefined"
+    ) {
+      //for day
+      url =
+        "https://localhost:8765/energy/api/ActualTotalLoad/" +
+        Name +
+        "/" +
+        Res +
+        "/date/" +
+        Time +
+        "?format=json";
+    } else if (
+      typeof array_of_time[0] !== "undefined" &&
+      typeof array_of_time[1] !== "undefined" &&
+      typeof array_of_time[2] === "undefined"
+    ) {
+      //for month
+      url =
+        "https://localhost:8765/energy/api/ActualTotalLoad/" +
+        Name +
+        "/" +
+        Res +
+        "/month/" +
+        Time +
+        "?format=json";
+    } else if (
+      typeof array_of_time[0] != "undefined" &&
+      typeof array_of_time[1] === "undefined" &&
+      typeof array_of_time[2] === "undefined"
+    ) {
+      //for year
+      url =
+        "https://localhost:8765/energy/api/ActualTotalLoad/" +
+        Name +
+        "/" +
+        Res +
+        "/year/" +
+        Time +
+        "?format=json";
+    }
 
     console.log("executing...", url);
 
@@ -48,11 +97,19 @@ class ATLParams extends Component {
         this.setState({ myjson: json, isLoaded: true });
         console.log(this.state.myjson);
         console.log(this.state.isLoaded);
-        console.log("ela ela");
+        this.setState({
+          displayTable: !this.state.displayTable
+        });
+        console.log("ela", typeof this.state.myjson);
+
+        if (!this.isEmpty(this.state.myjson)) {
+          //check if json is empty
+          this.props.sendData(this.state.myjson, this.state.displayTable);
+        } else console.log("empty json");
       });
   }
+
   render() {
-    const to_show = this.state.myjson;
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -95,7 +152,9 @@ class ATLParams extends Component {
           </div>
 
           <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
-            <label htmlfor="timeRes" class="col-lg-6"></label>
+            <label htmlfor="timeRes" class="col-lg-6">
+              Time Resolution
+            </label>
             <select ref={this.timeRes} id="timeRes" class="col-lg-6">
               <option>None</option>
               <option>PT15M</option>
@@ -107,7 +166,7 @@ class ATLParams extends Component {
               <option>PT1D</option>
             </select>
           </div>
-          <div class="form-group" style={{ marginTop: 10, width: "50%" }}>
+          <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
             <label htmlFor="datePicker" style={{ color: "white" }}>
               YYYY-MM-DD/YYYY-MM/YYYY
             </label>
@@ -117,8 +176,6 @@ class ATLParams extends Component {
             className="btn btn-primary  "
             type="submit"
             style={{ marginLeft: 100 }}
-            onClick={() => this.props.sendData(to_show)}
-            onDoubleClick={this.props.display}
           >
             Execute
           </button>
