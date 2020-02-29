@@ -58,8 +58,14 @@ class App extends Component {
                   );
                 }}
               />
-              <Route path="/main" component={Main} />
-              <Route path="/ActualTotalLoad" component={ATLTable} />
+              <Route
+                path="/main"
+                render={this.renderProtectedComponent(Main)}
+              />
+              <Route
+                path="/ActualTotalLoad"
+                render={this.renderProtectedComponent(ATLTable)}
+              />
               <Route path="/login" component={Login} />
               <Route
                 path="/logout"
