@@ -26,7 +26,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
     List<BasicAdminArguments> basicAdminArguments;
     
     static class BasicAdminArguments {
-
         @ArgGroup(exclusive = false, multiplicity = "1")
         List<UserArgumentGroup> userArgumentGroup;
 
@@ -35,7 +34,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
 
         @ArgGroup(exclusive = false, multiplicity = "1", heading = "%nOptions for importing data into database%n")
         NewDataArgumentGroup newDataArgumentGroup;
-
     }
 
     static class UserArgumentGroup {
@@ -47,7 +45,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
     }
 
     static class ActionOnUserArgumentGroup {
-        
         @Option(
             names = "--newuser",
             required = true,
@@ -61,7 +58,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
             description = "username of the user to be modified"
         ) 
         protected String oldUser;
-
     }
 
     static class UserStatusArgumentGroup {
@@ -74,7 +70,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
     }
 
     static class NewDataArgumentGroup {
-        
         @Option(
             names = "--newdata", 
             required = true,
@@ -125,7 +120,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
 
 
         try {
-            System.out.println("Hello world");
+            
             return 0;
         } 
         
