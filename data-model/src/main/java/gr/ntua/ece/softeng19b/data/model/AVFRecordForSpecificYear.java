@@ -2,26 +2,26 @@ package gr.ntua.ece.softeng19b.data.model;
 
 public class AVFRecordForSpecificYear extends AbstractEntsoeRecord {
 
-    private double dayAheadTotalLoadForecastValue;
-    private double actualTotalLoadValue;
+    private double dayAheadTotalLoadForecastByMonthValue;
+    private double actualTotalLoadByMonthValue;
 
     public AVFRecordForSpecificYear() {
         super(DataSet.ActualVSForecastedTotalLoad);
     }
 
-    public double getDayAheadTotalLoadForecastValue() {
-        return dayAheadTotalLoadForecastValue;
+    public double getDayAheadTotalLoadForecastByMonthValue() {
+        return dayAheadTotalLoadForecastByMonthValue;
     }
 
-    public void setDayAheadTotalLoadForecastValue(double dayAheadTotalLoadForecastValue) {
-        this.dayAheadTotalLoadForecastValue = dayAheadTotalLoadForecastValue;
+    public void setDayAheadTotalLoadForecastByMonthValue(double dayAheadTotalLoadForecastByMonthValue) {
+        this.dayAheadTotalLoadForecastByMonthValue = dayAheadTotalLoadForecastByMonthValue;
     }
     
-    public double getActualTotalLoadValue() {
-        return actualTotalLoadValue;
+    public double getActualTotalLoadByMonthValue() {
+        return actualTotalLoadByMonthValue;
     }
 
-    public void setActualTotalLoadValue(double actualTotalLoadValue) {
-        this.actualTotalLoadValue = actualTotalLoadValue;
+    public void setActualTotalLoadByMonthValue(double actualTotalLoadByMonthValue) {
+        this.actualTotalLoadByMonthValue = actualTotalLoadByMonthValue;
     }
 }

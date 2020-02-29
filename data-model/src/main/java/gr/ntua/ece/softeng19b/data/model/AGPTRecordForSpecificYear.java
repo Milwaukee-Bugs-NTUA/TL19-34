@@ -2,19 +2,19 @@ package gr.ntua.ece.softeng19b.data.model;
 
 public class AGPTRecordForSpecificYear extends AbstractEntsoeRecord {
 
-    private double actualGenerationOutputValue;
+    private double actualGenerationOutputByMonthValue;
     private String productionType;
 
     public AGPTRecordForSpecificYear() {
         super(DataSet.AggregatedGenerationPerType);
     }
 
-    public double getActualGenerationOutputValue() {
-        return actualGenerationOutputValue;
+    public double getActualGenerationOutputByMonthValue() {
+        return actualGenerationOutputByMonthValue;
     }
 
-    public void setActualGenerationOutputValue(double actualGenerationOutputValue) {
-        this.actualGenerationOutputValue = actualGenerationOutputValue;
+    public void setActualGenerationOutputByMonthValue(double actualGenerationOutputByMonthValue) {
+        this.actualGenerationOutputByMonthValue = actualGenerationOutputByMonthValue;
     }
 
     public String getProductionType(){

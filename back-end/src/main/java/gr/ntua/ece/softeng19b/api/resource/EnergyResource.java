@@ -26,6 +26,21 @@ public class EnergyResource extends ServerResource {
         return optional.orElse(Format.JSON);
     }
 
+    static String getToken(String h) throws RuntimeException {
+        int length = h.length();
+        String [] headers = h.substring(1, length-1).split(", ");
+        String token = null;
+        for(String header : headers) {
+            length = header.length();
+            if(length>20){
+                if(header.substring(0, 20).equals("[X-OBSERVATORY-AUTH:")) token = header.substring(21, length-1);
+            }
+        }
+        if(token==null) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Unauthorized User");
+        return token;
+
+    }
+    
     static Integer parseYear(String year) throws NumberFormatException {
         return Integer.parseInt(year);
     }

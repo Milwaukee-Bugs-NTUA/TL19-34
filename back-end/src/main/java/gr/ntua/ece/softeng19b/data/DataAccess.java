@@ -12,6 +12,7 @@ import gr.ntua.ece.softeng19b.data.model.AGPTRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificMonth;
 import gr.ntua.ece.softeng19b.data.model.AVFRecordForSpecificYear;
+import gr.ntua.ece.softeng19b.data.model.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -76,10 +77,10 @@ public class DataAccess {
         };
 
         //TODO: Insert a valid SQL query
-        String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, atl.day, atl.TotalLoadValue "+
+        String sqlQuery = "select atl.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, atl.year, atl.month, atl.day, atl.datetime, atl.TotalLoadValue, atl.updatetime "+
                           "from actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
                           "where atl.areaname=? and rc.resolutioncodetext=? and atl.Year=? and atl.Month=? and atl.Day=? " +
-                          "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId";
+                          "and rc.Id=atl.ResolutionCodeId and mc.id=atl.mapcodeid and atc.id=atl.AreaTypeCodeId order by atl.datetime";
 		try {
 					return jdbcTemplate.query(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
 						ATLRecordForSpecificDay dataLoad = new ATLRecordForSpecificDay();
@@ -89,8 +90,10 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setActualTotalLoadValue(rs.getDouble(8));
+                        dataLoad.setDay(rs.getInt(7));
+                        dataLoad.setDateTimeUTC(rs.getTimestamp(8));
+                        dataLoad.setActualTotalLoadValue(rs.getDouble(9));
+                        dataLoad.setUpdateTimeUTC(rs.getTimestamp(10));
 						return dataLoad;
 
 					});
@@ -115,7 +118,7 @@ public class DataAccess {
         };
 
         //TODO: Insert a valid SQL query
-        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, datlf.day, datlf.TotalLoadValue "+
+        String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, datlf.day, datlf.datetime, datlf.TotalLoadValue, datlf.updatetime "+
                           "from dayaheadtotalloadforecast as datlf, resolutioncode as rc, areatypecode as atc, mapcode as mc " +
                           "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? " +
                           "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId";
@@ -128,8 +131,10 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+                        dataLoad.setDay(rs.getInt(7));
+                        dataLoad.setDateTimeUTC(rs.getTimestamp(8));
+                        dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(9));
+                        dataLoad.setUpdateTimeUTC(rs.getTimestamp(10));
 						return dataLoad;
 
 					});
@@ -169,7 +174,7 @@ public class DataAccess {
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDay(rs.getInt(7));
-                        dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
+                        dataLoad.setDayAheadTotalLoadForecastByDayValue(rs.getDouble(8));
 						return dataLoad;
 					});
 
@@ -205,7 +210,7 @@ public class DataAccess {
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(7));
+						dataLoad.setDayAheadTotalLoadForecastByMonthValue(rs.getDouble(7));
 						return dataLoad;
 					});
 
@@ -235,7 +240,7 @@ public class DataAccess {
             };
             
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
-                       "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
+                       "agpt.day, pt.productiontypetext, agpt.datetime, agpt.actualgenerationoutput, agpt.updatetime "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and pt.productiontypetext=? and agpt.Year=? and agpt.Month=? and agpt.Day=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
@@ -251,7 +256,7 @@ public class DataAccess {
             };
             
             sqlQuery = "select agpt.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, agpt.year, agpt.month, "+
-                       "agpt.day, pt.productiontypetext, agpt.actualgenerationoutput "+
+                       "agpt.day, pt.productiontypetext, agpt.datetime, agpt.actualgenerationoutput, agpt.updatetime "+
                        "from aggregatedgenerationpertype as agpt, resolutioncode as rc, areatypecode as atc, mapcode as mc, productiontype as pt " +
                        "where agpt.areaname=? and rc.resolutioncodetext=? and agpt.Year=? and agpt.Month=? and agpt.Day=? " +
                        "and rc.Id=agpt.ResolutionCodeId and mc.id=agpt.mapcodeid and atc.id=agpt.AreaTypeCodeId and pt.id=agpt.productiontypeid";
@@ -267,7 +272,9 @@ public class DataAccess {
 						dataLoad.setMonth(rs.getInt(6));
                         dataLoad.setDay(rs.getInt(7));
                         dataLoad.setProductionType(rs.getString(8));
-						dataLoad.setActualGenerationOutputValue(rs.getDouble(9));
+                        dataLoad.setDateTimeUTC(rs.getTimestamp(9));
+                        dataLoad.setActualGenerationOutputValue(rs.getDouble(10));
+                        dataLoad.setUpdateTimeUTC(rs.getTimestamp(11));
 						return dataLoad;
 
 					});
@@ -332,7 +339,7 @@ public class DataAccess {
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDay(rs.getInt(7));
                         dataLoad.setProductionType(rs.getString(8));
-                        dataLoad.setActualGenerationOutputValue(rs.getDouble(9));
+                        dataLoad.setActualGenerationOutputByDayValue(rs.getDouble(9));
                         return dataLoad;
 					});
 
@@ -394,7 +401,7 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setMonth(rs.getInt(6));
                         dataLoad.setProductionType(rs.getString(7));
-                        dataLoad.setActualGenerationOutputValue(rs.getDouble(8));
+                        dataLoad.setActualGenerationOutputByMonthValue(rs.getDouble(8));
 						return dataLoad;
 					});
 
@@ -496,7 +503,7 @@ public class DataAccess {
 
         //TODO: Insert a valid SQL query
         String sqlQuery = "select datlf.areaname, atc.areatypecodetext, mc.mapcodetext, rc.resolutioncodetext, datlf.year, datlf.month, "+
-        "datlf.day, datlf.TotalLoadValue, atl.TotalLoadValue, atl.DateTime "+
+        "datlf.day, datlf.DateTime, datlf.TotalLoadValue, atl.TotalLoadValue, datlf.UpdateTime "+
         "from dayaheadtotalloadforecast as datlf, actualtotalload as atl, resolutioncode as rc, areatypecode as atc, mapcode as mc "+
         "where datlf.areaname=? and rc.resolutioncodetext=? and datlf.Year=? and datlf.Month=? and datlf.Day=? "+
         "and rc.Id=datlf.ResolutionCodeId and mc.id=datlf.mapcodeid and atc.id=datlf.AreaTypeCodeId and "+
@@ -512,9 +519,11 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
-						dataLoad.setActualTotalLoadValue(rs.getDouble(9));
+                        dataLoad.setDay(rs.getInt(7));
+                        dataLoad.setDateTimeUTC(rs.getTimestamp(8));
+						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(9));
+                        dataLoad.setActualTotalLoadValue(rs.getDouble(10));
+                        dataLoad.setUpdateTimeUTC(rs.getTimestamp(11));
 						return dataLoad;
 
 					});
@@ -555,8 +564,8 @@ public class DataAccess {
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
 						dataLoad.setDay(rs.getInt(7));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(8));
-						dataLoad.setActualTotalLoadValue(rs.getDouble(9));
+						dataLoad.setDayAheadTotalLoadForecastByDayValue(rs.getDouble(8));
+						dataLoad.setActualTotalLoadByDayValue(rs.getDouble(9));
 						return dataLoad;
 
 					});
@@ -595,8 +604,8 @@ public class DataAccess {
 						dataLoad.setResolutionCode(rs.getString(4));
 						dataLoad.setYear(rs.getInt(5));
 						dataLoad.setMonth(rs.getInt(6));
-						dataLoad.setDayAheadTotalLoadForecastValue(rs.getDouble(7));
-						dataLoad.setActualTotalLoadValue(rs.getDouble(8));
+						dataLoad.setDayAheadTotalLoadForecastByMonthValue(rs.getDouble(7));
+						dataLoad.setActualTotalLoadByMonthValue(rs.getDouble(8));
 						return dataLoad;
 
 					});
@@ -604,6 +613,35 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+    }
+
+    public User Login(String userName, String password) throws DataAccessException {
+        
+        Object[] sqlParams = new Object[] {
+            userName
+        };
+
+        //TODO: Insert a valid SQL query
+        String sqlQuery = "select username, email, password, quotas, admin from users where username = ?";
+        
+        try {
+                    return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                        User dataLoad = new User();
+                        dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
+                        dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
+                        dataLoad.setPassword(rs.getString(3));
+                        dataLoad.setRequestsPerDayQuota(rs.getInt(4));
+                        dataLoad.setAdmin(rs.getInt(5));
+                        if(password.equals(dataLoad.getPassword())) return dataLoad;
+                        else return null;
+                    });
+        }
+        
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
     }
 
 }

@@ -1,9 +1,12 @@
 package gr.ntua.ece.softeng19b.data.model;
 
+import java.sql.Timestamp;
+
 public class DATLFRecordForSpecificDay extends AbstractEntsoeRecord {
 
     private int day;
     private double dayAheadTotalLoadForecastValue;
+    private Timestamp dateTimeUTC, updateTimeUTC;
 
     public DATLFRecordForSpecificDay() {
         super(DataSet.DayAheadTotalLoadForecast);
@@ -24,4 +27,29 @@ public class DATLFRecordForSpecificDay extends AbstractEntsoeRecord {
     public void setDayAheadTotalLoadForecastValue(double dayAheadTotalLoadForecastValue) {
         this.dayAheadTotalLoadForecastValue = dayAheadTotalLoadForecastValue;
     }
+    public Timestamp getDateTimeUTC() {
+        return dateTimeUTC;
+    }
+
+    public void setDateTimeUTC(Timestamp dateTimeUTC) {
+        this.dateTimeUTC = dateTimeUTC;
+    }    
+
+
+    public void setDateTimeUTC(String string) {
+        this.dateTimeUTC = Timestamp.valueOf(string);
+    }
+
+    public Timestamp getUpdateTimeUTC() {
+        return updateTimeUTC;
+    }
+
+    public void setUpdateTimeUTC(Timestamp updateTimeUTC) {
+        this.updateTimeUTC = updateTimeUTC;
+    }
+    
+    public void setUpdateTimeUTC(String string) {
+        this.updateTimeUTC = Timestamp.valueOf(string);
+    }    
+
 }
