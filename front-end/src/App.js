@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import { Login, Logout } from "./Auth";
 import { UserProvider } from "./UserContext";
 import ATLParams from "./ATLParams";
-import ATLTable from "./ATLTable";
+import TableRepresentation from "./TableRepresentation";
 
 class App extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ class App extends Component {
               />
               <Route
                 path="/ActualTotalLoad"
-                render={this.renderProtectedComponent(ATLTable)}
+                render={this.renderProtectedComponent(TableRepresentation)}
               />
               <Route path="/login" component={Login} />
               <Route

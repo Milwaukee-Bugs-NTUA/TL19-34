@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./ATLTable.css";
+import "./TableRepresentation";
 
 class ATLParams extends Component {
   state = {
@@ -11,6 +11,7 @@ class ATLParams extends Component {
     displayTable: false,
     token: null,
     username: null,
+
     setUserData: (token, username) =>
       this.setState({
         token: token,
@@ -178,11 +179,19 @@ class ATLParams extends Component {
               <option>PT1D</option>
             </select>
           </div>
-          <div class="form-group" style={{ marginTop: 10, width: "100%" }}>
-            <label htmlFor="datePicker" style={{ color: "white" }}>
-              YYYY-MM-DD/YYYY-MM/YYYY
+          <div
+            class="form-group"
+            style={{ marginTop: 10, marginLeft: 15, width: "100%" }}
+          >
+            <label htmlFor="datePicker" style={{ color: "dark" }}>
+              Enter Day,Month or Year
             </label>
-            <input id="datePicker" type="text" ref={this.datePicker} />
+            <input
+              id="datePicker"
+              type="text"
+              ref={this.datePicker}
+              placeholder="YYYY-MM-DD/YYYY-MM/YYYY"
+            />
           </div>
           <button
             className="btn btn-primary  "

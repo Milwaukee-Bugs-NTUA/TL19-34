@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./ATLTable.css";
+import "./TableRepresentation.css";
 
-class ATLTable extends Component {
+class TableRepresentation extends Component {
   constructor(props) {
     super(props);
   }
@@ -45,4 +45,4 @@ class ATLTable extends Component {
   }
 }
 
-export default ATLTable;
+export default TableRepresentation;

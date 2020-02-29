@@ -5,8 +5,9 @@ import ATLParams from "./ATLParams";
 import DATLParams from "./DATLParams";
 import AggParams from "./AggParams";
 import VsParams from "./VsParams";
-import ATLTable from "./ATLTable";
+import ATLTable from "./TableRepresentation";
 import { UserConsumer } from "./UserContext";
+import TableRepresentation from "./TableRepresentation";
 
 $(document).ready(function() {
   $(".first-button").on("click", function() {
@@ -139,7 +140,17 @@ class Main extends Component {
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                          <DATLParams />
+                          <UserConsumer>
+                            {context => (
+                              <React.Fragment>
+                                <DATLParams
+                                  sendData={this.getjson_and_getdisplayTable}
+                                  location={this.props.location}
+                                  context={context}
+                                />
+                              </React.Fragment>
+                            )}
+                          </UserConsumer>
                         </li>
                       </ul>
                     </div>
@@ -164,7 +175,17 @@ class Main extends Component {
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                          <VsParams />
+                          <UserConsumer>
+                            {context => (
+                              <React.Fragment>
+                                <VsParams
+                                  sendData={this.getjson_and_getdisplayTable}
+                                  location={this.props.location}
+                                  context={context}
+                                />
+                              </React.Fragment>
+                            )}
+                          </UserConsumer>
                         </li>
                       </ul>
                     </div>
@@ -199,7 +220,7 @@ class Main extends Component {
             </nav>
           </col1>
           <col2 class="col-8">
-            <ATLTable
+            <TableRepresentation
               isLoaded={this.state.isLoaded}
               myjson={this.state.myjson}
               displayTable={this.state.displayTable}
