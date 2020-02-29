@@ -6,12 +6,21 @@ class TableRepresentation extends Component {
     super(props);
   }
 
+  isEmpty(obj) {
+    //check if an object is empty
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   render() {
     return (
       <div>
         {this.props.displayTable ? (
           <div>
-            {this.props.isLoaded ? (
+            {console.log(this.props.myjson)}
+            {!this.isEmpty(this.props.myjson) ? (
               <div class="table-responsive-xl">
                 <table class="table table-bordered" style={{ marginTop: 30 }}>
                   <div>
@@ -34,7 +43,9 @@ class TableRepresentation extends Component {
                 </table>
               </div>
             ) : (
-              <div>Loading</div>
+              <div style={{ marginTop: 80, marginLeft: 15 }}>
+                <h2>No Data to display for this day,month or year</h2>
+              </div>
             )}
           </div>
         ) : (

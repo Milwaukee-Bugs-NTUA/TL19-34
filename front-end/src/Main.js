@@ -5,9 +5,9 @@ import ATLParams from "./ATLParams";
 import DATLParams from "./DATLParams";
 import AggParams from "./AggParams";
 import VsParams from "./VsParams";
-import ATLTable from "./TableRepresentation";
 import { UserConsumer } from "./UserContext";
 import TableRepresentation from "./TableRepresentation";
+import Modal from "./Modal";
 
 $(document).ready(function() {
   $(".first-button").on("click", function() {
@@ -28,17 +28,30 @@ class Main extends Component {
   state = {
     displayTable: false,
     isLoaded: false,
-    myjson: null
+    myjson: null,
+    modalVisible: false
+  };
+
+  showModal = () => {
+    console.log("show modal");
+    this.setState({ modalVisible: true });
+  };
+
+  hideModal = userChoice => {
+    //handle user choice
+    console.log(userChoice);
+    this.setState({ modalVisible: false });
   };
 
   getjson_and_getdisplayTable = (passjson, passdisplayTable) => {
-    this.setState({ displayTable: passdisplayTable });
+    this.setState({ displayTable: true });
     this.setState({ myjson: passjson, isLoaded: true });
   };
 
   render() {
     return (
       <div>
+        {console.log("modal", this.state.modalVisible)}
         <row class="row">
           <col1 class="col-4">
             <nav
@@ -111,6 +124,8 @@ class Main extends Component {
                                   sendData={this.getjson_and_getdisplayTable}
                                   location={this.props.location}
                                   context={context}
+                                  showBadDateModal={this.showModal}
+                                  hideModal={this.hideModal}
                                 />
                               </React.Fragment>
                             )}
@@ -235,6 +250,13 @@ class Main extends Component {
               displayTable={this.state.displayTable}
             />
           </col2>
+          <Modal
+            buttonName="Try Again"
+            title="Bad Request"
+            message="Wrong Date"
+            visible={this.state.modalVisible}
+            onHide={this.hideModal}
+          />
         </row>
       </div>
     );

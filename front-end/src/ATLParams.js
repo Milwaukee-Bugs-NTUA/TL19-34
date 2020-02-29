@@ -39,15 +39,21 @@ class ATLParams extends Component {
     console.log("ref to areaName: ", this.areaName.current.value);
     console.log("ref to timeRes: ", this.timeRes.current.value);
     console.log("ref to datePicker: ", this.datePicker.current.value);
+
     var url;
 
-    var u;
-    var tokenhelp;
     const Name = this.areaName.current.value;
     const Res = this.timeRes.current.value;
     const Time = this.datePicker.current.value;
 
     var array_of_time = Time.split("-"); //split the time
+
+    var month = parseInt(array_of_time[1]);
+    var day = parseInt(array_of_time[2]);
+
+    if (month > 12 || month < 1 || day < 1 || day > 31) {
+      return this.props.showBadDateModal();
+    }
 
     if (
       typeof array_of_time[0] != "undefined" &&
@@ -98,7 +104,6 @@ class ATLParams extends Component {
     console.log("Executing for user: ", this.props.context.token);
 
     fetch(url, {
-      //mode: "no-cors",
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -113,12 +118,8 @@ class ATLParams extends Component {
         this.setState({
           displayTable: !this.state.displayTable
         });
-        console.log("ela", typeof this.state.myjson);
 
-        if (!this.isEmpty(this.state.myjson)) {
-          //check if json is empty
-          this.props.sendData(this.state.myjson, this.state.displayTable);
-        } else console.log("empty json");
+        this.props.sendData(this.state.myjson, this.state.displayTable);
       });
   }
 

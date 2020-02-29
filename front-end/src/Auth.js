@@ -99,7 +99,7 @@ export class Logout extends Component {
     fetch("https://localhost:8765/energy/api/Logout", {
       method: "POST",
       headers: {
-        "X-OBSERVATORY-AUTH": this.context.username,
+        "X-OBSERVATORY-AUTH": this.context.token,
         "Content-Type": "application/x-www-form-urlencoded"
       }
     }).then(() => this.doLogout());

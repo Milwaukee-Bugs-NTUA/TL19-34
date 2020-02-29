@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import $ from "jquery";
 
-export default class UserConfirmationModal extends Component {
+export default class HelpModal extends Component {
   constructor(props) {
     super(props);
     this.$modalDOMElem = null;
-    this.userChoice = false; //default is no
+    this.backButton = false; //default is no
     this.modalMounted = this.modalMounted.bind(this);
-    this.handleYes = this.handleYes.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   //example of using a React ref as DOM element mount/unmount callback
   modalMounted(refToModal) {
     const hideFun = () => {
-      this.props.onHide(this.userChoice);
+      this.props.onHide(this.backButton);
     };
     console.log("ref to modal: ", refToModal);
     if (refToModal !== null) {
@@ -23,8 +23,8 @@ export default class UserConfirmationModal extends Component {
     }
   }
 
-  handleYes() {
-    this.userChoice = true;
+  handleBack() {
+    this.backButton = true;
     this.$modalDOMElem.modal("hide");
   }
 
@@ -52,17 +52,10 @@ export default class UserConfirmationModal extends Component {
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  No
-                </button>
-                <button
-                  type="button"
                   className="btn btn-primary"
-                  onClick={this.handleYes}
+                  onClick={this.handleBack}
                 >
-                  Yes
+                  {this.props.buttonName}
                 </button>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import HelpModal from "./HelpModal";
+import Modal from "./Modal";
 
 class Footer extends Component {
   constructor(props) {
@@ -35,7 +35,8 @@ class Footer extends Component {
             >
               Need Help?
             </button>
-            <HelpModal
+            <Modal
+              buttonName="Back"
               title="This is the most useless help ever"
               message="I simply cannot help"
               visible={this.state.modalVisible}
