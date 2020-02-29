@@ -14,6 +14,8 @@ import java.time.YearMonth;
 import java.time.Year;
 
 import java.util.List;
+import io.jsonwebtoken.*;
+import java.util.Base64;
 
 /**
  * The Restlet resource that deals with the /ActualDataLoad/... payloads.
@@ -26,6 +28,22 @@ public class ActualTotalLoadForSpecificMonth extends EnergyResource {
     protected Representation get() throws ResourceException {
 
         //Read the mandatory URI attributes
+
+        String h = getRequest().getHeaders().toString();
+        String token = null;
+
+        try{
+            token = getToken(h);
+        }
+        catch(Exception e)
+        {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage(), e);
+        }
+
+        String userName = Jwts.parser()         
+        .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+        .parseClaimsJws(token).getBody().get("username").toString();                         
+
         String areaName = getMandatoryAttribute("AreaName", "AreaName is missing");
         String resolution = getMandatoryAttribute("Resolution", "Resolution is missing");
 
@@ -48,7 +66,8 @@ public class ActualTotalLoadForSpecificMonth extends EnergyResource {
             List<ATLRecordForSpecificMonth> result = dataAccess.fetchActualDataLoadForSpecificMonth(
                     areaName,
                     resolution,
-                    yearMonth
+                    yearMonth,
+                    userName
             );
             return format.generateRepresentationATLFSM(result);
         } catch (Exception e) {

@@ -381,7 +381,7 @@ public enum Format implements ResponseBodyProcessor {
                     rec.setMonth(reader.nextInt());
                     break;
                 case "ActualTotalLoadByMonthValue":
-                    rec.setActualDataLoadByMonthValue(reader.nextDouble());
+                    rec.setActualTotalLoadByMonthValue(reader.nextDouble());
                     break;
                 default:
                     reader.skipValue();

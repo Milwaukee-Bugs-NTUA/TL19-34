@@ -25,7 +25,8 @@ import static picocli.CommandLine.*;
         DayAheadTotalLoadForecast.class,
         ActualvsForecast.class,
         Login.class,
-        Logout.class
+        Logout.class,
+        Reset.class
     }
 )
 public class App implements Callable<Integer> {
