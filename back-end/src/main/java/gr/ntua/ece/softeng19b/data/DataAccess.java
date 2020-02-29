@@ -475,7 +475,7 @@ public class DataAccess {
             dataLoad.setYear(rs.getInt(5));
             dataLoad.setMonth(rs.getInt(6));
             //dataLoad.setDay(rs.getInt(7));
-            dataLoad.setActualDataLoadByMonthValue(rs.getDouble(7));
+            dataLoad.setActualTotalLoadByMonthValue(rs.getDouble(7));
             return dataLoad;
 
             });

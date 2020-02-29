@@ -9,11 +9,11 @@ public class ATLRecordForSpecificYear extends AbstractEntsoeRecord {
         super(DataSet.ActualTotalLoad);
     }
 
-    public double getActualDataLoadByMonthValue() {
+    public double getActualTotalLoadByMonthValue() {
         return actualDataLoadByMonthValue;
     }
 
-    public void setActualDataLoadByMonthValue(double actualDataLoadByMonthValue) {
+    public void setActualTotalLoadByMonthValue(double actualDataLoadByMonthValue) {
         this.actualDataLoadByMonthValue = actualDataLoadByMonthValue;
     }
 }
