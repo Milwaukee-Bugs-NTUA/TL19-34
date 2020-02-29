@@ -14,15 +14,11 @@ class ATLTable extends Component {
             {this.props.isLoaded ? (
               <div class="table-responsive-xl">
                 <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      {Object.keys(this.props.myjson[0]).map((key, index) => {
-                        //insert headers
-                        return <th key={index}>{key}</th>;
-                      })}
-                    </tr>
-                  </thead>
                   <div>
+                    {Object.keys(this.props.myjson[0]).map((key, index) => {
+                      //insert headers
+                      return <th key={index}>{key}</th>;
+                    })}
                     {this.props.myjson.map((myobj, i) => {
                       return (
                         <tbody>
