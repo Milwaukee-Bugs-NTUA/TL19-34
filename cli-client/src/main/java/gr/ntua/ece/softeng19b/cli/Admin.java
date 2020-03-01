@@ -25,11 +25,11 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
     }
 
     @ArgGroup(exclusive = true, multiplicity = "1")
-    List<BasicAdminArguments> basicAdminArguments;
+    BasicAdminArguments basicAdminArguments;
     
     static class BasicAdminArguments {
         @ArgGroup(exclusive = false, multiplicity = "1")
-        List<UserArgumentGroup> userArgumentGroup;
+        UserArgumentGroup userArgumentGroup;
 
         @ArgGroup(heading = "%nFetch specified user's information from DataBase%n")
         UserStatusArgumentGroup userStatusArgumentGroup;
@@ -122,74 +122,59 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
         
         try {
             RestAPI restAPI = new RestAPI();
-            String newUsername = basicAdminArguments.get(0)
-                                .userArgumentGroup.get(0)
-                                .actionOnUserArgumentGroup.newUsername;
-            String oldUsername = basicAdminArguments.get(0)
-                                .userArgumentGroup.get(0)
-                                .actionOnUserArgumentGroup.oldUsername;
-            String password = basicAdminArguments.get(0)
-                                .userArgumentGroup.get(1)
-                                .userInfo.password;
-            String email = basicAdminArguments.get(0)
-                            .userArgumentGroup.get(1)
-                            .userInfo.email;
-            int quotas = basicAdminArguments.get(0)
-                            .userArgumentGroup.get(1)
-                            .userInfo.quotas;
-
-            String username = basicAdminArguments.get(1)
-                                .userStatusArgumentGroup
-                                .username;
-
-            DataSet dataSet = basicAdminArguments.get(2)
-                                .newDataArgumentGroup
-                                .dataSet;
-            String dataFile = basicAdminArguments.get(2)
-                                .newDataArgumentGroup
-                                .dataFile;
-
-            System.out.println(newUsername);
-            System.out.println(oldUsername);
-            System.out.println(password);
-            System.out.println(email);
-            System.out.println(String.valueOf(quotas));
-            System.out.println(username);
-            System.out.println(String.valueOf(dataSet));
-            System.out.println(dataFile);
-            return 0;}catch (RuntimeException e) {
-            cli.getOut().println(e.getMessage());
-            e.printStackTrace(cli.getOut());
-            return -1;
-        }}
-/*
-            if (newUsername != null) {
-                // Add new user
-                User newUserObject = restAPI.addUser(newUsername, email, password, quotas);
-                JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out,"UTF-8"));
-                w.setIndent("  ");
-                w.beginObject(); // {
-                w.name("Username").value(newUserObject.getUserName());
-                w.name("Email").value(newUserObject.getEmail());
-                w.name("Admin").value(newUserObject.getAdmin());
-                w.name("RequestsPerDayQuota").value(newUserObject.getRequestsPerDayQuota());
-                w.endObject(); // }
-                w.flush();
-                System.out.println();
-                System.out.println();
-                System.out.println("User added in DataBase successfully!");
-                return 0;
+            if (basicAdminArguments.userArgumentGroup != null) {
+                // Get arguments' values from classes' fields
+                String password = basicAdminArguments
+                                    .userArgumentGroup
+                                    .userInfo.password;
+                String email = basicAdminArguments
+                                    .userArgumentGroup
+                                    .userInfo.email;
+                int quotas = basicAdminArguments
+                                    .userArgumentGroup
+                                    .userInfo.quotas;
+                
+                if (basicAdminArguments.userArgumentGroup.actionOnUserArgumentGroup.newUsername != null) {
+                    // Add new user
+                    String username = basicAdminArguments
+                                            .userArgumentGroup
+                                            .actionOnUserArgumentGroup
+                                            .newUsername;
+                    User newUserObject = restAPI.addUser(username, email, password, quotas);
+                    JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out,"UTF-8"));
+                    w.setIndent("  ");
+                    w.beginObject(); // {
+                    w.name("Username").value(newUserObject.getUserName());
+                    w.name("Email").value(newUserObject.getEmail());
+                    w.name("Admin").value(newUserObject.getAdmin());
+                    w.name("RequestsPerDayQuota").value(newUserObject.getRequestsPerDayQuota());
+                    w.endObject(); // }
+                    w.flush();
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("User added in DataBase successfully!");
+                    return 0;
+                }
+                else if (basicAdminArguments.userArgumentGroup.actionOnUserArgumentGroup.oldUsername != null) {
+                    // Modify existing user
+                    String username = basicAdminArguments
+                                        .userArgumentGroup
+                                        .actionOnUserArgumentGroup
+                                        .oldUsername;
+                    User userObject = new User(username, email, 0, quotas);
+                    userObject.setPassword(password);
+                    restAPI.updateUser(userObject);
+                    System.out.println("Not implemented yet");
+                    System.out.println(username+password+email+String.valueOf(quotas));
+                    return 0;
+                }                
             }
-            else if (oldUsername != null) {
-                // Modify existing user
-                //User userObject = new User(oldUsername, email, 0, quotas);
-                //userObject.setPassword(password);
-                //restAPI.updateUser(userObject);
-                System.out.println("Not implemented yet");
-                return 0;
-            }
-            else if (username != null) {
+            else if (basicAdminArguments.userStatusArgumentGroup != null) {
                 // Fetch user status
+                String username = basicAdminArguments
+                                    .userStatusArgumentGroup
+                                    .username;
+                
                 User newUserObject = restAPI.getUser(username);
                 System.out.println("Information of requested User:");
                 System.out.println();
@@ -203,11 +188,19 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                 w.endObject(); // }
                 w.flush();
                 System.out.println();
+                System.out.println(username);
                 return 0;
             }
-            else if (dataSet != null) {
+            else if (basicAdminArguments.newDataArgumentGroup != null) {
                 // Import Data into DataBase
+                DataSet dataSet = basicAdminArguments
+                                    .newDataArgumentGroup
+                                    .dataSet;
+                String dataFile = basicAdminArguments
+                                    .newDataArgumentGroup
+                                    .dataFile;
                 System.out.println("Not implemented yet");
+                return 0;
             }
             return 0;
         } 
@@ -217,5 +210,5 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
             e.printStackTrace(cli.getOut());
             return -1;
         }
-    }*/
+    }
 }
