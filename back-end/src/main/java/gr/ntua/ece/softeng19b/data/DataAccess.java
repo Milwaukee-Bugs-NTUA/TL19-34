@@ -1176,12 +1176,11 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
 
-        Object [] sqlParams = new Object [] {email, password, requestsPerDayQuota, userName};
-
-        String sqlQuery = "update users set email = ?, password = ?, quotas = ? where username = ?";
+        Object [] sqlParamsForUpdate = new Object [] {email, password, requestsPerDayQuota, userName};
+        String sqlQueryForUpdate = "update users set email = ?, password = ?, quotas = ? where username = ?";
 
         try {
-            int rows1 = jdbcTemplate.update(sqlQuery, sqlParams);
+            int rows1 = jdbcTemplate.update(sqlQueryForUpdate, sqlParamsForUpdate);
         }
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
@@ -1192,7 +1191,7 @@ public class DataAccess {
         String sqlQueryForUser = "select username, email, quotas, admin, usedquotas from users where username = ?";
 
         try {
-            return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+            return jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
                 User dataLoad = new User();
                 dataLoad.setUserName(rs.getString(1)); 
                 dataLoad.setEmail(rs.getString(2));
