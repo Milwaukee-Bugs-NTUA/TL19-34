@@ -1125,4 +1125,22 @@ public class DataAccess {
 
     }
 
+    public User addUser(String userName, String password, String email, int requestedPerDayQuota) throws DataAccessException {
+    
+        Object [] sqlParams = new Object [] {userName, email, password, requestedPerDayQuota};
+
+        String sqlQuery = "isert int users (username, email, password, quotas, admin, usedquotas) values "+
+                                   "(?, ?, ?, ?, 0, 0)";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQuery, sqlParams);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        return new User(userName, email, 0, requestedPerDayQuota);   
+    }
+
+
 }
