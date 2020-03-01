@@ -1,9 +1,11 @@
 package gr.ntua.ece.softeng19b.cli;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;
+import gr.ntua.ece.softeng19b.client.ImportResult;
 import gr.ntua.ece.softeng19b.data.model.User;
 import com.google.gson.stream.JsonWriter;
 import java.io.OutputStreamWriter;
+import java.nio.file.*;
 
 import picocli.CommandLine;
 
@@ -86,7 +88,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
             required = true,
             description = "file to be imported to database"    
         )
-        String dataFile;
+        String dataPath;
     }
 
     static class UserInfo {
@@ -212,10 +214,26 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                 DataSet dataSet = basicAdminArguments
                                     .newDataArgumentGroup
                                     .dataSet;
-                String dataFile = basicAdminArguments
+                String dataPath = basicAdminArguments
                                     .newDataArgumentGroup
-                                    .dataFile;
-                System.out.println("Not implemented yet");
+                                    .dataPath;
+                // need to split path and file name
+                String filename = dataPath.substring(dataPath.lastIndexOf("\\") + 1);
+                String filepath = dataPath.substring(0, dataPath.lastIndexOf("\\"));
+                Path path = FileSystems.getDefault().getPath(filepath, filename);
+
+                ImportResult importResult = restAPI.importFile(String.valueOf(dataSet), path);
+                JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out,"UTF-8"));
+                w.setIndent("  ");
+                w.beginObject(); // {
+                w.name("TotalRecordsInFile").value(importResult.getTotalRecordsInFile());
+                w.name("TotalRecordsImported").value(importResult.getTotalRecordsImported());
+                w.name("TotalRecordsInDatabase").value(importResult.getTotalRecordsInDatabase());
+                w.endObject(); // }
+                w.flush();
+                System.out.println();
+                System.out.println();
+                System.out.println("Data Import ended successfully!");
                 return 0;
             }
             return 0;
