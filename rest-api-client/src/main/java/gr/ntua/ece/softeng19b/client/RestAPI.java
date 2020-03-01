@@ -352,6 +352,7 @@ public class RestAPI {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("email", updatedUser.getEmail());
+        formData.put("password", updatedUser.getPassword());
         formData.put("requestsPerDayQuota", String.valueOf(updatedUser.getRequestsPerDayQuota()));
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPutRequest(urlForUpdateUser(updatedUser.getUserName()), URL_ENCODED, ofUrlEncodedFormData(formData)),

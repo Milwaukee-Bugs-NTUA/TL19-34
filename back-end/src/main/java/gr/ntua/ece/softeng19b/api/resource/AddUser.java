@@ -23,7 +23,7 @@ public class AddUser extends EnergyResource {
 
     @Override
     protected Representation post(Representation entity) throws ResourceException {
-        
+        // create new user
         String h = getRequest().getHeaders().toString();
         String token = null;
 
@@ -43,14 +43,11 @@ public class AddUser extends EnergyResource {
         int requestedPerDayQuota = Integer.valueOf(form.getFirstValue("requestsPerDayQuota"));
         User u;
 
-        //create new user
-
         try{
             u = dataAccess.addUser(adminUserName, userName, password, email, requestedPerDayQuota);
         }
         catch(Exception e)
         {
-            //System.out.println(e.getMessage());
             if(e.getMessage().equals("Unauthorized (401) - User has no Admin Priveleges!")){
                 throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage());
             }
