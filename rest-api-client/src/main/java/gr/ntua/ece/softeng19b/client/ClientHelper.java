@@ -47,8 +47,11 @@ public class ClientHelper {
                     case "Admin":
                         user.setAdmin(jsonReader.nextInt());
                         break;
-                    case "RequestsPerDayQuotas":
+                    case "RequestsPerDayQuota":
                         user.setRequestsPerDayQuota(jsonReader.nextInt());
+                        break;
+                    case "UsedPerDayQuota":
+                        user.setUsedPerDayQuota(jsonReader.nextInt());
                         break;
                     default:
                         jsonReader.skipValue();
