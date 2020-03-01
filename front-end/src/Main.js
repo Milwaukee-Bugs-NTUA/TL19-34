@@ -269,16 +269,13 @@ class Main extends Component {
           />
         </row>
 
-        <row2>
-          <col12 class="col-6" />
-          <col22 class="col-6" style={{ marginLeft: 100 }}>
-            <Diagram
-              isLoaded={this.state.isLoaded}
-              myjson={this.state.myjson}
-              displayTable={this.state.displayTable}
-              displayDiagram={this.state.displayDiagram}
-            />
-          </col22>
+        <row2 class="row justify-content-center" style={{ marginLeft: -350 }}>
+          <Diagram
+            isLoaded={this.state.isLoaded}
+            myjson={this.state.myjson}
+            displayTable={this.state.displayTable}
+            displayDiagram={this.state.displayDiagram}
+          />
         </row2>
       </div>
     );

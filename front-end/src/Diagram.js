@@ -34,15 +34,16 @@ class Diagram extends Component {
         exportEnabled: true,
         animationDuration: 4000,
         theme: "light1", //"light1", "dark1", "dark2"
+        width: 950,
 
-        dataPointMaxWidth: 50,
+        dataPointMaxWidth: 40,
         height: 400,
         title: {
           text: "Actual Total Load for each day of selected Month"
         },
         data: [
           {
-            type: "column", //change type to bar, line, area, pie, etc
+            type: "line", //change type to bar, line, area, pie, etc
             indexLabel: "{y}", //Shows y value on all Data Points
             indexLabelFontColor: "#5A5757",
             indexLabelPlacement: "outside",
@@ -58,7 +59,7 @@ class Diagram extends Component {
         {this.props.displayDiagram ? (
           <div>
             {!this.isEmpty(this.props.myjson) ? (
-              <CanvasJSChart options={options} style={{ marginLeft: 1000 }} />
+              <CanvasJSChart options={options} />
             ) : (
               ""
             )}
