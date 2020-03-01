@@ -13,15 +13,19 @@ import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.List;
 
+import io.jsonwebtoken.*;
+import java.util.Base64;
+
 /**
  * The Restlet resource that deals with the /ActualDataLoad/... payloads.
  */
 public class ActualTotalLoadForSpecificDate extends EnergyResource {
 
     private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
+    private static Status outOfQuotasStatus = new Status(402, "Out of Quotas");
 
     @Override
-    protected Representation get() throws ResourceException, RuntimeException {
+    protected Representation get() throws ResourceException{
 
         //Read the mandatory URI attributes
         String h = getRequest().getHeaders().toString();
@@ -35,6 +39,9 @@ public class ActualTotalLoadForSpecificDate extends EnergyResource {
             throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage(), e);
         }
 
+        String userName = Jwts.parser()         
+                            .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+                            .parseClaimsJws(token).getBody().get("username").toString();                         
         String areaName = getMandatoryAttribute("AreaName", "AreaName is missing");
         String resolution = getMandatoryAttribute("Resolution", "Resolution is missing");
 
@@ -57,11 +64,14 @@ public class ActualTotalLoadForSpecificDate extends EnergyResource {
             List<ATLRecordForSpecificDay> result = dataAccess.fetchActualDataLoadForSpecificDate(
                     areaName,
                     resolution,
-                    date
+                    date,
+                    userName
             );
             return format.generateRepresentationATLFSD(result);
         } 
         catch (Exception e) {
+            if(e.getMessage().equals("Out of Quotas (402) - Out of Quotas!"))
+                throw new ResourceException(outOfQuotasStatus, e.getMessage(), e);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }
 

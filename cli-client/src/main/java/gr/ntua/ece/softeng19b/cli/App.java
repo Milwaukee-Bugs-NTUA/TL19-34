@@ -26,7 +26,8 @@ import static picocli.CommandLine.*;
         ActualvsForecast.class,
         Login.class,
         Logout.class,
-        Admin.class
+        Admin.class,
+        Reset.class
     }
 )
 public class App implements Callable<Integer> {

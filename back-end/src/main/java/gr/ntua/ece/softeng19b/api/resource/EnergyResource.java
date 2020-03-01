@@ -13,6 +13,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Optional;
+import io.jsonwebtoken.*;
+import java.util.Base64;
 
 public class EnergyResource extends ServerResource {
 
@@ -30,6 +32,7 @@ public class EnergyResource extends ServerResource {
         int length = h.length();
         String [] headers = h.substring(1, length-1).split(", ");
         String token = null;
+        Claims claims;
         for(String header : headers) {
             length = header.length();
             if(length>20){
@@ -37,6 +40,15 @@ public class EnergyResource extends ServerResource {
             }
         }
         if(token==null) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Unauthorized User");
+        try{
+                claims = Jwts.parser()         
+                        .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+                        .parseClaimsJws(token).getBody();
+        }
+        catch(Exception e)
+        {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "Malformed Token! Please Login again!");
+        }
         return token;
 
     }
