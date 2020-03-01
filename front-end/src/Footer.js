@@ -31,7 +31,7 @@ class Footer extends Component {
             <button
               className="btn btn-primary"
               onClick={this.showModal}
-              style={{ marginLeft: 57, marginTop: 350 }}
+              style={{ marginLeft: 57, marginTop: 150 }}
             >
               Need Help?
             </button>

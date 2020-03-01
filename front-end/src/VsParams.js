@@ -9,6 +9,7 @@ class VsParams extends Component {
     myjson: null,
     isLoaded: false,
     displayTable: false,
+    displayDiagram: false,
     token: null,
     username: null,
 
@@ -111,13 +112,18 @@ class VsParams extends Component {
         console.log(this.state.myjson);
         console.log(this.state.isLoaded);
         this.setState({
-          displayTable: !this.state.displayTable
+          displayTable: !this.state.displayTable,
+          displayDiagram: !this.state.displayDiagram
         });
         console.log("ela", typeof this.state.myjson);
 
         if (!this.isEmpty(this.state.myjson)) {
           //check if json is empty
-          this.props.sendData(this.state.myjson, this.state.displayTable);
+          this.props.sendData(
+            this.state.myjson,
+            this.state.displayTable,
+            this.state.displayDiagram
+          );
         } else console.log("empty json");
       });
   }

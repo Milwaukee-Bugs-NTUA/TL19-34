@@ -166,7 +166,10 @@ class Main extends Component {
                             {context => (
                               <React.Fragment>
                                 <DATLParams
-                                  sendData={this.getjson_and_getdisplayTable}
+                                  sendData={
+                                    this
+                                      .getjson_and_getdisplayTable_getdisplayDiagram
+                                  }
                                   location={this.props.location}
                                   context={context}
                                 />
@@ -201,7 +204,10 @@ class Main extends Component {
                             {context => (
                               <React.Fragment>
                                 <VsParams
-                                  sendData={this.getjson_and_getdisplayTable}
+                                  sendData={
+                                    this
+                                      .getjson_and_getdisplayTable_getdisplayDiagram
+                                  }
                                   location={this.props.location}
                                   context={context}
                                 />
@@ -236,7 +242,10 @@ class Main extends Component {
                             {context => (
                               <React.Fragment>
                                 <AggParams
-                                  sendData={this.getjson_and_getdisplayTable}
+                                  sendData={
+                                    this
+                                      .getjson_and_getdisplayTable_getdisplayDiagram
+                                  }
                                   location={this.props.location}
                                   context={context}
                                 />

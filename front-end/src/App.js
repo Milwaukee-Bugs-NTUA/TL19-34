@@ -16,9 +16,8 @@ class App extends Component {
       token: props.userData.token,
       username: props.userData.username,
       style: {
-        backgroundImage: `url("https://wallpaperboat.com/wp-content/uploads/2019/10/free-website-background-01.jpg")`,
         backgroundSize: "cover",
-        backgroundColor: "#fff",
+        backgroundColor: "fff",
         height: "100vh"
       },
       setUserData: (token, username) =>
