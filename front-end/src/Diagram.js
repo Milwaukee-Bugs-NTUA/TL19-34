@@ -23,25 +23,25 @@ class Diagram extends Component {
       "Hydro Pumped Storage": 3,
       "Hydro Water Reservoir": 4,
       "Fossil Hard coal": 5,
-      "Nuclear": 6,
+      Nuclear: 6,
       "Fossil Brown coal/Lignite": 7,
       "Fossil Oil": 8,
       "Fossil Oil shale": 9,
-      "Biomass":10,
+      Biomass: 10,
       "Fossil Peat": 11,
       "Wind Onshore": 12,
-      "Other": 13,
+      Other: 13,
       "Wind Offshore": 14,
       "Fossil Coal-derived gas": 15,
-      "Waste": 16,
-      "Solar": 17,
-      "Geothermal": 18,
+      Waste: 16,
+      Solar: 17,
+      Geothermal: 18,
       "Other renewable": 19,
-      "Marine": 20,
+      Marine: 20,
       "AC Link": 21,
-      "Transformer": 22,
+      Transformer: 22,
       "DC Link": 23,
-      "Substation": 24
+      Substation: 24
     };
 
     var options;
@@ -93,8 +93,8 @@ class Diagram extends Component {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
               x: mydict[Object.values(this.props.myjson[i])[9]], //type
-              y: Object.values(this.props.myjson[i])[11] ,//posothta,
-              label:Object.values(this.props.myjson[i])[9]
+              y: Object.values(this.props.myjson[i])[11], //posothta,
+              label: Object.values(this.props.myjson[i])[9]
             });
           }
           console.log(arrayPlot);
@@ -110,8 +110,7 @@ class Diagram extends Component {
           plot_type = "line";
           diagramTitle = "Aggregated Generation for selected day for Type:";
         }
-      }
-      else if (
+      } else if (
         keys.length == 11 &&
         keys[10] == "ActualGenerationOutputByDayValue"
       ) {
@@ -119,27 +118,25 @@ class Diagram extends Component {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
               x: mydict[Object.values(this.props.myjson[i])[9]], //type
-              y: Object.values(this.props.myjson[i])[10] ,//posothta,
-              label:Object.values(this.props.myjson[i])[9]
+              y: Object.values(this.props.myjson[i])[10], //posothta,
+              label: Object.values(this.props.myjson[i])[9]
             });
           }
           console.log(arrayPlot);
           plot_type = "pie";
-          diagramTitle = "Aggregated Generation for selected month for AllTypes";
+          diagramTitle =
+            "Aggregated Generation for selected month for AllTypes";
         } else {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
-              x:  Object.values(this.props.myjson[i])[8],
+              x: Object.values(this.props.myjson[i])[8],
               y: Object.values(this.props.myjson[i])[10]
             });
           }
           plot_type = "line";
           diagramTitle = "Aggregated Generation for selected month for Type:";
         }
-      }
-
-
-      else if (
+      } else if (
         keys.length == 10 &&
         keys[9] == "ActualGenerationOutputByMonthValue"
       ) {
@@ -147,8 +144,8 @@ class Diagram extends Component {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
               x: mydict[Object.values(this.props.myjson[i])[8]], //type
-              y: Object.values(this.props.myjson[i])[9] ,//posothta,
-              label:Object.values(this.props.myjson[i])[8]
+              y: Object.values(this.props.myjson[i])[9], //posothta,
+              label: Object.values(this.props.myjson[i])[8]
             });
           }
           plot_type = "pie";
@@ -156,7 +153,7 @@ class Diagram extends Component {
         } else {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
-              x:  Object.values(this.props.myjson[i])[7],
+              x: Object.values(this.props.myjson[i])[7],
               y: Object.values(this.props.myjson[i])[9]
             });
           }
@@ -165,7 +162,11 @@ class Diagram extends Component {
         }
       }
 
-      if (keys.length == 13 && keys[10]=="DayAheadTotalLoadForecastValue" && keys[11] === "ActualTotalLoadValue") {
+      if (
+        keys.length == 13 &&
+        keys[10] == "DayAheadTotalLoadForecastValue" &&
+        keys[11] === "ActualTotalLoadValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot1.push({
             x: i,
@@ -176,45 +177,46 @@ class Diagram extends Component {
             y: Object.values(this.props.myjson[i])[11]
           });
         }
-          diagramTitle = "ActualvsForecat for the selected day";
-          plot_type = "line";
-      }
-
-
-      else if(keys.length==11 && keys[9]=="DayAheadTotalLoadForecastByDayValue" && keys[10]=="ActualTotalLoadByDayValue"){
+        diagramTitle = "ActualvsForecat for the selected day";
+        plot_type = "line";
+      } else if (
+        keys.length == 11 &&
+        keys[9] == "DayAheadTotalLoadForecastByDayValue" &&
+        keys[10] == "ActualTotalLoadByDayValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot1.push({
             x: Object.values(this.props.myjson[i])[8],
             y: Object.values(this.props.myjson[i])[9]
           });
           arrayPlot.push({
-            x:  Object.values(this.props.myjson[i])[8],
+            x: Object.values(this.props.myjson[i])[8],
             y: Object.values(this.props.myjson[i])[10]
           });
         }
-          diagramTitle = "ActualvsForecat for the selected month";
-          plot_type = "line";
-      }
-
-
-      else if(keys.length==10 && keys[8]=="DayAheadTotalLoadForecastByMonthValue" && keys[9]=="ActualTotalLoadByMonthValue"){
+        diagramTitle = "ActualvsForecat for the selected month";
+        plot_type = "line";
+      } else if (
+        keys.length == 10 &&
+        keys[8] == "DayAheadTotalLoadForecastByMonthValue" &&
+        keys[9] == "ActualTotalLoadByMonthValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot1.push({
             x: Object.values(this.props.myjson[i])[7],
             y: Object.values(this.props.myjson[i])[8]
           });
           arrayPlot.push({
-            x:  Object.values(this.props.myjson[i])[7],
+            x: Object.values(this.props.myjson[i])[7],
             y: Object.values(this.props.myjson[i])[9]
           });
         }
-          diagramTitle = "ActualvsForecat for the selected year";
-          plot_type = "line";
-      }
-
-
-     else if (keys.length == 12 && keys[10] === "DayAheadTotalLoadForecastValue") {
-
+        diagramTitle = "ActualvsForecat for the selected year";
+        plot_type = "line";
+      } else if (
+        keys.length == 12 &&
+        keys[10] === "DayAheadTotalLoadForecastValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: i,
@@ -224,10 +226,10 @@ class Diagram extends Component {
 
         diagramTitle = "Day Ahead Forecast for the selected day";
         plot_type = "line";
-      }
-
-     else if (keys.length == 10 && keys[9] === "DayAheadTotalLoadForecastByDayValue") {
-
+      } else if (
+        keys.length == 10 &&
+        keys[9] === "DayAheadTotalLoadForecastByDayValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[8],
@@ -237,11 +239,10 @@ class Diagram extends Component {
 
         diagramTitle = "Day Ahead Forecast for the selected month";
         plot_type = "line";
-      }
-
-
-    else  if (keys.length == 9 && keys[8] === "DayAheadTotalLoadForecastByMonthValue") {
-
+      } else if (
+        keys.length == 9 &&
+        keys[8] === "DayAheadTotalLoadForecastByMonthValue"
+      ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[7],
@@ -252,10 +253,8 @@ class Diagram extends Component {
         diagramTitle = "Day Ahead Forecast for the selected year";
         plot_type = "line";
       }
-      
- else return 78;
 
- options = {
+      options = {
         animationEnabled: true,
         exportEnabled: true,
         animationDuration: 4000,
@@ -280,12 +279,11 @@ class Diagram extends Component {
           {
             type: plot_type, //change type to bar, line, area, pie, etc
             //Shows y value on all Data Points
-            color:"red",
+            color: "red",
             indexLabelFontColor: "#5A5757",
             indexLabelPlacement: "outside",
             colorSet: "#5A5757",
             dataPoints: arrayPlot1
-
           }
         ]
       };

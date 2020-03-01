@@ -53,6 +53,13 @@ class AggParams extends Component {
 
     var array_of_time = Time.split("-"); //split the time
 
+    var month = parseInt(array_of_time[1]);
+    var day = parseInt(array_of_time[2]);
+
+    if (month > 12 || month < 1 || day < 1 || day > 31) {
+      return this.props.showBadDateModal();
+    }
+
     if (
       typeof array_of_time[0] != "undefined" &&
       typeof array_of_time[1] != "undefined" &&

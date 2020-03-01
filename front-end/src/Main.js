@@ -11,16 +11,10 @@ import Modal from "./Modal";
 import Diagram from "./Diagram";
 
 $(document).ready(function() {
-  $(".first-button").on("click", function() {
+  $(".animated-button").on("click", function() {
     $(".animated-icon1").toggleClass("open");
   });
-  $(".second-button").on("click", function() {
-    $().toggleClass("open");
-  });
-  $(".third-button").on("click", function() {
-    $().toggleClass("open");
-  });
-  $(".fourth-button").on("click", function() {
+  $(".simple-button").on("click", function() {
     $().toggleClass("open");
   });
 });
@@ -68,21 +62,18 @@ class Main extends Component {
               }}
             >
               <a
-                class="navbar-brand"
-                class="navbar-toggler first-button"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent21"
-                aria-controls="navbarSupportedContent20"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-                style={{ color: "white" }}
+                class="font-weight-bold"
+                style={{
+                  color: "white",
+                  fontSize: "30px",
+                  textUnderlinePosition: true
+                }}
               >
                 Available Datasets
               </a>
 
               <button
-                class="navbar-toggler first-button"
+                class="navbar-toggler animated-button"
                 type="button"
                 data-toggle="collapse"
                 data-target="#navbarSupportedContent20"
@@ -104,12 +95,12 @@ class Main extends Component {
                 <ul class="navbar-nav mr-auto" style={{ marginTop: 10 }}>
                   <li class="nav-item">
                     <a
-                      class="nav-link"
-                      class="navbar-toggler second-button"
+                      lass="nav-link"
+                      class="navbar-toggler simple-button"
                       type="button"
                       data-toggle="collapse"
-                      data-target="#navbarSupportedContent23"
-                      aria-controls="navbarSupportedContent23"
+                      data-target="#navbarSupportedContent21"
+                      aria-controls="navbarSupportedContent21"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
                       style={{ color: "white" }}
@@ -118,7 +109,7 @@ class Main extends Component {
                     </a>
                     <div
                       class="collapse navbar-collapse"
-                      id="navbarSupportedContent23"
+                      id="navbarSupportedContent21"
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -145,11 +136,11 @@ class Main extends Component {
                   <li class="nav-item" style={{ marginTop: 10 }}>
                     <a
                       class="nav-link"
-                      class="navbar-toggler second-button"
+                      class="navbar-toggler simple-button"
                       type="button"
                       data-toggle="collapse"
-                      data-target="#navbarSupportedContent26"
-                      aria-controls="navbarSupportedContent26"
+                      data-target="#navbarSupportedContent22"
+                      aria-controls="navbarSupportedContent22"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
                       style={{ color: "white" }}
@@ -158,7 +149,7 @@ class Main extends Component {
                     </a>
                     <div
                       class="collapse navbar-collapse"
-                      id="navbarSupportedContent26"
+                      id="navbarSupportedContent22"
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -172,6 +163,8 @@ class Main extends Component {
                                   }
                                   location={this.props.location}
                                   context={context}
+                                  showBadDateModal={this.showModal}
+                                  hideModal={this.hideModal}
                                 />
                               </React.Fragment>
                             )}
@@ -183,11 +176,11 @@ class Main extends Component {
                   <li class="nav-item">
                     <a
                       class="nav-link"
-                      class="navbar-toggler third-button"
+                      class="navbar-toggler simple-button"
                       type="button"
                       data-toggle="collapse"
-                      data-target="#navbarSupportedContent26"
-                      aria-controls="navbarSupportedContent26"
+                      data-target="#navbarSupportedContent23"
+                      aria-controls="navbarSupportedContent23"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
                       style={{ color: "white" }}
@@ -196,7 +189,7 @@ class Main extends Component {
                     </a>
                     <div
                       class="collapse navbar-collapse"
-                      id="navbarSupportedContent29"
+                      id="navbarSupportedContent23"
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -210,6 +203,8 @@ class Main extends Component {
                                   }
                                   location={this.props.location}
                                   context={context}
+                                  showBadDateModal={this.showModal}
+                                  hideModal={this.hideModal}
                                 />
                               </React.Fragment>
                             )}
@@ -221,11 +216,11 @@ class Main extends Component {
                   <li class="nav-item">
                     <a
                       class="nav-link"
-                      class="navbar-toggler fourth-button"
+                      class="navbar-toggler simple-button"
                       type="button"
                       data-toggle="collapse"
-                      data-target="#navbarSupportedContent29"
-                      aria-controls="navbarSupportedContent29"
+                      data-target="#navbarSupportedContent24"
+                      aria-controls="navbarSupportedContent24"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
                       style={{ color: "white" }}
@@ -234,7 +229,7 @@ class Main extends Component {
                     </a>
                     <div
                       class="collapse navbar-collapse"
-                      id="navbarSupportedContent29"
+                      id="navbarSupportedContent24"
                     >
                       <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -248,6 +243,8 @@ class Main extends Component {
                                   }
                                   location={this.props.location}
                                   context={context}
+                                  showBadDateModal={this.showModal}
+                                  hideModal={this.hideModal}
                                 />
                               </React.Fragment>
                             )}
