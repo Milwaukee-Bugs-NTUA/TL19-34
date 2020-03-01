@@ -150,6 +150,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                     w.name("Email").value(newUserObject.getEmail());
                     w.name("Admin").value(newUserObject.getAdmin());
                     w.name("RequestsPerDayQuota").value(newUserObject.getRequestsPerDayQuota());
+                    w.name("UsedPerDayQuota").value(newUserObject.getUsedPerDayQuota());
                     w.endObject(); // }
                     w.flush();
                     System.out.println();
@@ -187,6 +188,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                 w.name("Email").value(newUserObject.getEmail());
                 w.name("Admin").value(newUserObject.getAdmin());
                 w.name("RequestsPerDayQuota").value(newUserObject.getRequestsPerDayQuota());
+                w.name("UsedPerDayQuota").value(newUserObject.getUsedPerDayQuota());
                 w.endObject(); // }
                 w.flush();
                 System.out.println();

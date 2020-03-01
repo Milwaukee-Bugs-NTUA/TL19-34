@@ -46,6 +46,7 @@ public class AddUser extends EnergyResource {
                 w.name("Email").value(u.getEmail());
                 w.name("Admin").value(u.getAdmin());
                 w.name("RequestsPerDayQuota").value(u.getRequestsPerDayQuota());
+                w.name("UsedPerDayQuota").value(u.getUsedPerDayQuota());
                 w.endObject(); // }
                 w.flush();
             } 

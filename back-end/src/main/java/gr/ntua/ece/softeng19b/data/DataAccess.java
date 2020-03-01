@@ -1125,9 +1125,9 @@ public class DataAccess {
 
     }
 
-    public User addUser(String userName, String password, String email, int requestedPerDayQuota) throws DataAccessException {
+    public User addUser(String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
     
-        Object [] sqlParams = new Object [] {userName, email, password, requestedPerDayQuota};
+        Object [] sqlParams = new Object [] {userName, email, password, requestsPerDayQuota};
 
         String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas) values "+
                                    "(?, ?, ?, ?, 0, 0)";
@@ -1138,23 +1138,23 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
-        return new User(userName, email, 0, requestedPerDayQuota);   
+        return new User(userName, email, 0, requestsPerDayQuota); 
     }
 
     public User getUser(String userName) throws DataAccessException {
     
         Object [] sqlParams = new Object [] {userName};
 
-        String sqlQuery = "select username, email, password, quotas, admin from users where username = ?";
+        String sqlQuery = "select username, email, quotas, admin, usedquotas from users where username = ?";
 
         try {
             return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
                 User dataLoad = new User();
                 dataLoad.setUserName(rs.getString(1)); 
                 dataLoad.setEmail(rs.getString(2));
-                dataLoad.setPassword(rs.getString(3));
-                dataLoad.setRequestsPerDayQuota(rs.getInt(4));
-                dataLoad.setAdmin(rs.getInt(5));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(3));
+                dataLoad.setAdmin(rs.getInt(4));
+                dataLoad.setUsedPerDayQuota(rs.getInt(5));
                 return dataLoad;
             });
         }
