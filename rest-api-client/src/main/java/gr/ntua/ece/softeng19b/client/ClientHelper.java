@@ -1,12 +1,14 @@
 package gr.ntua.ece.softeng19b.client;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -29,7 +31,35 @@ public class ClientHelper {
     }
 
     static User parseJsonUser(Reader r) {
-        return new Gson().fromJson(r, User.class);
+        try {
+            JsonReader jsonReader = new JsonReader(r);
+            User user = new User();
+            jsonReader.beginObject();
+            while(jsonReader.hasNext()) {
+                String name = jsonReader.nextName();
+                switch (name) {
+                    case "Username":
+                        user.setUserName(jsonReader.nextString());
+                        break;
+                    case "Email":
+                        user.setEmail(jsonReader.nextString());
+                        break;
+                    case "Admin":
+                        user.setAdmin(jsonReader.nextInt());
+                        break;
+                    case "RequestsPerDayQuotas":
+                        user.setRequestsPerDayQuota(jsonReader.nextInt());
+                        break;
+                    default:
+                        jsonReader.skipValue();
+                        break;
+                }
+            }
+            jsonReader.endObject();
+            return user;    
+        }catch(IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     static ImportResult parseJsonImportResult(Reader r) {

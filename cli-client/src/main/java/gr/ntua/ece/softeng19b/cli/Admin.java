@@ -10,6 +10,8 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static picocli.CommandLine.*;
 
@@ -164,7 +166,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                     User userObject = new User(username, email, 0, quotas);
                     userObject.setPassword(password);
                     restAPI.updateUser(userObject);
-                    System.out.println("User " + username " updated successfully");
+                    System.out.println("User " + username + " updated successfully");
                     return 0;
                 }                
             }
@@ -202,9 +204,17 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                 return 0;
             }
             return 0;
-        } 
-        
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
+            cli.getOut().println(e.getMessage());
+            e.printStackTrace(cli.getOut());
+            return -1;
+        }
+        catch (UnsupportedEncodingException e) {
+            cli.getOut().println(e.getMessage());
+            e.printStackTrace(cli.getOut());
+            return -1;
+        }
+        catch (IOException e) {
             cli.getOut().println(e.getMessage());
             e.printStackTrace(cli.getOut());
             return -1;

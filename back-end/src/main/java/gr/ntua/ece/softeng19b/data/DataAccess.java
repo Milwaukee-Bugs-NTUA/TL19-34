@@ -1138,7 +1138,6 @@ public class DataAccess {
         catch(Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
-
         return new User(userName, email, 0, requestedPerDayQuota);   
     }
 
