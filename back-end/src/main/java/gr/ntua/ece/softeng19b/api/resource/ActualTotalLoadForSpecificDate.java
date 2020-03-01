@@ -22,6 +22,7 @@ import java.util.Base64;
 public class ActualTotalLoadForSpecificDate extends EnergyResource {
 
     private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
+    private static Status outOfQuotasStatus = new Status(402, "Out of Quotas");
 
     @Override
     protected Representation get() throws ResourceException{
@@ -69,6 +70,8 @@ public class ActualTotalLoadForSpecificDate extends EnergyResource {
             return format.generateRepresentationATLFSD(result);
         } 
         catch (Exception e) {
+            if(e.getMessage().equals("Out of Quotas (402) - Out of Quotas!"))
+                throw new ResourceException(outOfQuotasStatus, e.getMessage(), e);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }
 
