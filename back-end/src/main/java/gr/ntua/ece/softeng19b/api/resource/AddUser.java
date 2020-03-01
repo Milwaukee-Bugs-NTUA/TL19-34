@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 
 import gr.ntua.ece.softeng19b.data.DataAccess;
 import java.io.IOException;
+import io.jsonwebtoken.*;
+import java.util.Base64;
 
 public class AddUser extends EnergyResource {
 
@@ -22,6 +24,18 @@ public class AddUser extends EnergyResource {
     @Override
     protected Representation post(Representation entity) throws ResourceException {
         
+        String h = getRequest().getHeaders().toString();
+        String token = null;
+
+        try{
+            token = getToken(h);
+        }
+        catch(Exception e) {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage(), e);
+        }
+        String adminUserName = Jwts.parser()         
+                            .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+                            .parseClaimsJws(token).getBody().get("username").toString();
         Form form = new Form(entity);
         String userName = form.getFirstValue("username");
         String password = form.getFirstValue("password");
@@ -32,11 +46,15 @@ public class AddUser extends EnergyResource {
         //create new user
 
         try{
-            u = dataAccess.addUser(userName, password, email, requestedPerDayQuota);
+            u = dataAccess.addUser(adminUserName, userName, password, email, requestedPerDayQuota);
         }
         catch(Exception e)
         {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
+            //System.out.println(e.getMessage());
+            if(e.getMessage().equals("Unauthorized (401) - User has no Admin Priveleges!")){
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage());
+            }
+            else throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }
 
         return new CustomJsonRepresentation( (JsonWriter w) -> {

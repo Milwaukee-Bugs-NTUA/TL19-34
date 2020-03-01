@@ -15,6 +15,8 @@ import java.net.http.HttpRequest;
 
 import gr.ntua.ece.softeng19b.data.DataAccess;
 import java.io.IOException;
+import io.jsonwebtoken.*;
+import java.util.Base64;
 
 public class UserManager extends EnergyResource {
 
@@ -24,15 +26,30 @@ public class UserManager extends EnergyResource {
     protected Representation get() throws ResourceException {
         //read existing user
         String h = getRequest().getHeaders().toString();
+        String token = null;
+
+        try{
+            token = getToken(h);
+        }
+        catch(Exception e)
+        {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage(), e);
+        }
+        String adminUserName = Jwts.parser()         
+                            .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+                            .parseClaimsJws(token).getBody().get("username").toString();
         String userName = getMandatoryAttribute("username", "username is missing");
         User u;
 
         try{
-            u = dataAccess.getUser(userName);
+            u = dataAccess.getUser(adminUserName, userName);
         }
         catch(Exception e)
         {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
+            if(e.getMessage().equals("Unauthorized (401) - User has no Admin Priveleges!")){
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage());
+            }
+            else throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
         }
 
         return new CustomJsonRepresentation( (JsonWriter w) -> {
@@ -42,6 +59,7 @@ public class UserManager extends EnergyResource {
                 w.name("Email").value(u.getEmail());
                 w.name("Admin").value(u.getAdmin());
                 w.name("RequestsPerDayQuota").value(u.getRequestsPerDayQuota());
+                w.name("UsedPerDayQuota").value(u.getUsedPerDayQuota());
                 w.endObject(); // }
                 w.flush();
             } 
@@ -55,6 +73,20 @@ public class UserManager extends EnergyResource {
     @Override
     protected Representation put(Representation entity) throws ResourceException {
         //update existing user
+        String h = getRequest().getHeaders().toString();
+        String token = null;
+        
+        try{
+            token = getToken(h);
+        }
+        catch(Exception e)
+        {
+            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage(), e);
+        }
+        String adminUserName = Jwts.parser()         
+                            .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
+                            .parseClaimsJws(token).getBody().get("username").toString();
+
         throw new ResourceException(Status.SERVER_ERROR_NOT_IMPLEMENTED);
     }
 

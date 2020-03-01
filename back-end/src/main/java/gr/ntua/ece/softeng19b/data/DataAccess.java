@@ -1125,8 +1125,25 @@ public class DataAccess {
 
     }
 
-    public User addUser(String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
-    
+    public User addUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
         Object [] sqlParams = new Object [] {userName, email, password, requestsPerDayQuota};
 
         String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas) values "+
@@ -1141,8 +1158,26 @@ public class DataAccess {
         return new User(userName, email, 0, requestsPerDayQuota); 
     }
 
-    public User getUser(String userName) throws DataAccessException {
+    public User getUser(String adminUserName, String userName) throws DataAccessException {
     
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }        
+        
         Object [] sqlParams = new Object [] {userName};
 
         String sqlQuery = "select username, email, quotas, admin, usedquotas from users where username = ?";
