@@ -66,7 +66,32 @@ public class ClientHelper {
     }
 
     static ImportResult parseJsonImportResult(Reader r) {
-        return new Gson().fromJson(r, ImportResult.class);
+        try {
+            JsonReader jsonReader = new JsonReader(r);
+            ImportResult importResult = new ImportResult();
+            jsonReader.beginObject();
+            while(jsonReader.hasNext()) {
+                String name = jsonReader.nextName();
+                switch (name) {
+                    case "TotalRecordsInFile":
+                        importResult.setTotalRecordsInFile(jsonReader.nextLong());
+                        break;
+                    case "TotalRecordsImported":
+                        importResult.setTotalRecordsImported(jsonReader.nextLong());
+                        break;
+                    case "TotalRecordsInDatabase":
+                        importResult.setTotalRecordsInDatabase(jsonReader.nextLong());
+                        break;
+                    default:
+                        jsonReader.skipValue();
+                        break;
+                }
+            }
+            jsonReader.endObject();
+            return importResult;    
+        }catch(IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     static String readContents(InputStream inputStream) {

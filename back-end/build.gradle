@@ -27,7 +27,8 @@ dependencies {
     compile "com.google.code.gson:gson:2.8.2"                  //json library
     compile "org.apache.commons:commons-dbcp2:2.7.0"           //db connection pool
     compile "org.apache.commons:commons-csv:1.8"               // csv formating
-    //compile "org.apache.commons:commons-collections4:4.4"    // map to string
+    compile 'commons-fileupload:commons-fileupload:1.4'        // for importing in db
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
     compile "org.springframework:spring-jdbc:5.2.2.RELEASE"    //spring JDBC classes
 
     testCompile project(':rest-api-client')                    //for performing functional tests
