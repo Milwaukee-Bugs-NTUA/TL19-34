@@ -167,7 +167,20 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                     User userObject = new User(username, email, 0, quotas);
                     userObject.setPassword(password);
                     restAPI.updateUser(userObject);
-                    System.out.println("User " + username + " updated successfully");
+                    System.out.println();
+                    System.out.println("User " + username + " updated successfully with info below");
+                    System.out.println();
+                    JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out,"UTF-8"));
+                    w.setIndent("  ");
+                    w.beginObject(); // {
+                    w.name("Username").value(userObject.getUserName());
+                    w.name("Email").value(userObject.getEmail());
+                    w.name("Admin").value(userObject.getAdmin());
+                    w.name("RequestsPerDayQuota").value(userObject.getRequestsPerDayQuota());
+                    w.name("UsedPerDayQuota").value(userObject.getUsedPerDayQuota());
+                    w.endObject(); // }
+                    w.flush();
+                    System.out.println();
                     return 0;
                 }                
             }

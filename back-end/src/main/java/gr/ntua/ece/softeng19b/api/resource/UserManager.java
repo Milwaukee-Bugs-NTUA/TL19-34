@@ -87,7 +87,40 @@ public class UserManager extends EnergyResource {
                             .setSigningKey(Base64.getDecoder().decode("J0KlwfLrnZ92TWJ0VgZXZjTAnQynDpnYY4TYdBTvtOc="))
                             .parseClaimsJws(token).getBody().get("username").toString();
 
-        throw new ResourceException(Status.SERVER_ERROR_NOT_IMPLEMENTED);
+        String userName = getMandatoryAttribute("username", "username is missing");
+        Form form = new Form(entity);
+        String email = form.getFirstValue("email");
+        String password = form.getFirstValue("password");
+        int requestedPerDayQuota = Integer.valueOf(form.getFirstValue("requestsPerDayQuota"));
+        User u;
+
+        try{
+            u = dataAccess.updateUser(adminUserName, userName, password, email, requestedPerDayQuota);
+        }
+        catch(Exception e)
+        {
+            if(e.getMessage().equals("Unauthorized (401) - User has no Admin Priveleges!")){
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, e.getMessage());
+            }
+            else throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
+        }
+
+        return new CustomJsonRepresentation( (JsonWriter w) -> {
+            try {
+                w.beginObject(); // {
+                w.name("Username").value(u.getUserName());
+                w.name("Email").value(u.getEmail());
+                w.name("Admin").value(u.getAdmin());
+                w.name("RequestsPerDayQuota").value(u.getRequestsPerDayQuota());
+                w.name("UsedPerDayQuota").value(u.getUsedPerDayQuota());
+                w.endObject(); // }
+                w.flush();
+            } 
+            
+            catch (IOException e) {
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
+            }
+        });
     }
 
 
