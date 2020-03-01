@@ -9,6 +9,7 @@ class ATLParams extends Component {
     myjson: null,
     isLoaded: false,
     displayTable: false,
+    displayDiagram: false,
     token: null,
     username: null,
 
@@ -116,10 +117,15 @@ class ATLParams extends Component {
         console.log(this.state.myjson);
         console.log(this.state.isLoaded);
         this.setState({
-          displayTable: !this.state.displayTable
+          displayTable: !this.state.displayTable,
+          displayDiagram: !this.state.displayDiagram
         });
 
-        this.props.sendData(this.state.myjson, this.state.displayTable);
+        this.props.sendData(
+          this.state.myjson,
+          this.state.displayTable,
+          this.state.displayDiagram
+        );
       });
   }
 

@@ -19,7 +19,6 @@ class TableRepresentation extends Component {
       <div>
         {this.props.displayTable ? (
           <div>
-            {console.log(this.props.myjson)}
             {!this.isEmpty(this.props.myjson) ? (
               <div class="table-responsive-xl">
                 <table class="table table-bordered" style={{ marginTop: 30 }}>

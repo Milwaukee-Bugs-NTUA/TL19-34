@@ -8,6 +8,7 @@ import VsParams from "./VsParams";
 import { UserConsumer } from "./UserContext";
 import TableRepresentation from "./TableRepresentation";
 import Modal from "./Modal";
+import Diagram from "./Diagram";
 
 $(document).ready(function() {
   $(".first-button").on("click", function() {
@@ -27,6 +28,7 @@ $(document).ready(function() {
 class Main extends Component {
   state = {
     displayTable: false,
+    displayDiagram: false,
     isLoaded: false,
     myjson: null,
     modalVisible: false
@@ -43,8 +45,11 @@ class Main extends Component {
     this.setState({ modalVisible: false });
   };
 
-  getjson_and_getdisplayTable = (passjson, passdisplayTable) => {
-    this.setState({ displayTable: true });
+  getjson_and_getdisplayTable_getdisplayDiagram = (
+    passjson,
+    passdisplayTable
+  ) => {
+    this.setState({ displayTable: true, displayDiagram: true });
     this.setState({ myjson: passjson, isLoaded: true });
   };
 
@@ -121,7 +126,10 @@ class Main extends Component {
                             {context => (
                               <React.Fragment>
                                 <ATLParams
-                                  sendData={this.getjson_and_getdisplayTable}
+                                  sendData={
+                                    this
+                                      .getjson_and_getdisplayTable_getdisplayDiagram
+                                  }
                                   location={this.props.location}
                                   context={context}
                                   showBadDateModal={this.showModal}
@@ -243,6 +251,7 @@ class Main extends Component {
               </div>
             </nav>
           </col1>
+
           <col2 class="col-8">
             <TableRepresentation
               isLoaded={this.state.isLoaded}
@@ -250,6 +259,7 @@ class Main extends Component {
               displayTable={this.state.displayTable}
             />
           </col2>
+
           <Modal
             buttonName="Try Again"
             title="Bad Request"
@@ -258,6 +268,18 @@ class Main extends Component {
             onHide={this.hideModal}
           />
         </row>
+
+        <row2>
+          <col12 class="col-6" />
+          <col22 class="col-6" style={{ marginLeft: 100 }}>
+            <Diagram
+              isLoaded={this.state.isLoaded}
+              myjson={this.state.myjson}
+              displayTable={this.state.displayTable}
+              displayDiagram={this.state.displayDiagram}
+            />
+          </col22>
+        </row2>
       </div>
     );
   }
