@@ -14,9 +14,9 @@ import java.util.concurrent.Callable;
 import static picocli.CommandLine.*;
 
 @Command(
-    name="Admin"
+    name="Admin2"
 )
-public class Admin extends BasicCliArgs implements Callable<Integer> {
+public class Admin2 extends BasicCliArgs implements Callable<Integer> {
 
     enum DataSet {
         ActualTotalLoad,
