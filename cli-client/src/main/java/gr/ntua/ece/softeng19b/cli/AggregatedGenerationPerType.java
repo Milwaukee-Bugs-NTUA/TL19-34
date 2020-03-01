@@ -45,7 +45,7 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
         }
 
         try {
-            if ((format == Format.JSON) || (format == null)) {
+            if (format == Format.JSON) {
                 if (dateArgs.date != null ) {
                     List<AGPTRecordForSpecificDay> records = new RestAPI().
                             getAggregatedGenerationPerType(areaName, productionType, timeres.name(), LocalDate.parse(dateArgs.date), format);

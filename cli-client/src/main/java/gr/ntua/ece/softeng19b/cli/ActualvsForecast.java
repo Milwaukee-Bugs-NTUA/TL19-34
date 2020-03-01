@@ -39,7 +39,7 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
         }
 
         try {
-            if ((format == Format.JSON) || (format == null)) {
+            if (format == Format.JSON) {
                 if (dateArgs.date != null ) {
                     List<AVFRecordForSpecificDay> records = new RestAPI().
                             getActualvsForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);

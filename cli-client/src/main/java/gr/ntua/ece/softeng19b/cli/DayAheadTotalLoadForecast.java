@@ -39,7 +39,7 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
 
 
         try {
-            if ((format == Format.JSON) || (format == null)) {
+            if (format == Format.JSON) {
                 if (dateArgs.date != null ) {
                     List<DATLFRecordForSpecificDay> records = new RestAPI().
                             getDayAheadTotalLoadForecast(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);

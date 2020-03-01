@@ -38,7 +38,7 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
         }
 
         try {
-            if ((format == Format.JSON) || (format == null)){
+            if (format == Format.JSON){
                 if (dateArgs.date != null ) {
                     List<ATLRecordForSpecificDay> records = new RestAPI().
                             getActualTotalLoad(areaName, timeres.name(), LocalDate.parse(dateArgs.date), format);
