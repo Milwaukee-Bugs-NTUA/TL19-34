@@ -1129,7 +1129,7 @@ public class DataAccess {
     
         Object [] sqlParams = new Object [] {userName, email, password, requestedPerDayQuota};
 
-        String sqlQuery = "isert int users (username, email, password, quotas, admin, usedquotas) values "+
+        String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas) values "+
                                    "(?, ?, ?, ?, 0, 0)";
 
         try {

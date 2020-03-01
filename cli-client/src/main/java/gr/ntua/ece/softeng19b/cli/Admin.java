@@ -164,8 +164,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                     User userObject = new User(username, email, 0, quotas);
                     userObject.setPassword(password);
                     restAPI.updateUser(userObject);
-                    System.out.println("Not implemented yet");
-                    System.out.println(username+password+email+String.valueOf(quotas));
+                    System.out.println("User " + username " updated successfully");
                     return 0;
                 }                
             }
@@ -176,6 +175,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                                     .username;
                 
                 User newUserObject = restAPI.getUser(username);
+                System.out.println();
                 System.out.println("Information of requested User:");
                 System.out.println();
                 JsonWriter w = new JsonWriter(new OutputStreamWriter(System.out,"UTF-8"));
@@ -188,7 +188,6 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
                 w.endObject(); // }
                 w.flush();
                 System.out.println();
-                System.out.println(username);
                 return 0;
             }
             else if (basicAdminArguments.newDataArgumentGroup != null) {
