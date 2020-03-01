@@ -51,7 +51,7 @@ public class AddUser extends EnergyResource {
             } 
             
             catch (IOException e) {
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e.getMessage(), e);
             }
         });
     }
