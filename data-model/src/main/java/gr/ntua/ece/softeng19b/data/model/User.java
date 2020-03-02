@@ -6,7 +6,8 @@ public class User {
     private String password;
     private String email;
     private int admin;
-    private int requestsPerDayQuota; //negative values indicate no quota
+    private int requestsPerDayQuota;
+    private int usedPerDayQuota;
 
     public User() {
         //Keep this for json encoding/decoding
@@ -17,6 +18,7 @@ public class User {
         this.email = email;
         this.admin = admin;
         this.requestsPerDayQuota = requestsPerDayQuota;
+        this.usedPerDayQuota = 0;
     }
 
     public String getUserName() {
@@ -57,6 +59,14 @@ public class User {
 
     public int getRequestsPerDayQuota() {
         return requestsPerDayQuota;
+    }
+
+    public void setUsedPerDayQuota(int usedPerDayQuota) {
+        this.usedPerDayQuota = usedPerDayQuota;
+    }
+
+    public int getUsedPerDayQuota() {
+        return usedPerDayQuota;
     }
 
 }

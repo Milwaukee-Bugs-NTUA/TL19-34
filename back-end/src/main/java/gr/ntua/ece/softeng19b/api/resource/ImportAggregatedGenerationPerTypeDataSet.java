@@ -27,7 +27,7 @@ import gr.ntua.ece.softeng19b.data.DataAccess;
 import gr.ntua.ece.softeng19b.conf.Configuration;
 import io.jsonwebtoken.*;
 
-public class ImportActualTotalLoadDataSet extends EnergyResource {
+public class ImportAggregatedGenerationPerTypeDataSet extends EnergyResource {
     
     private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
     
@@ -112,14 +112,14 @@ public class ImportActualTotalLoadDataSet extends EnergyResource {
             }
             // Call Data Access
             try{
-                int[] threeValues = dataAccess.importActualTotalLoadDataSet(adminUserName, fileName);
+                int[] rows = dataAccess.importAggregatedGenerationPerTypeDataSet(adminUserName, fileName);
                 final int rowsInFile = numberOfLines;
                 return new CustomJsonRepresentation( (JsonWriter w) -> {
                     try {
                         w.beginObject(); // {
                         w.name("TotalRecordsInFile").value(rowsInFile);
-                        w.name("TotalRecordsImported").value(threeValues[0]);
-                        w.name("TotalRecordsInDatabase").value(threeValues[1]);
+                        w.name("TotalRecordsImported").value(rows[0]);
+                        w.name("TotalRecordsInDatabase").value(rows[1]);
                         w.endObject(); // }
                         w.flush();
                     } 

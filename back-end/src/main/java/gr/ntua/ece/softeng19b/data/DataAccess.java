@@ -1125,4 +1125,299 @@ public class DataAccess {
 
     }
 
+    public User addUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        Object [] sqlParams = new Object [] {userName, email, password, requestsPerDayQuota};
+
+        String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas) values "+
+                                   "(?, ?, ?, ?, 0, 0)";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQuery, sqlParams);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        return new User(userName, email, 0, requestsPerDayQuota); 
+    }
+    public User updateUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        Object [] sqlParamsForUpdate = new Object [] {email, password, requestsPerDayQuota, userName};
+        String sqlQueryForUpdate = "update users set email = ?, password = ?, quotas = ? where username = ?";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQueryForUpdate, sqlParamsForUpdate);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        
+        Object [] sqlParamsForUser = new Object [] {userName};
+
+        String sqlQueryForUser = "select username, email, quotas, admin, usedquotas from users where username = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sqlQueryForUser, sqlParamsForUser, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); 
+                dataLoad.setEmail(rs.getString(2));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(3));
+                dataLoad.setAdmin(rs.getInt(4));
+                dataLoad.setUsedPerDayQuota(rs.getInt(5));
+                return dataLoad;
+            });
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    public User getUser(String adminUserName, String userName) throws DataAccessException {
+    
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }        
+        
+        Object [] sqlParams = new Object [] {userName};
+
+        String sqlQuery = "select username, email, quotas, admin, usedquotas from users where username = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                User dataLoad = new User();
+                dataLoad.setUserName(rs.getString(1)); 
+                dataLoad.setEmail(rs.getString(2));
+                dataLoad.setRequestsPerDayQuota(rs.getInt(3));
+                dataLoad.setAdmin(rs.getInt(4));
+                dataLoad.setUsedPerDayQuota(rs.getInt(5));
+                return dataLoad;
+            });
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    public int[] importActualTotalLoadDataSet(String adminUserName, String fileName) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for db configuration
+        String sqlQueryForLocalInfile = "SET GLOBAL local_infile = 1";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQueryForLocalInfile);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for import data
+        String fullPath = System.getProperty("user.home")+ "/"+ fileName;
+        Object [] sqlParamsForImport = new Object [] {fullPath};
+        int rows2 = 0;
+        String sqlQueryForImport = "load data local infile ? into table actualtotalload FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' IGNORE 1 LINES";
+        try {
+            rows2 = jdbcTemplate.update(sqlQueryForImport, sqlParamsForImport);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        int rows3 = 0;
+        String sqlQueryForCountingRecords = "select count(*) from actualtotalload";
+        try {
+            rows3 = jdbcTemplate.queryForObject(sqlQueryForCountingRecords, (ResultSet rs, int rowNum) -> {
+            int dataLoad = rs.getInt(1);
+            return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        
+
+        return new int [] {rows2,rows3};
+    }
+
+    public int[] importDayAheadTotalLoadForecastDataSet(String adminUserName, String fileName) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for db configuration
+        String sqlQueryForLocalInfile = "SET GLOBAL local_infile = 1";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQueryForLocalInfile);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for import data
+        String fullPath = System.getProperty("user.home")+ "/"+ fileName;
+        Object [] sqlParamsForImport = new Object [] {fullPath};
+        int rows2 = 0;
+        String sqlQueryForImport = "load data local infile ? into table dayaheadtotalloadforecast FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' IGNORE 1 LINES";
+        try {
+            rows2 = jdbcTemplate.update(sqlQueryForImport, sqlParamsForImport);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        int rows3 = 0;
+        String sqlQueryForCountingRecords = "select count(*) from dayaheadtotalloadforecast";
+        try {
+            rows3 = jdbcTemplate.queryForObject(sqlQueryForCountingRecords, (ResultSet rs, int rowNum) -> {
+            int dataLoad = rs.getInt(1);
+            return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        
+
+        return new int [] {rows2,rows3};
+    }
+
+    public int[] importAggregatedGenerationPerTypeDataSet(String adminUserName, String fileName) throws DataAccessException {
+        int admin;
+
+        Object [] sqlParamsForAdmin = new Object [] {adminUserName};
+
+        String sqlQueryForAdmin = "select admin from users where username = ?";
+
+        try {
+                admin = jdbcTemplate.queryForObject(sqlQueryForAdmin, sqlParamsForAdmin, (ResultSet rs, int rowNum) -> {
+                int dataLoad = rs.getInt(1);
+                if (dataLoad==0) throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "User has no Admin Priveleges!");
+                return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for db configuration
+        String sqlQueryForLocalInfile = "SET GLOBAL local_infile = 1";
+
+        try {
+            int rows1 = jdbcTemplate.update(sqlQueryForLocalInfile);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        // SQL query for import data
+        String fullPath = System.getProperty("user.home")+ "/"+ fileName;
+        Object [] sqlParamsForImport = new Object [] {fullPath};
+        int rows2 = 0;
+        String sqlQueryForImport = "load data local infile ? into table aggregatedgenerationpertype FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n' IGNORE 1 LINES";
+        try {
+            rows2 = jdbcTemplate.update(sqlQueryForImport, sqlParamsForImport);
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
+        int rows3 = 0;
+        String sqlQueryForCountingRecords = "select count(*) from aggregatedgenerationpertype";
+        try {
+            rows3 = jdbcTemplate.queryForObject(sqlQueryForCountingRecords, (ResultSet rs, int rowNum) -> {
+            int dataLoad = rs.getInt(1);
+            return dataLoad;
+            });
+        }
+
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+        
+
+        return new int [] {rows2,rows3};
+    }
+
 }

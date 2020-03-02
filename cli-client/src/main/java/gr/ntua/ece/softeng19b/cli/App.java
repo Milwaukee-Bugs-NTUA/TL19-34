@@ -26,6 +26,7 @@ import static picocli.CommandLine.*;
         ActualvsForecast.class,
         Login.class,
         Logout.class,
+        Admin.class,
         Reset.class
     }
 )
