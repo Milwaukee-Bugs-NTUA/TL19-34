@@ -111,21 +111,28 @@ class ATLParams extends Component {
         "X-OBSERVATORY-AUTH": this.props.context.token
       }
     })
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ myjson: json, isLoaded: true });
-        console.log(this.state.myjson);
-        console.log(this.state.isLoaded);
-        this.setState({
-          displayTable: !this.state.displayTable,
-          displayDiagram: !this.state.displayDiagram
-        });
+      .then(response => Promise.all([response.ok, response.json()]))
+      .then(([responseOk, json]) => {
+        if (responseOk) {
+          this.setState({ myjson: json, isLoaded: true });
+          console.log(this.state.myjson);
+          console.log(this.state.isLoaded);
+          this.setState({
+            displayTable: !this.state.displayTable,
+            displayDiagram: !this.state.displayDiagram
+          });
 
-        this.props.sendData(
-          this.state.myjson,
-          this.state.displayTable,
-          this.state.displayDiagram
-        );
+          this.props.sendData(
+            this.state.myjson,
+            this.state.displayTable,
+            this.state.displayDiagram
+          );
+        } else {
+          throw new Error();
+        }
+      })
+      .catch(error => {
+        console.log("error", error);
       });
   }
 

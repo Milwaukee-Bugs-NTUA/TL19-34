@@ -16,16 +16,15 @@ class Diagram extends Component {
     return true;
   }
 
-  search(arr_keys,target){
+  search(arr_keys, target) {
     console.log(arr_keys.length);
-    for(var i=0; i<arr_keys.length; i++){
-      console.log("Array key:",arr_keys[i]," ","Target:",target.toString());
-      if(arr_keys[i] === target.toString()){
+    for (var i = 0; i < arr_keys.length; i++) {
+      console.log("Array key:", arr_keys[i], " ", "Target:", target.toString());
+      if (arr_keys[i] === target.toString()) {
         return i;
       }
     }
-      return -1;
-
+    return -1;
   }
 
   render() {
@@ -65,37 +64,58 @@ class Diagram extends Component {
     if (!this.isEmpty(this.props.myjson)) {
       var keys = Object.keys(this.props.myjson[0]); //take the keys
       console.log(keys);
-      var atlforday = this.search(keys,"ActualTotalLoadValue");
-      var atlformonth = this.search(keys,"ActualTotalLoadByDayValue");
-      var atlforyear =  this.search(keys,"ActualTotalLoadByMonthValue");
-      var Day = this.search(keys,"Day");
-      var Month = this.search(keys,"Month");
-      var aggforday = this.search(keys,"ActualGenerationOutputValue");
-      var aggformonth = this.search(keys,"ActualGenerationOutputByDayValue");
-      var aggforyear = this.search(keys,"ActualGenerationOutputByMonthValue");
-      var productiontype = this.search(keys,"ProductionType");
-      var dayaheadforday = this.search(keys,"DayAheadTotalLoadForecastValue");
-      var dayaheadformonth = this.search(keys,"DayAheadTotalLoadForecastByDayValue");
-      var dayaheadforyear = this.search(keys,"DayAheadTotalLoadForecastByMonthValue");
+      var atlforday = this.search(keys, "ActualTotalLoadValue");
+      var atlformonth = this.search(keys, "ActualTotalLoadByDayValue");
+      var atlforyear = this.search(keys, "ActualTotalLoadByMonthValue");
+      var Day = this.search(keys, "Day");
+      var Month = this.search(keys, "Month");
+      var aggforday = this.search(keys, "ActualGenerationOutputValue");
+      var aggformonth = this.search(keys, "ActualGenerationOutputByDayValue");
+      var aggforyear = this.search(keys, "ActualGenerationOutputByMonthValue");
+      var productiontype = this.search(keys, "ProductionType");
+      var dayaheadforday = this.search(keys, "DayAheadTotalLoadForecastValue");
+      var dayaheadformonth = this.search(
+        keys,
+        "DayAheadTotalLoadForecastByDayValue"
+      );
+      var dayaheadforyear = this.search(
+        keys,
+        "DayAheadTotalLoadForecastByMonthValue"
+      );
+      var resolutionCodeIndex = this.search(keys, "ResolutionCode");
 
-
-
-
-      if (keys.length == 12 && atlforday!=-1) {
+      if (keys.length == 12 && atlforday != -1) {
         //actuatotaload for day
-
-        for (var i = 0; i < this.props.myjson.length; i++) {
-          arrayPlot.push({
-            x: i,
-            y: Object.values(this.props.myjson[i])[atlforday]
-          });
+        if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT15M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: 0.25 * i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
+        } else if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT30M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: 0.5 * i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
+        } else {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
         }
 
         diagramTitle = "Actual Total Load for the selected day";
         plot_type = "line";
-      }
-
-       else if (keys.length == 10 && atlformonth!=-1) {
+      } else if (keys.length == 10 && atlformonth != -1) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[Day],
@@ -105,7 +125,7 @@ class Diagram extends Component {
 
         diagramTitle = "Actual Total Load for the selected month";
         plot_type = "line";
-      } else if (keys.length == 9 && atlforyear!=-1) {
+      } else if (keys.length == 9 && atlforyear != -1) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[Month],
@@ -114,10 +134,7 @@ class Diagram extends Component {
         }
         diagramTitle = "Actual Total Load for the selected year";
         plot_type = "line";
-      } else if (
-        keys.length == 13 &&
-        aggforday!=-1
-      ) {
+      } else if (keys.length == 13 && aggforday != -1) {
         if (this.props.myjson.length > 24) {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
@@ -136,13 +153,12 @@ class Diagram extends Component {
               y: Object.values(this.props.myjson[i])[aggforday]
             });
           }
+
           plot_type = "line";
-          diagramTitle = "Aggregated Generation for selected day for selected Type";
+          diagramTitle =
+            "Aggregated Generation for selected day for selected Type";
         }
-      } else if (
-        keys.length == 11 &&
-        aggformonth!=-1
-      ) {
+      } else if (keys.length == 11 && aggformonth != -1) {
         if (this.props.myjson.length > 24) {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
@@ -164,10 +180,7 @@ class Diagram extends Component {
           plot_type = "line";
           diagramTitle = "Aggregated Generation for selected month for Type:";
         }
-      } else if (
-        keys.length == 10 &&
-       aggforyear!=-1
-      ) {
+      } else if (keys.length == 10 && aggforyear != -1) {
         if (this.props.myjson.length > 4) {
           for (var i = 0; i < this.props.myjson.length; i++) {
             arrayPlot.push({
@@ -190,27 +203,52 @@ class Diagram extends Component {
         }
       }
 
-      if (
-        keys.length == 13 &&
-        dayaheadforday!=-1 &&
-        atlforday!=-1
-      ) {
-        for (var i = 0; i < this.props.myjson.length; i++) {
-          arrayPlot1.push({
-            x: i,
-            y: Object.values(this.props.myjson[i])[dayaheadforday]
-          });
-          arrayPlot.push({
-            x: i,
-            y: Object.values(this.props.myjson[i])[atlforday]
-          });
+      if (keys.length == 13 && dayaheadforday != -1 && atlforday != -1) {
+        if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT15M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot1.push({
+              x: 0.25 * i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+            arrayPlot.push({
+              x: 0.25 * i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
+        } else if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT15M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot1.push({
+              x: 0.5 * i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+            arrayPlot.push({
+              x: 0.5 * i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
+        } else {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot1.push({
+              x: i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+            arrayPlot.push({
+              x: i,
+              y: Object.values(this.props.myjson[i])[atlforday]
+            });
+          }
         }
-        diagramTitle = "ActualvsForecat for the selected day";
+
+        diagramTitle = "ActualvsForecast for the selected day";
         plot_type = "line";
       } else if (
         keys.length == 11 &&
-      dayaheadformonth!=-1 &&
-       atlformonth!=-1
+        dayaheadformonth != -1 &&
+        atlformonth != -1
       ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot1.push({
@@ -222,12 +260,12 @@ class Diagram extends Component {
             y: Object.values(this.props.myjson[i])[atlformonth]
           });
         }
-        diagramTitle = "ActualvsForecat for the selected month";
+        diagramTitle = "ActualvsForecast for the selected month";
         plot_type = "line";
       } else if (
         keys.length == 10 &&
-       dayaheadforyear!=-1 &&
-       atlforyear!=-1
+        dayaheadforyear != -1 &&
+        atlforyear != -1
       ) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot1.push({
@@ -239,25 +277,39 @@ class Diagram extends Component {
             y: Object.values(this.props.myjson[i])[atlforyear]
           });
         }
-        diagramTitle = "ActualvsForecat for the selected year";
+        diagramTitle = "ActualvsForecast for the selected year";
         plot_type = "line";
-      } else if (
-        keys.length == 12 &&
-       dayaheadforday!=-1
-      ) {
-        for (var i = 0; i < this.props.myjson.length; i++) {
-          arrayPlot.push({
-            x: i,
-            y: Object.values(this.props.myjson[i])[dayaheadforday]
-          });
+      } else if (keys.length == 12 && dayaheadforday != -1) {
+        if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT15M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: 0.25 * i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+          }
+        } else if (
+          Object.values(this.props.myjson[0])[resolutionCodeIndex] === "PT30M"
+        ) {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: 0.5 * i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+          }
+        } else {
+          for (var i = 0; i < this.props.myjson.length; i++) {
+            arrayPlot.push({
+              x: i,
+              y: Object.values(this.props.myjson[i])[dayaheadforday]
+            });
+          }
         }
 
         diagramTitle = "Day Ahead Forecast for the selected day";
         plot_type = "line";
-      } else if (
-        keys.length == 10 &&
-        dayaheadformonth!=-1
-      ) {
+      } else if (keys.length == 10 && dayaheadformonth != -1) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[Day],
@@ -267,10 +319,7 @@ class Diagram extends Component {
 
         diagramTitle = "Day Ahead Forecast for the selected month";
         plot_type = "line";
-      } else if (
-        keys.length == 9 &&
-        dayaheadforyear!=-1
-      ) {
+      } else if (keys.length == 9 && dayaheadforyear != -1) {
         for (var i = 0; i < this.props.myjson.length; i++) {
           arrayPlot.push({
             x: Object.values(this.props.myjson[i])[Month],
@@ -280,7 +329,7 @@ class Diagram extends Component {
 
         diagramTitle = "Day Ahead Forecast for the selected year";
         plot_type = "line";
-      } 
+      }
 
       options = {
         animationEnabled: true,
