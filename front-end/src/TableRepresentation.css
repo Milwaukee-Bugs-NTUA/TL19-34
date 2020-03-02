@@ -1,0 +1,9 @@
+.table-earnings {
+  background-color: #020002;
+}
+.table {
+  display: block;
+  max-height: 400px;
+  overflow: scroll;
+  width: 900px;
+}
