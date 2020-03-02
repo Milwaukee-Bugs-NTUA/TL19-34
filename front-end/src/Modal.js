@@ -13,7 +13,7 @@ export default class HelpModal extends Component {
   //example of using a React ref as DOM element mount/unmount callback
   modalMounted(refToModal) {
     const hideFun = () => {
-      this.props.onHide(this.backButton);
+      this.props.onHide();
     };
     console.log("ref to modal: ", refToModal);
     if (refToModal !== null) {

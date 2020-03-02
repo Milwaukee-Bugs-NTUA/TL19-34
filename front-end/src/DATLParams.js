@@ -124,14 +124,12 @@ class DATLParams extends Component {
         });
         console.log("ela", typeof this.state.myjson);
 
-        if (!this.isEmpty(this.state.myjson)) {
-          //check if json is empty
-          this.props.sendData(
-            this.state.myjson,
-            this.state.displayTable,
-            this.state.displayDiagram
-          );
-        }
+        //check if json is empty
+        this.props.sendData(
+          this.state.myjson,
+          this.state.displayTable,
+          this.state.displayDiagram
+        );
       });
   }
 

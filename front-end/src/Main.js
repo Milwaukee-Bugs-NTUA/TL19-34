@@ -25,7 +25,9 @@ class Main extends Component {
     displayDiagram: false,
     isLoaded: false,
     myjson: null,
-    modalVisible: false
+    modalVisible: false,
+    errorVisible: false,
+    errmessage: false
   };
 
   showModal = () => {
@@ -33,10 +35,17 @@ class Main extends Component {
     this.setState({ modalVisible: true });
   };
 
-  hideModal = userChoice => {
-    //handle user choice
-    console.log(userChoice);
+  show_errModal = message => {
+    console.log("show modal_error");
+    this.setState({ errorVisible: true, errmessage: message });
+  };
+
+  hideModal = () => {
     this.setState({ modalVisible: false });
+  };
+
+  hide_errModal = () => {
+    this.setState({ errorVisible: false });
   };
 
   getjson_and_getdisplayTable_getdisplayDiagram = (
@@ -124,6 +133,7 @@ class Main extends Component {
                                   location={this.props.location}
                                   context={context}
                                   showBadDateModal={this.showModal}
+                                  showErrModal={this.show_errModal}
                                   hideModal={this.hideModal}
                                 />
                               </React.Fragment>
@@ -272,6 +282,13 @@ class Main extends Component {
             message="Wrong Date"
             visible={this.state.modalVisible}
             onHide={this.hideModal}
+          />
+          <Modal
+            buttonName="Back"
+            title="error description"
+            message={this.state.errmessage}
+            visible={this.state.errorVisible}
+            onHide={this.hide_errModal}
           />
         </row>
 

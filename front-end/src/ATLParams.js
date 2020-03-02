@@ -57,9 +57,9 @@ class ATLParams extends Component {
     }
 
     if (
-      typeof array_of_time[0] != "undefined" &&
-      typeof array_of_time[1] != "undefined" &&
-      typeof array_of_time[2] != "undefined"
+      typeof array_of_time[0] !== "undefined" &&
+      typeof array_of_time[1] !== "undefined" &&
+      typeof array_of_time[2] !== "undefined"
     ) {
       //for day
       url =
@@ -85,7 +85,7 @@ class ATLParams extends Component {
         Time +
         "?format=json";
     } else if (
-      typeof array_of_time[0] != "undefined" &&
+      typeof array_of_time[0] !== "undefined" &&
       typeof array_of_time[1] === "undefined" &&
       typeof array_of_time[2] === "undefined"
     ) {
@@ -111,9 +111,9 @@ class ATLParams extends Component {
         "X-OBSERVATORY-AUTH": this.props.context.token
       }
     })
-      .then(response => Promise.all([response.ok, response.json()]))
-      .then(([responseOk, json]) => {
-        if (responseOk) {
+      .then(response => Promise.all([response.status, response.json()]))
+      .then(([responseStatus, json]) => {
+        if (responseStatus > 200 && responseStatus < 299) {
           this.setState({ myjson: json, isLoaded: true });
           console.log(this.state.myjson);
           console.log(this.state.isLoaded);
@@ -128,11 +128,11 @@ class ATLParams extends Component {
             this.state.displayDiagram
           );
         } else {
-          throw new Error();
+          throw new Error(responseStatus);
         }
       })
-      .catch(error => {
-        console.log("error", error);
+      .catch(responseStatus => {
+        return this.props.showErrModal(responseStatus.toString());
       });
   }
 

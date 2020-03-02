@@ -133,14 +133,11 @@ class AggParams extends Component {
         });
         console.log("ela", typeof this.state.myjson);
 
-        if (!this.isEmpty(this.state.myjson)) {
-          //check if json is empty
-          this.props.sendData(
-            this.state.myjson,
-            this.state.displayTable,
-            this.state.displayDiagram
-          );
-        } else console.log("empty json");
+        this.props.sendData(
+          this.state.myjson,
+          this.state.displayTable,
+          this.state.displayDiagram
+        );
       });
   }
 
