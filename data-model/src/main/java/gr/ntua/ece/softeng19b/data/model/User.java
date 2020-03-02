@@ -19,6 +19,7 @@ public class User {
         this.admin = admin;
         this.requestsPerDayQuota = requestsPerDayQuota;
         this.usedPerDayQuota = 0;
+        this.password = "1234";
     }
 
     public String getUserName() {

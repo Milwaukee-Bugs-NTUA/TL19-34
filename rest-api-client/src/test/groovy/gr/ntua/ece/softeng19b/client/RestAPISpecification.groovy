@@ -110,14 +110,14 @@ class RestAPISpecification extends Specification {
             post(
                 urlEqualTo("/energy/api/Login")
             ).withRequestBody(
-                equalTo(ClientHelper.encode([username:"admin", password:"321nimda"]))
+                equalTo(ClientHelper.encode([username:"john", password:"1234"]))
             ).willReturn(
                 okJson("""{"token":"${TOKEN1}"}""")
             )
         )
 
         when:
-        caller1.login("admin", "321nimda")
+        caller1.login("john", "1234")
 
         then:
         caller1.isLoggedIn()
@@ -134,20 +134,23 @@ class RestAPISpecification extends Specification {
             .withRequestBody(
                 equalTo(ClientHelper.encode([username:"user", email:"user@ntua.gr", password:"4321resu", requestsPerDayQuota:"100"]))
             ).willReturn(
-                okJson('{"username":"user", "email":"user@ntua.gr","requestsPerDayQuota":100}')
+                okJson('{"Username": "user", "Email": "user@ntua.gr","Admin": 0,"RequestsPerDayQuota": 100,"UsedPerDayQuota": 0}')
             )
         )
 
         when:
-        User user = caller1.addUser("user", "user@ntua.gr", "4321resu", 100)
+        User user = caller1.addUser("user", "user@ntua.gr", "4321resu", 0, 100)
 
         then:
-        user.getUsername() == "user" &&
+        user.getUsername().equals("user") &&
         user.getEmail() == "user@ntua.gr" &&
-        user.getRequestsPerDayQuota() == 100
+        user.getAdmin() == 0 &&
+        user.getPassword == null &&
+        user.getRequestsPerDayQuota() == 100 &&
+        user.getUsedPerDayQuota() == 0
     }
 
-    def "T05. User logs in"() {
+    /*def "T05. User logs in"() {
         given:
         wms.givenThat(
             post(
@@ -200,12 +203,12 @@ class RestAPISpecification extends Specification {
             ).withRequestBody(
                 equalTo(ClientHelper.encode([email:"user@ntua.gr", requestsPerDayQuota:"1"]))
             ).willReturn(
-                okJson('{"username":"user", "email":"user@ntua.gr","requestsPerDayQuota":1}')
+                okJson('{"Username":"user", "Email":"user@ntua.gr","Admin":0,"RequestsPerDayQuota":1,"UsedPerDayQuota":0}')
             )
         )
 
         when:
-        User user = caller1.updateUser(new User("user", "user@ntua.gr", 1))
+        User user = caller1.updateUser(new User("user", "user@ntua.gr", 0, 1))
 
         then:
         user.getRequestsPerDayQuota() == 1
@@ -246,12 +249,12 @@ class RestAPISpecification extends Specification {
             ).withRequestBody(
                 equalTo(ClientHelper.encode([email:"user@ntua.gr", requestsPerDayQuota:"10"]))
             ).willReturn(
-                okJson('{"username":"user", "email":"user@ntua.gr","requestsPerDayQuota":10}')
+                okJson('{"Username":"user", "Email":"user@ntua.gr","Admin":0,"RequestsPerDayQuota":10,"UsedPerDayQuota":0}')
             )
         )
 
         when:
-        User user = caller1.updateUser(new User("user", "user@ntua.gr", 10))
+        User user = caller1.updateUser(new User("user", "user@ntua.gr", 0, 10))
 
         then:
         user.getRequestsPerDayQuota() == 10
@@ -308,7 +311,7 @@ class RestAPISpecification extends Specification {
                 RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
             ).withMultipartRequestBody(
                 new MultipartValuePatternBuilder().
-                    withName("file").
+                    withName("fileToUpload").
                     withBody(
                         binaryEqualTo(
                             Base64.mimeEncoder.encode(new File(csv).getBytes())
@@ -366,6 +369,6 @@ class RestAPISpecification extends Specification {
         then:
         ServerResponseException exception = thrown()
         exception.getStatusCode() == 401
-    }
+    }*/
 
 }
