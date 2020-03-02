@@ -28,8 +28,8 @@ public class RestfulApp extends Application {
         router.attach("/Admin/users", AddUser.class);
         router.attach("/Admin/users/{username}", UserManager.class);
         router.attach("/Admin/ActualTotalLoad", ImportActualTotalLoadDataSet.class);
-        //router.attach("/Admin/DayAheadTotalLoadForecast", ImportDayAheadTotalLoadForecast.class);
-        //router.attach("/Admin/AggregatedGenerationPerType", ImportAggregatedGenerationPerType.class);
+        router.attach("/Admin/DayAheadTotalLoadForecast", ImportDayAheadTotalLoadForecast.class);
+        router.attach("/Admin/AggregatedGenerationPerType", ImportAggregatedGenerationPerType.class);
 
         //You should make these REST endpoints available to all authenticated users
         router.attach("/Logout", Logout.class);
