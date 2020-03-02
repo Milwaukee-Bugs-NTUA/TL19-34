@@ -90,6 +90,34 @@ class Diagram extends Component {
       24: "Substation"
     };
 
+    var colors = {
+      "Fossil Gas": "#000000",
+      "Hydro Run-of-river and poundage": "#F0F8FF",
+      "Hydro Pumped Storage": "#FAEBD7",
+      "Hydro Water Reservoir": "#00FFFF",
+      "Fossil Hard coal": "#00FF00",
+
+      Nuclear: "#FFB6C1",
+      "Fossil Brown coal/Lignite": "#90EE90",
+      "Fossil Oil": "#FFB6C1",
+      "Fossil Oil shale": "#008000",
+      Biomass: "#FFD700",
+      "Fossil Peat": "#B22222",
+      "Wind Onshore": "#2F4F4F",
+      Other: "#8B008B",
+      "Wind Offshore": "#D2691E",
+      "Fossil Coal-derived gas": "#7FFF00",
+      Waste: "#0000FF",
+      Solar: "#F0FFFF",
+      Geothermal: "#9ACD32",
+      "Other renewable": "#FFFFFF",
+      Marine: "#F5F5F5",
+      "AC Link": "#008080",
+      Transformer: "#00FF7F",
+      "DC Link": "#FA8072",
+      Substation: "#FF0000"
+    };
+
     if (!this.isEmpty(this.props.myjson)) {
       var keys = Object.keys(this.props.myjson[0]); //take the keys
       console.log(keys);
@@ -178,7 +206,11 @@ class Diagram extends Component {
         if (count > 1) {
           for (var i = 0; i < sweet_arr.length; i++) {
             if (sweet_arr[i] !== 0)
-              arrayPlot.push({ y: sweet_arr[i], label: mydict2[i] });
+              arrayPlot.push({
+                y: sweet_arr[i],
+                label: mydict2[i],
+                color: colors[mydict2[i]]
+              });
           }
 
           plot_type = "pie";
@@ -210,7 +242,11 @@ class Diagram extends Component {
         if (count > 1) {
           for (var i = 0; i < sweet_arr.length; i++) {
             if (sweet_arr[i] !== 0)
-              arrayPlot.push({ y: sweet_arr[i], label: mydict2[i] });
+              arrayPlot.push({
+                y: sweet_arr[i],
+                label: mydict2[i],
+                color: colors[mydict2[i]]
+              });
           }
 
           plot_type = "pie";
@@ -241,7 +277,11 @@ class Diagram extends Component {
         if (count > 1) {
           for (var i = 0; i < sweet_arr.length; i++) {
             if (sweet_arr[i] !== 0)
-              arrayPlot.push({ y: sweet_arr[i], label: mydict2[i] });
+              arrayPlot.push({
+                y: sweet_arr[i],
+                label: mydict2[i],
+                color: colors[mydict2[i]]
+              });
           }
 
           plot_type = "pie";
@@ -394,7 +434,7 @@ class Diagram extends Component {
         exportEnabled: true,
         animationDuration: 4000,
         theme: "light1", //"light1", "dark1", "dark2"
-        width: 950,
+        width: 1300,
 
         dataPointMaxWidth: 20,
         height: 400,
@@ -408,7 +448,6 @@ class Diagram extends Component {
             //Shows y value on all Data Points
             indexLabelFontColor: "#5A5757",
             indexLabelPlacement: "outside",
-            colorSet: "#5A5757",
             dataPoints: arrayPlot
           },
           {
@@ -417,7 +456,6 @@ class Diagram extends Component {
             color: "red",
             indexLabelFontColor: "#5A5757",
             indexLabelPlacement: "outside",
-            colorSet: "#5A5757",
             dataPoints: arrayPlot1
           }
         ]

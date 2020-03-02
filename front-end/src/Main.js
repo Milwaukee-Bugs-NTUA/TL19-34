@@ -74,7 +74,7 @@ class Main extends Component {
                 class="font-weight-bold"
                 style={{
                   color: "white",
-                  fontSize: "30px",
+                  fontSize: "45px",
                   textUnderlinePosition: true
                 }}
               >
@@ -101,7 +101,7 @@ class Main extends Component {
                 class="collapse navbar-collapse"
                 id="navbarSupportedContent20"
               >
-                <ul class="navbar-nav mr-auto" style={{ marginTop: 10 }}>
+                <ul class="navbar-nav mr-auto" style={{ marginTop: 20 }}>
                   <li class="nav-item">
                     <a
                       lass="nav-link"
@@ -112,7 +112,7 @@ class Main extends Component {
                       aria-controls="navbarSupportedContent21"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
-                      style={{ color: "white" }}
+                      style={{ fontSize: "30px", color: "white" }}
                     >
                       Actual Total Load
                     </a>
@@ -143,7 +143,7 @@ class Main extends Component {
                       </ul>
                     </div>
                   </li>
-                  <li class="nav-item" style={{ marginTop: 10 }}>
+                  <li class="nav-item" style={{ marginTop: 20 }}>
                     <a
                       class="nav-link"
                       class="navbar-toggler simple-button"
@@ -153,7 +153,7 @@ class Main extends Component {
                       aria-controls="navbarSupportedContent22"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
-                      style={{ color: "white" }}
+                      style={{ fontSize: "30px", color: "white" }}
                     >
                       Day Ahead Total Load
                     </a>
@@ -183,7 +183,7 @@ class Main extends Component {
                       </ul>
                     </div>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" style={{ marginTop: 20 }}>
                     <a
                       class="nav-link"
                       class="navbar-toggler simple-button"
@@ -193,7 +193,7 @@ class Main extends Component {
                       aria-controls="navbarSupportedContent23"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
-                      style={{ color: "white" }}
+                      style={{ fontSize: "30px", color: "white" }}
                     >
                       Actual vs Forecast
                     </a>
@@ -223,7 +223,7 @@ class Main extends Component {
                       </ul>
                     </div>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" style={{ marginTop: 20 }}>
                     <a
                       class="nav-link"
                       class="navbar-toggler simple-button"
@@ -233,7 +233,7 @@ class Main extends Component {
                       aria-controls="navbarSupportedContent24"
                       aria-expanded="false"
                       aria-label="Toggle navigation"
-                      style={{ color: "white" }}
+                      style={{ fontSize: "30px", color: "white" }}
                     >
                       Agreggated
                     </a>
@@ -292,7 +292,10 @@ class Main extends Component {
           />
         </row>
 
-        <row2 class="row justify-content-center" style={{ marginLeft: -350 }}>
+        <row2
+          class="row justify-content-center"
+          style={{ marginLeft: -1150, marginTop: 20 }}
+        >
           <Diagram
             isLoaded={this.state.isLoaded}
             myjson={this.state.myjson}

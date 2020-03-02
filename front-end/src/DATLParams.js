@@ -145,33 +145,124 @@ class DATLParams extends Component {
               Area Name
             </label>
             <select ref={this.areaName} id="areaName" class="col-lg-6">
-              <option>None</option>
+              <option>50Hertz CA</option>
+              <option>Amprion CA</option>
+              <option>APG CA</option>
+              <option>AST BZ</option>
+              <option>AST CA</option>
               <option>Austria</option>
+              <option>Belgium</option>
+              <option>Bosnia Herzegovina</option>
               <option>Bulgaria</option>
+              <option>CEPS BZ</option>
+              <option>CEPS CA</option>
+              <option>CGES BZ</option>
+              <option>CGES CA</option>
+              <option>CREOS CA</option>
+              <option>Croatia</option>
+              <option>Cyprus</option>
+              <option>Cyprus TSO BZ</option>
+              <option>Cyprus TSO CA</option>
+              <option>Czech Republic</option>
+              <option>DE-AT-LU</option>
+              <option>Denmark</option>
+              <option>DK1 BZ</option>
+              <option>DK2 BZ</option>
+              <option>EirGrid CA</option>
+              <option>Elering BZ</option>
+              <option>Elering CA</option>
+              <option>ELES BZ</option>
+              <option>ELES CA</option>
+              <option>Elia BZ</option>
+              <option>Elia CA</option>
+              <option>EMS BZ</option>
+              <option>EMS CA</option>
+              <option>Energinet CA</option>
+              <option>ESO BZ</option>
+              <option>ESO CA</option>
+              <option>Estonia</option>
+              <option>Fingrid BZ</option>
+              <option>Fingrid CA</option>
+              <option>Finland</option>
+              <option>Former Yugoslav Republic of Macedonia</option>
+              <option>France</option>
+              <option>Germany</option>
               <option>Greece</option>
+              <option>HOPS BZ</option>
+              <option>HOPS CA</option>
+              <option>Hungary</option>
+              <option>IPTO BZ</option>
+              <option>IPTO CA</option>
+              <option>Ireland</option>
+              <option>Ireland - (SEM) BZ</option>
+              <option>IT-Centre-North BZ</option>
+              <option>IT-Centre-South BZ</option>
+              <option>IT-North BZ</option>
+              <option>IT-Sardinia BZ</option>
+              <option>IT-Sicily BZ</option>
+              <option>IT-South BZ</option>
+              <option>Italy</option>
+              <option>Italy CA</option>
+              <option>Latvia</option>
+              <option>Litgrid BZ</option>
+              <option>Litgrid CA</option>
+              <option>Lithuania</option>
+              <option>Luxembourg</option>
+              <option>MAVIR BZ</option>
+              <option>MAVIR CA</option>
+              <option>MEPSO BZ</option>
+              <option>MEPSO CA</option>
+              <option>Montenegro</option>
+              <option>National Grid BZ</option>
+              <option>National Grid CA/</option>
+              <option>Netherlands</option>
+              <option>NO1 BZ</option>
+              <option>NO2 BZ</option>
+              <option>NO3 BZ</option>
+              <option>NO4 BZ</option>
+              <option>NO5 BZ</option>
+              <option>Norway</option>
+              <option>NOS BiH BZ</option>
+              <option>NOS BiH CA</option>
+              <option>Poland</option>
+              <option>Portugal</option>
+              <option>PSE SA BZ</option>
+              <option>PSE SA CA</option>
+              <option>REE BZ</option>
+              <option>REE CA</option>
+              <option>REN BZ</option>
+              <option>REN CA</option>
+              <option>Romania</option>
+              <option>RTE BZ</option>
+              <option>RTE CA</option>
+              <option>SE1 BZ</option>
+              <option>SE2 BZ</option>
+              <option>SE3 BZ</option>
+              <option>SE4 BZ</option>
+              <option>SEPS BZ</option>
+              <option>SEPS CA</option>
+              <option>Serbia</option>
+              <option>Slovakia</option>
               <option>Slovenia</option>
-              <option>Austria</option>
-              <option>Bulgaria</option>
-              <option>Greece</option>
-              <option>Slovenia</option>
-              <option>None</option>
-              <option>Austria</option>
-              <option>Bulgaria</option>
-              <option>Greece</option>
-              <option>Slovenia</option>
-              <option>Austria</option>
-              <option>Bulgaria</option>
-              <option>Greece</option>
-              <option>Slovenia</option>
-              <option>None</option>
-              <option>Austria</option>
-              <option>Bulgaria</option>
-              <option>Greece</option>
-              <option>Slovenia</option>
-              <option>Austria</option>
-              <option>Bulgaria</option>
-              <option>Greece</option>
-              <option>Slovenia</option>
+              <option>SONI CA</option>
+              <option>Spain</option>
+              <option>Statnett CA</option>
+              <option>SvK CA</option>
+              <option>Sweden</option>
+              <option>swissgrid BZ</option>
+              <option>swissgrid CA</option>
+              <option>Switzerland</option>
+              <option>TenneT GER CA</option>
+              <option>TenneT NL BZ</option>
+              <option>TenneT NL CA</option>
+              <option>Transelectrica BZ</option>
+              <option>Transelectrica CA</option>
+              <option>TransnetBW CA</option>
+              <option>Ukraine</option>
+              <option>Ukraine BEI CA</option>
+              <option>Ukraine BZN</option>
+              <option>Ukraine IPS CA</option>
+              <option>United Kingdom</option>
             </select>
           </div>
 
@@ -198,6 +289,7 @@ class DATLParams extends Component {
             type="text"
             ref={this.datePicker}
             placeholder="YYYY-MM-DD/YYYY-MM/YYYY"
+            style={{ marginLeft: 100 }}
           />
           <button
             className="btn btn-primary  "

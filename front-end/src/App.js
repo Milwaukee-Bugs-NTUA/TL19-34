@@ -17,8 +17,8 @@ class App extends Component {
       username: props.userData.username,
       style: {
         backgroundSize: "cover",
-        backgroundColor: "fff",
-        height: "100vh"
+        marginLeft: 0,
+        marginRight: 0
       },
       setUserData: (token, username) =>
         this.setState({
@@ -41,7 +41,15 @@ class App extends Component {
       <div style={this.state.style}>
         <UserProvider value={this.state}>
           <Router>
-            <div className="container">
+            <div
+              className="container"
+              style={{
+                marginLeft: 0,
+                marginRight: 0,
+                width: 1853,
+                maxWidth: 1853
+              }}
+            >
               <Nav />
               <Route
                 path="/"

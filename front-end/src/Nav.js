@@ -5,7 +5,8 @@ import { UserConsumer } from "./UserContext";
 const css = {
   fullWidth: {
     width: "100%"
-  }
+  },
+  backgroundColor: "#212529"
 };
 
 /*
@@ -69,8 +70,17 @@ class NavMenu extends Component {
 const UserAvatar = props => {
   if (props.context.username) {
     return (
-      <span className="navbar-text" style={{ marginRight: 300 }}>
-        <h5>User: {props.context.username}</h5>
+      <span style={{ marginLeft: 100 }}>
+        <h5
+          style={{
+            color: "white",
+            fontSize: "25px",
+            marginLeft: 100,
+            marginBottom: 35
+          }}
+        >
+          User: {props.context.username}
+        </h5>
       </span>
     );
   } else {
@@ -86,32 +96,52 @@ class Nav extends Component {
           className="navbar navbar-expand-lg navbar-dark bg-primary"
           style={css.fullWidth}
         >
-          <Link className="navbar-brand" to="/">
-            <h3> Home</h3>
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+          <col1 class="col-4">
+            <Link className="navbar-brand" to="/">
+              <h3> Home</h3>
+            </Link>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <UserConsumer>
+              {context => (
+                <React.Fragment>
+                  <NavMenu location={this.props.location} context={context} />
+                </React.Fragment>
+              )}
+            </UserConsumer>
+          </col1>
 
-          <UserConsumer>
-            {context => (
-              <React.Fragment>
-                <NavMenu location={this.props.location} context={context} />
-                <UserAvatar context={context} />
-              </React.Fragment>
-            )}
-          </UserConsumer>
-          <text class="justify content-end" style={{ color: "white" }}>
-            <h3>Milwaukee Bugs</h3>
-          </text>
+          <col2 class="col-6">
+            <text style={{ color: "white", marginRight: 850 }}>
+              <h3
+                style={{
+                  color: "white",
+                  fontSize: "60px",
+                  textUnderlinePosition: true
+                }}
+              >
+                Milwaukee Bugs
+              </h3>
+            </text>
+          </col2>
+          <col3 class="col-2">
+            <UserConsumer>
+              {context => (
+                <React.Fragment>
+                  <UserAvatar context={context} />
+                </React.Fragment>
+              )}
+            </UserConsumer>
+          </col3>
         </nav>
       </div>
     );
