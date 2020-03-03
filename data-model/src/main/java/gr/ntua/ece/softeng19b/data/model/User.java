@@ -8,6 +8,7 @@ public class User {
     private int admin;
     private int requestsPerDayQuota;
     private int usedPerDayQuota;
+    private String salt;
 
     public User() {
         //Keep this for json encoding/decoding
@@ -68,6 +69,14 @@ public class User {
 
     public int getUsedPerDayQuota() {
         return usedPerDayQuota;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
 }
