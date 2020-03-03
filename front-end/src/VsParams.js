@@ -113,22 +113,23 @@ class VsParams extends Component {
         "X-OBSERVATORY-AUTH": this.props.context.token
       }
     })
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ myjson: json, isLoaded: true });
-        console.log(this.state.myjson);
-        console.log(this.state.isLoaded);
-        this.setState({
-          displayTable: !this.state.displayTable,
-          displayDiagram: !this.state.displayDiagram
-        });
-        console.log("ela", typeof this.state.myjson);
+      .then(response =>
+        Promise.all([response.status, response.json(), response.statusText])
+      )
+      .then(([responseStatus, json, responseStatusText]) => {
+        if (responseStatus >= 200 && responseStatus <= 299) {
+          console.log(responseStatus);
+          this.setState({ myjson: json, isLoaded: true });
+          console.log(this.state.myjson);
+          console.log(this.state.isLoaded);
 
-        this.props.sendData(
-          this.state.myjson,
-          this.state.displayTable,
-          this.state.displayDiagram
-        );
+          this.props.sendData(this.state.myjson, this.state.displayTable);
+        } else if (responseStatus > 300) {
+          throw new Error(responseStatusText);
+        }
+      })
+      .catch(responseStatus => {
+        return this.props.showErrModal(responseStatus.toString());
       });
   }
 
