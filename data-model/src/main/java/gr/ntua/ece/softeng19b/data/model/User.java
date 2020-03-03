@@ -8,6 +8,7 @@ public class User {
     private int admin;
     private int requestsPerDayQuota;
     private int usedPerDayQuota;
+    private String salt;
 
     public User() {
         //Keep this for json encoding/decoding
@@ -19,7 +20,15 @@ public class User {
         this.admin = admin;
         this.requestsPerDayQuota = requestsPerDayQuota;
         this.usedPerDayQuota = 0;
-        this.password = "1234";
+    }
+
+    public User(String username, String email, String password, int admin, int requestsPerDayQuota) {
+        this.username = username;
+        this.email = email;
+        this.admin = admin;
+        this.requestsPerDayQuota = requestsPerDayQuota;
+        this.usedPerDayQuota = 0;
+        this.password = password;
     }
 
     public String getUserName() {
@@ -68,6 +77,14 @@ public class User {
 
     public int getUsedPerDayQuota() {
         return usedPerDayQuota;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
 }

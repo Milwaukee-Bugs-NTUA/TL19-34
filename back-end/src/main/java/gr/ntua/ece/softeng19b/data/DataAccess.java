@@ -24,6 +24,8 @@ import java.time.Year;
 import java.util.List;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class DataAccess {
 
@@ -35,6 +37,26 @@ public class DataAccess {
     private static final int MAX_IDLE_CONNECTIONS = 8;
 
     private JdbcTemplate jdbcTemplate;
+
+    private static String generateHash(String data, String algorithm, byte[] salt) throws NoSuchAlgorithmException{
+        MessageDigest digest = MessageDigest.getInstance(algorithm);
+        digest.reset();
+        digest.update(salt);
+        byte[] hash = digest.digest(data.getBytes());
+        return bytesToStringHex(hash);
+    }
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    public static String bytesToStringHex(byte[] bytes){
+        char[] hexChars = new char [bytes.length*2];
+        for(int j=0; j<bytes.length; j++){
+            int v = bytes[j] & 0xFF;
+            hexChars[j*2] = hexArray[v>>>4];
+            hexChars[j*2+1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
 
     public void setup(String driverClass, String url, String user, String pass) throws SQLException {
 
@@ -1101,20 +1123,22 @@ public class DataAccess {
         Object[] sqlParams = new Object[] {
             userName
         };
-
+        User u;
+        int res =0;
         //TODO: Insert a valid SQL query
-        String sqlQuery = "select username, email, password, quotas, admin from users where username = ?";
+        String sqlQuery = "select username, email, password, quotas, admin, usedquotas, salt from users where username = ?";
         
         try {
-                    return jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
+                    u = jdbcTemplate.queryForObject(sqlQuery, sqlParams, (ResultSet rs, int rowNum) -> {
                         User dataLoad = new User();
                         dataLoad.setUserName(rs.getString(1)); //get the string located at the 1st column of the result set
                         dataLoad.setEmail(rs.getString(2)); //get the int located at the 2nd column of the result set
                         dataLoad.setPassword(rs.getString(3));
                         dataLoad.setRequestsPerDayQuota(rs.getInt(4));
                         dataLoad.setAdmin(rs.getInt(5));
-                        if(password.equals(dataLoad.getPassword())) return dataLoad;
-                        else return null;
+                        dataLoad.setUsedPerDayQuota(rs.getInt(6));
+                        dataLoad.setSalt(rs.getString(7));
+                        return dataLoad;
                     });
         }
         
@@ -1123,9 +1147,20 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
 
+        try{
+            if(u.getPassword().equals(generateHash(password, "SHA-512", u.getSalt().getBytes()))) res = 1;
+            else res =0;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Oups! Something went wrong :(");
+        }
+        if(res==1) return u;
+        else return null;
+
     }
 
-    public User addUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
+    public User addUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota, String salt) throws DataAccessException {
         int admin;
 
         Object [] sqlParamsForAdmin = new Object [] {adminUserName};
@@ -1144,10 +1179,10 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
 
-        Object [] sqlParams = new Object [] {userName, email, password, requestsPerDayQuota};
+        Object [] sqlParams = new Object [] {userName, email, password, requestsPerDayQuota, salt};
 
-        String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas) values "+
-                                   "(?, ?, ?, ?, 0, 0)";
+        String sqlQuery = "insert into users (username, email, password, quotas, admin, usedquotas, salt) values "+
+                                   "(?, ?, ?, ?, 0, 0, ?)";
 
         try {
             int rows1 = jdbcTemplate.update(sqlQuery, sqlParams);
@@ -1157,7 +1192,7 @@ public class DataAccess {
         }
         return new User(userName, email, 0, requestsPerDayQuota); 
     }
-    public User updateUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota) throws DataAccessException {
+    public User updateUser(String adminUserName, String userName, String password, String email, int requestsPerDayQuota, String salt) throws DataAccessException {
         int admin;
 
         Object [] sqlParamsForAdmin = new Object [] {adminUserName};
@@ -1176,8 +1211,8 @@ public class DataAccess {
             throw new DataAccessException(e.getMessage(), e);
         }
 
-        Object [] sqlParamsForUpdate = new Object [] {email, password, requestsPerDayQuota, userName};
-        String sqlQueryForUpdate = "update users set email = ?, password = ?, quotas = ? where username = ?";
+        Object [] sqlParamsForUpdate = new Object [] {email, password, requestsPerDayQuota, salt, userName};
+        String sqlQueryForUpdate = "update users set email = ?, password = ?, quotas = ?, salt=? where username = ?";
 
         try {
             int rows1 = jdbcTemplate.update(sqlQueryForUpdate, sqlParamsForUpdate);

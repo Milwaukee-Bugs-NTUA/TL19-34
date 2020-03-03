@@ -17,10 +17,59 @@ import gr.ntua.ece.softeng19b.data.DataAccess;
 import java.io.IOException;
 import io.jsonwebtoken.*;
 import java.util.Base64;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class UserManager extends EnergyResource {
 
     private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
+
+    private static String generateHash(String data, String algorithm, byte[] salt) throws NoSuchAlgorithmException{
+        MessageDigest digest = MessageDigest.getInstance(algorithm);
+        digest.reset();
+        digest.update(salt);
+        byte[] hash = digest.digest(data.getBytes());
+        return bytesToStringHex(hash);
+    }
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    public static String bytesToStringHex(byte[] bytes){
+        char[] hexChars = new char [bytes.length*2];
+        for(int j=0; j<bytes.length; j++){
+            int v = bytes[j] & 0xFF;
+            hexChars[j*2] = hexArray[v>>>4];
+            hexChars[j*2+1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    public static String getAlphaNumericString(int n) 
+    { 
+  
+        // chose a Character random from this String 
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                    + "0123456789"
+                                    + "abcdefghijklmnopqrstuvxyz"; 
+  
+        // create StringBuffer size of AlphaNumericString 
+        StringBuilder sb = new StringBuilder(n); 
+  
+        for (int i = 0; i < n; i++) { 
+  
+            // generate a random number between 
+            // 0 to AlphaNumericString variable length 
+            int index 
+                = (int)(AlphaNumericString.length() 
+                        * Math.random()); 
+  
+            // add Character one by one in end of sb 
+            sb.append(AlphaNumericString 
+                          .charAt(index)); 
+        } 
+  
+        return sb.toString(); 
+    }
 
     @Override
     protected Representation get() throws ResourceException {
@@ -92,10 +141,21 @@ public class UserManager extends EnergyResource {
         String email = form.getFirstValue("email");
         String password = form.getFirstValue("password");
         int requestedPerDayQuota = Integer.valueOf(form.getFirstValue("requestsPerDayQuota"));
+
+        String algorithm = "SHA-512";
+        String salt = getAlphaNumericString(10);
+        try{
+            password = generateHash(password, algorithm, salt.getBytes());
+        }
+        catch(Exception e)
+        {
+            System.out.println("Something went wrong :(");
+        }
+
         User u;
 
         try{
-            u = dataAccess.updateUser(adminUserName, userName, password, email, requestedPerDayQuota);
+            u = dataAccess.updateUser(adminUserName, userName, password, email, requestedPerDayQuota, salt);
         }
         catch(Exception e)
         {
