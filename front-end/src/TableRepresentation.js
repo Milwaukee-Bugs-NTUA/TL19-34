@@ -42,8 +42,8 @@ class TableRepresentation extends Component {
                 </table>
               </div>
             ) : (
-              <div style={{ marginTop: 80, marginLeft: 15 }}>
-                <h2>No Data to display for this day,month or year</h2>
+              <div style={{ marginTop: 150, marginLeft: 150 }}>
+                <h1>No Data to display for this input</h1>
               </div>
             )}
           </div>

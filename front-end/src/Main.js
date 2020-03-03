@@ -237,7 +237,7 @@ class Main extends Component {
                       aria-label="Toggle navigation"
                       style={{ fontSize: "30px", color: "white" }}
                     >
-                      Agreggated
+                      Agreggated Generation per Type
                     </a>
                     <div
                       class="collapse navbar-collapse"

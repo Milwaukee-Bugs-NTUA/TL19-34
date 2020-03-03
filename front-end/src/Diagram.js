@@ -432,7 +432,7 @@ class Diagram extends Component {
       options = {
         animationEnabled: true,
         exportEnabled: true,
-        animationDuration: 4000,
+        animationDuration: 3000,
         theme: "light1", //"light1", "dark1", "dark2"
         width: 1300,
 

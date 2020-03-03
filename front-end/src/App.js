@@ -16,9 +16,12 @@ class App extends Component {
       token: props.userData.token,
       username: props.userData.username,
       style: {
+        backgroundColor: "000",
         backgroundSize: "cover",
         marginLeft: 0,
-        marginRight: 0
+        marginRight: 0,
+        maxheight: 1000,
+        height: 1000
       },
       setUserData: (token, username) =>
         this.setState({
