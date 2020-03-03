@@ -122,22 +122,22 @@ class AggParams extends Component {
         "X-OBSERVATORY-AUTH": this.props.context.token
       }
     })
+      .then(response => {
+        if (response.ok) {
+          return response;
+        } else throw new Error([response.status, response.statusText]);
+      })
       .then(response => response.json())
       .then(json => {
+        //console.log(response.status);
         this.setState({ myjson: json, isLoaded: true });
         console.log(this.state.myjson);
-        console.log(this.state.isLoaded);
-        this.setState({
-          displayTable: !this.state.displayTable,
-          displayDiagram: !this.state.displayDiagram
-        });
-        console.log("ela", typeof this.state.myjson);
-
-        this.props.sendData(
-          this.state.myjson,
-          this.state.displayTable,
-          this.state.displayDiagram
-        );
+        this.props.sendData(this.state.myjson, this.state.displayTable);
+      })
+      .catch(responseStatus => {
+        var msg = responseStatus.toString();
+        var mymsg = msg.replace(",", " ");
+        return this.props.showErrModal(mymsg);
       });
   }
 

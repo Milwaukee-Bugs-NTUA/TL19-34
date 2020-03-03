@@ -174,6 +174,7 @@ class Main extends Component {
                                   location={this.props.location}
                                   context={context}
                                   showBadDateModal={this.showModal}
+                                  showErrModal={this.show_errModal}
                                   hideModal={this.hideModal}
                                 />
                               </React.Fragment>
@@ -214,6 +215,7 @@ class Main extends Component {
                                   location={this.props.location}
                                   context={context}
                                   showBadDateModal={this.showModal}
+                                  showErrModal={this.show_errModal}
                                   hideModal={this.hideModal}
                                 />
                               </React.Fragment>
@@ -254,6 +256,7 @@ class Main extends Component {
                                   location={this.props.location}
                                   context={context}
                                   showBadDateModal={this.showModal}
+                                  showErrModal={this.show_errModal}
                                   hideModal={this.hideModal}
                                 />
                               </React.Fragment>
