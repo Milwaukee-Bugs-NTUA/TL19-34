@@ -87,6 +87,23 @@ class RestAPISpecification extends Specification {
         status == "OK"
     }
 
+    def "T02. The database is reset successfully"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Reset")
+            ).willReturn(
+                okJson('{"status":"OK"}')
+            )
+        )
+
+        when:
+        String status = caller1.resetDatabase()
+
+        then:
+        status == "OK"
+    }
+
     def "T03. Admin logs in successfully"() {
         given:
         wms.givenThat(
@@ -476,7 +493,8 @@ class RestAPISpecification extends Specification {
                     withName("fileToUpload").
                     withBody(
                         binaryEqualTo(
-                            Base64.mimeEncoder.encode(new File(csv).getBytes())
+                            ///Base64.mimeEncoder.encode(new File(csv).getBytes())
+                            new File(csv).getBytes()
                         )
                     )
             ).willReturn(
@@ -532,23 +550,6 @@ class RestAPISpecification extends Specification {
         then:
         ServerResponseException exception = thrown()
         exception.getStatusCode() == 401
-    }
-
-    def "T24. The database is reset successfully"() {
-        given:
-        wms.givenThat(
-            post(
-                urlEqualTo("/energy/api/Reset")
-            ).willReturn(
-                okJson('{"status":"OK"}')
-            )
-        )
-
-        when:
-        String status = caller1.resetDatabase()
-
-        then:
-        status == "OK"
     }
 
 }
