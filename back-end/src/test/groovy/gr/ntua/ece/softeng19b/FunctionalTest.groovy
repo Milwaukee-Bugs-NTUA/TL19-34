@@ -34,7 +34,7 @@ class FunctionalTest extends Specification{
 
     def "T03. Admin logs in successfully"() {
         given:
-        caller1.login("john", "1234")
+        caller1.login("gstak", "1234")
         expect:
         caller1.isLoggedIn() == true
     }
@@ -89,7 +89,7 @@ class FunctionalTest extends Specification{
     
     def "T09. Admin logs in successfully"() {
         given:
-        caller1.login("john", "1234")
+        caller1.login("gstak", "1234")
         expect:
         caller1.isLoggedIn() == true
     }
@@ -121,7 +121,7 @@ class FunctionalTest extends Specification{
 
     def "T13. Admin logs in successfully"() {
         given:
-        caller1.login("john", "1234")
+        caller1.login("gstak", "1234")
         expect:
         caller1.isLoggedIn() == true
     }
