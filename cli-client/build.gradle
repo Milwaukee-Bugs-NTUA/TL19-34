@@ -20,7 +20,7 @@ dependencies {
 }
 
 application {
-    applicationName = "energy_TEAM"
+    applicationName = "energy_group034"
     mainClassName = 'gr.ntua.ece.softeng19b.cli.App'
 }
 

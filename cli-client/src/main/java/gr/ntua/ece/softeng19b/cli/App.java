@@ -15,7 +15,7 @@ import static picocli.CommandLine.*;
 
 
 @Command(
-    name="energy_TEAM",
+    name="energy_group034",
     mixinStandardHelpOptions = true,
     version = "energy_TEAM 1.0",
     subcommands = {
