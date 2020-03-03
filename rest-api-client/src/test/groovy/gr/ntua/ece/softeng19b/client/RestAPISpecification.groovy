@@ -87,23 +87,6 @@ class RestAPISpecification extends Specification {
         status == "OK"
     }
 
-    def "T02. The database is reset successfully"() {
-        given:
-        wms.givenThat(
-            post(
-                urlEqualTo("/energy/api/Reset")
-            ).willReturn(
-                okJson('{"status":"OK"}')
-            )
-        )
-
-        when:
-        String status = caller1.resetDatabase()
-
-        then:
-        status == "OK"
-    }
-
     def "T03. Admin logs in successfully"() {
         given:
         wms.givenThat(
@@ -139,18 +122,34 @@ class RestAPISpecification extends Specification {
         )
 
         when:
-        User user = caller1.addUser("user", "user@ntua.gr", "4321resu", 0, 100)
+        User user = caller1.addUser("user", "user@ntua.gr", "4321resu",100)
 
         then:
-        user.getUsername().equals("user") &&
+        user.getUserName() == "user" &&
         user.getEmail() == "user@ntua.gr" &&
         user.getAdmin() == 0 &&
-        user.getPassword == null &&
         user.getRequestsPerDayQuota() == 100 &&
         user.getUsedPerDayQuota() == 0
     }
 
-    /*def "T05. User logs in"() {
+    def "T05. Admin logs out "() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Logout")
+            ).withHeader(
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
+            )
+        )
+
+        when:
+        caller1.logout()
+
+        then:
+        !caller1.isLoggedIn()
+    }
+
+    def "T06. User logs in"() {
         given:
         wms.givenThat(
             post(
@@ -169,7 +168,7 @@ class RestAPISpecification extends Specification {
         caller2.isLoggedIn()
     }
 
-    def "T06. User retrieves ActualTotalLoad tuple for 2000-01-01"() {
+    def "T07. User retrieves ActualTotalLoad tuple for 2000-01-01"() {
         given:
         wms.givenThat(
             get(
@@ -193,7 +192,43 @@ class RestAPISpecification extends Specification {
         records.size() == 1
     }
 
-    def "T07. Admin limits the quota of the new user"() {
+    def "T08. User logs out"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Logout")
+            ).withHeader(
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
+            )
+        )
+
+        when:
+        caller2.logout()
+
+        then:
+        !caller2.isLoggedIn()
+    }
+
+    def "T09. Admin logs in successfully for second time"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Login")
+            ).withRequestBody(
+                equalTo(ClientHelper.encode([username:"john", password:"1234"]))
+            ).willReturn(
+                okJson("""{"token":"${TOKEN1}"}""")
+            )
+        )
+
+        when:
+        caller1.login("john", "1234")
+
+        then:
+        caller1.isLoggedIn()
+    }
+
+    def "T10. Admin limits the quota of the new user"() {
         given:
         wms.givenThat(
             put(
@@ -201,20 +236,56 @@ class RestAPISpecification extends Specification {
             ).withHeader(
                 RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
             ).withRequestBody(
-                equalTo(ClientHelper.encode([email:"user@ntua.gr", requestsPerDayQuota:"1"]))
+                equalTo(ClientHelper.encode([email:"user@ntua.gr", password:"drowssapwen",requestsPerDayQuota:"1"]))
             ).willReturn(
                 okJson('{"Username":"user", "Email":"user@ntua.gr","Admin":0,"RequestsPerDayQuota":1,"UsedPerDayQuota":0}')
             )
         )
 
         when:
-        User user = caller1.updateUser(new User("user", "user@ntua.gr", 0, 1))
+        User user = caller1.updateUser(new User("user", "user@ntua.gr", "drowssapwen", 0, 1))
 
         then:
         user.getRequestsPerDayQuota() == 1
     }
 
-    def "T08. User cannot read ActualTotalLoad tuple for 2000-01-02 due to quota limit"() {
+    def "T11. Admin logs out for second time"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Logout")
+            ).withHeader(
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
+            )
+        )
+
+        when:
+        caller1.logout()
+
+        then:
+        !caller1.isLoggedIn()
+    }
+
+    def "T12. User logs in for second time"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Login")
+            ).withRequestBody(
+                equalTo(ClientHelper.encode([username:"user", password:"drowssapwen"]))
+            ).willReturn(
+                okJson("""{"token":"${TOKEN2}"}""")
+            )
+        )
+
+        when:
+        caller2.login("user", "drowssapwen")
+
+        then:
+        caller2.isLoggedIn()
+    }
+
+    def "T13. User cannot read ActualTotalLoad tuple for 2000-01-02 due to quota limit"() {
         given:
         wms.givenThat(
             get(
@@ -239,7 +310,43 @@ class RestAPISpecification extends Specification {
         exception.getStatusCode() == 402
     }
 
-    def "T09. Admin updates the quota of the new user again"() {
+    def "T14. User logs out"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Logout")
+            ).withHeader(
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
+            )
+        )
+
+        when:
+        caller2.logout()
+
+        then:
+        !caller2.isLoggedIn()
+    }
+
+    def "T15. Admin logs in for changing quotas second time"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Login")
+            ).withRequestBody(
+                equalTo(ClientHelper.encode([username:"john", password:"1234"]))
+            ).willReturn(
+                okJson("""{"token":"${TOKEN1}"}""")
+            )
+        )
+
+        when:
+        caller1.login("john", "1234")
+
+        then:
+        caller1.isLoggedIn()
+    }
+
+    def "T16. Admin updates the quota of the new user again"() {
         given:
         wms.givenThat(
             put(
@@ -247,20 +354,20 @@ class RestAPISpecification extends Specification {
             ).withHeader(
                 RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
             ).withRequestBody(
-                equalTo(ClientHelper.encode([email:"user@ntua.gr", requestsPerDayQuota:"10"]))
+                equalTo(ClientHelper.encode([email:"user@ntua.gr", password:"drowssapwen",requestsPerDayQuota:"10"]))
             ).willReturn(
                 okJson('{"Username":"user", "Email":"user@ntua.gr","Admin":0,"RequestsPerDayQuota":10,"UsedPerDayQuota":0}')
             )
         )
 
         when:
-        User user = caller1.updateUser(new User("user", "user@ntua.gr", 0, 10))
+        User user = caller1.updateUser(new User("user", "user@ntua.gr", "drowssapwen", 0, 10))
 
         then:
         user.getRequestsPerDayQuota() == 10
     }
 
-    def "T10. Admin logs out"() {
+    def "T17. Admin logs out"() {
         given:
         wms.givenThat(
             post(
@@ -277,7 +384,26 @@ class RestAPISpecification extends Specification {
         !caller1.isLoggedIn()
     }
 
-    def "T11. User retrieves ActualTotalLoad tuple for 2000-01-02"() {
+    def "T18. User logs in"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Login")
+            ).withRequestBody(
+                equalTo(ClientHelper.encode([username:"user", password:"drowssapwen"]))
+            ).willReturn(
+                okJson("""{"token":"${TOKEN2}"}""")
+            )
+        )
+
+        when:
+        caller2.login("user", "drowssapwen")
+
+        then:
+        caller2.isLoggedIn()
+    }
+
+    def "T19. User retrieves ActualTotalLoad tuple for 2000-01-02"() {
         given:
         wms.givenThat(
             get(
@@ -301,14 +427,50 @@ class RestAPISpecification extends Specification {
         records.size() == 1
     }
 
-    def "T12. User uploads an ActualTotalLoad dataset"() {
+    def "T20. User logs out"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Logout")
+            ).withHeader(
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
+            )
+        )
+
+        when:
+        caller2.logout()
+
+        then:
+        !caller2.isLoggedIn()
+    }
+
+    def "T21. Admin logs in for importing data"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Login")
+            ).withRequestBody(
+                equalTo(ClientHelper.encode([username:"john", password:"1234"]))
+            ).willReturn(
+                okJson("""{"token":"${TOKEN1}"}""")
+            )
+        )
+
+        when:
+        caller1.login("john", "1234")
+
+        then:
+        caller1.isLoggedIn()
+    }
+
+    /*def "T22. Admin uploads an ActualTotalLoad dataset"() {
         given:
         String csv = Paths.get(getClass().getResource("/test-atl.csv").toURI()).toString()
         wms.givenThat(
             post(
                 urlEqualTo("/energy/api/Admin/ActualTotalLoad")
             ).withHeader(
-                RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
             ).withMultipartRequestBody(
                 new MultipartValuePatternBuilder().
                     withName("fileToUpload").
@@ -328,27 +490,28 @@ class RestAPISpecification extends Specification {
         then:
         importResult.totalRecordsInFile == 2 &&
         importResult.totalRecordsImported == 2 &
-        importResult.totalRecordsInDatabase == 4 //2 (csv) + 2 (2000-01-XX test data)
-    }
+        importResult.totalRecordsInDatabase == 4 
+        //2 (csv) + 2 (2000-01-XX test data)
+    }*/
 
-    def "T13. User logs out"() {
+    def "T22. Admin logs out for last time"() {
         given:
         wms.givenThat(
             post(
                 urlEqualTo("/energy/api/Logout")
             ).withHeader(
-                RestAPI.CUSTOM_HEADER, equalTo(TOKEN2)
+                RestAPI.CUSTOM_HEADER, equalTo(TOKEN1)
             )
         )
 
         when:
-        caller2.logout()
+        caller1.logout()
 
         then:
-        !caller2.isLoggedIn()
+        !caller1.isLoggedIn()
     }
 
-    def "T14. Anonymous users cannot access protected resources"() {
+    def "T23. Anonymous users cannot access protected resources"() {
         given:
         wms.givenThat(
             get(
@@ -369,6 +532,23 @@ class RestAPISpecification extends Specification {
         then:
         ServerResponseException exception = thrown()
         exception.getStatusCode() == 401
-    }*/
+    }
+
+    def "T24. The database is reset successfully"() {
+        given:
+        wms.givenThat(
+            post(
+                urlEqualTo("/energy/api/Reset")
+            ).willReturn(
+                okJson('{"status":"OK"}')
+            )
+        )
+
+        when:
+        String status = caller1.resetDatabase()
+
+        then:
+        status == "OK"
+    }
 
 }
